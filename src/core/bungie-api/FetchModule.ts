@@ -15,6 +15,6 @@ export default class FetchModule {
 
     const data = (await response.json()) as BungieNetApiResponse<T>;
 
-    return data.Repsonse;
+    return data.Response;
   }
 }

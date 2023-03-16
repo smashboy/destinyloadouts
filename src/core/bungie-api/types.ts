@@ -8,7 +8,7 @@ export interface DestinyApiHeaders {
 }
 
 export interface BungieNetApiResponse<T> {
-  Repsonse: T;
+  Response: T;
   ErrorCode: number;
   ThrottleSeconds: number;
   ErrorStatus: string;
