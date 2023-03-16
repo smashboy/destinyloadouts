@@ -1,4 +1,4 @@
-import { DestinyApiHeaders } from "./types";
+import { BungieNetApiResponse, DestinyApiHeaders } from "./types";
 
 export default class FetchModule {
   private readonly apiUrl = "https://www.bungie.net/Platform";
@@ -8,11 +8,13 @@ export default class FetchModule {
     this.headers = headers;
   }
 
-  async get(endpoint: string) {
+  async get<T>(endpoint: string) {
     const response = await fetch(`${this.apiUrl}${endpoint}`, {
       headers: this.headers,
     });
 
-    return response.json();
+    const data = (await response.json()) as BungieNetApiResponse<T>;
+
+    return data.Repsonse;
   }
 }

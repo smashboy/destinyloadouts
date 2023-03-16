@@ -7,6 +7,15 @@ export interface DestinyApiHeaders {
   [k: string]: string;
 }
 
+export interface BungieNetApiResponse<T> {
+  Repsonse: T;
+  ErrorCode: number;
+  ThrottleSeconds: number;
+  ErrorStatus: string;
+  Message: string;
+  MessageData: { [key: string]: string };
+}
+
 export interface DestinyCharacter {
   classType: number;
   emblemPath: string;
