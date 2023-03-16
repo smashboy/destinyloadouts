@@ -12,8 +12,15 @@ export default class DestinyApiClient {
 
   constructor({ apiKey }: DestinyApiClientProps) {
     this.fetch = new FetchModule({ "X-API-Key": apiKey });
-    this.auth = new AuthModule();
-    this.characters = new CharactersModule({ fetch: this.fetch });
+    this.auth = new AuthModule({ fetch: this.fetch });
+    this.characters = new CharactersModule({
+      fetch: this.fetch,
+      auth: this.auth,
+    });
     this.profile = new ProfileModule({ fetch: this.fetch });
+  }
+
+  setAuthToken(token: string) {
+    this.fetch.setAuthToken(token);
   }
 }

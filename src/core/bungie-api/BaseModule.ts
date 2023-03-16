@@ -1,6 +1,6 @@
 import FetchModule from "./FetchModule";
 
-interface BaseModuleProps {
+export interface BaseModuleProps {
   fetch: FetchModule;
 }
 

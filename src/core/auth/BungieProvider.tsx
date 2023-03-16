@@ -1,4 +1,5 @@
 import { OAuthProvider } from "next-auth/providers";
+import { bungieNetOrigin } from "../bungie-api/consants";
 
 export const BungieAuthProvider: OAuthProvider = () => ({
   id: "bungie",
@@ -6,15 +7,15 @@ export const BungieAuthProvider: OAuthProvider = () => ({
   type: "oauth",
   clientId: process.env.BUNGIE_CLIENT_ID,
   clientSecret: process.env.BUNGIE_SECRET,
-  token: "https://www.bungie.net/platform/app/oauth/token/",
+  token: `${bungieNetOrigin}/platform/app/oauth/token/`,
   authorization: {
-    url: "https://www.bungie.net/en/OAuth/Authorize?reauth=true",
+    url: `${bungieNetOrigin}/en/OAuth/Authorize?reauth=true`,
     params: {
       scope: "",
     },
   },
   userinfo: {
-    url: "https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser/",
+    url: `${bungieNetOrigin}/Platform/User/GetMembershipsForCurrentUser/`,
   },
   httpOptions: {
     headers: {
@@ -24,13 +25,11 @@ export const BungieAuthProvider: OAuthProvider = () => ({
   profile: (profile, tokens) => {
     const { bungieNetUser: user } = profile.Response;
 
-    console.log("PROFILE TRIGGER", user);
-
     return {
       id: user.membershipId,
       name: user.displayName,
       email: user.membershipId,
-      image: `https://www.bungie.net${
+      image: `${bungieNetOrigin}${
         user.profilePicturePath.startsWith("/") ? "" : "/"
       }${user.profilePicturePath}`,
       profile,

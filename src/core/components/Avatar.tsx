@@ -65,6 +65,6 @@ const AvatarFallback = forwardRef<
 export const Avatar: React.FC<AvatarProps> = ({ src, fallback, size }) => (
   <AvatarRoot size={size}>
     <AvatarImage src={src} />
-    <AvatarFallback>{fallback}</AvatarFallback>
+    <AvatarFallback>{fallback.split("")[0] || "U"}</AvatarFallback>
   </AvatarRoot>
 );

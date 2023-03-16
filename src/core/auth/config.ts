@@ -3,14 +3,18 @@ import { BungieAuthProvider } from "./BungieProvider";
 
 export const authConfig = {
   providers: [BungieAuthProvider({})],
-  // callbacks: {
-  //   signIn: (params) => {
-  //     console.log("SIGN IN", params);
-  //     return true;
-  //   },
-  //   session: (params) => {
-  //     console.log("SESSION", params);
-  //     return params.session;
-  //   },
-  // },
+  callbacks: {
+    session: ({ session, token }) => {
+      // @ts-ignore
+      session.user.id = token.userId;
+      // @ts-ignore
+      session.accessToken = token.accessToken;
+      return session;
+    },
+    jwt: ({ token, user, account }) => {
+      if (user) token.userId = user.id;
+      if (account) token.accessToken = account.access_token;
+      return token;
+    },
+  },
 } satisfies AuthOptions;
