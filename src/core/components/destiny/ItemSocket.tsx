@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 
-export interface DestinyItemSocketProps {
+export interface ItemSocketProps {
   bgIconPath?: string;
   children?: React.ReactNode;
   href?: string;
   isSelected?: boolean;
 }
 
-export const DestinyItemSocket: React.FC<DestinyItemSocketProps> = ({
+export const ItemSocket: React.FC<ItemSocketProps> = ({
   bgIconPath,
   children,
   href,
