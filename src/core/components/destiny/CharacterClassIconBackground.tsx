@@ -4,15 +4,15 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import {
   characterClassIconPathMap,
   destinyLogoIconPath,
-} from "../bungie-api/consants";
-import { DestinyCharacter } from "../bungie-api/types";
+} from "../../bungie-api/consants";
+import { DestinyCharacter } from "../../bungie-api/types";
 
-interface DestinyCharacterClassIconBackgroundProps {
+interface CharacterClassIconBackgroundProps {
   characters: Record<string, DestinyCharacter>;
 }
 
-export const DestinyCharacterClassIconBackground: React.FC<
-  DestinyCharacterClassIconBackgroundProps
+export const CharacterClassIconBackground: React.FC<
+  CharacterClassIconBackgroundProps
 > = ({ characters }) => {
   const segments = useSelectedLayoutSegments();
 

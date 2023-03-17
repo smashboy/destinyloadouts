@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAuthSessionServer } from "@/core/auth/utils";
 import { destinyClient } from "@/core/bungie-api/client";
-import { DestinyCharacterClassIconBackground } from "@/core/components/DestinyCharacterClassIconBackground";
+import { CharacterClassIconBackground } from "@/core/components/destiny/CharacterClassIconBackground";
 import { CharacterSelector } from "./CharacterSelector";
 
 interface NewLoadoutLaoutProps {
@@ -20,7 +20,7 @@ export default async function NewLoadoutLaout({
 
   return (
     <div className="flex flex-col space-y-4">
-      <DestinyCharacterClassIconBackground characters={data.characters.data} />
+      <CharacterClassIconBackground characters={data.characters.data} />
       <CharacterSelector characters={data.characters.data} />
       {children}
     </div>

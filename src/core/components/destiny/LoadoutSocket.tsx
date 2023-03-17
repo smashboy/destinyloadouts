@@ -1,17 +1,14 @@
-import {
-  DestinyItemSocket,
-  DestinyItemSocketProps,
-} from "../DestinyItemSocket";
+import { ItemSocket, ItemSocketProps } from "./ItemSocket";
 import { LoadoutIcon, LoadoutIconProps } from "./LoadoutIcon";
 
-interface LoadoutSocketProps extends LoadoutIconProps, DestinyItemSocketProps {}
+interface LoadoutSocketProps extends LoadoutIconProps, ItemSocketProps {}
 
 export const LoadoutSocket: React.FC<LoadoutSocketProps> = ({
   iconImagePath,
   colorImagePath,
   ...props
 }) => (
-  <DestinyItemSocket {...props}>
+  <ItemSocket {...props}>
     <LoadoutIcon {...{ iconImagePath, colorImagePath }} />
-  </DestinyItemSocket>
+  </ItemSocket>
 );
