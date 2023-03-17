@@ -1,28 +1,40 @@
-import { destinyClient } from "@/core/bungie-api/client";
-import { DestinyContentLoadoutNameList } from "@/core/bungie-api/types";
+import { notFound } from "next/navigation";
+import {
+  getDestinyManifest,
+  getDestinyManifestSlice,
+} from "bungie-api-ts/destiny2";
+import { getAuthSessionServer } from "@/core/auth/utils";
+import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 import { CharacterSockets } from "./CharacterSockets";
 import { LoadoutName } from "./LoadoutName";
 
 interface SelectedLoadoutLayoutProps {
   children: React.ReactNode;
-  params: { loadoutIndex: string };
+  params: { loadoutIndex: string; characterId: string };
 }
 
 export default async function SelectedLoadoutLayout({
   children,
   params: { loadoutIndex },
 }: SelectedLoadoutLayoutProps) {
-  const destinyManifest = await destinyClient.manifest.get();
+  const session = await getAuthSessionServer();
 
-  const contentPaths = destinyManifest.jsonWorldComponentContentPaths["en"];
+  if (!session) return notFound();
 
-  const loadoutNames =
-    await destinyClient.manifest.getDestinyContentFromUrl<DestinyContentLoadoutNameList>(
-      contentPaths.DestinyLoadoutNameDefinition
-    );
+  const fetchHelper = bungieApiFetchHelper(session.accessToken);
+
+  const destinyManifest = await getDestinyManifest(fetchHelper);
+
+  const { DestinyLoadoutNameDefinition: loadoutNames } =
+    await getDestinyManifestSlice(fetchHelper, {
+      destinyManifest: destinyManifest.Response,
+      tableNames: ["DestinyLoadoutNameDefinition"],
+      language: "en",
+    });
 
   return (
     <div className="flex flex-col space-y-2">
+      {/* <ConsoleLog loadoutItems={loadoutItems} /> */}
       <LoadoutName loadoutIndex={loadoutIndex} loadoutNames={loadoutNames} />
       <CharacterSockets />
       {children}

@@ -1,11 +1,11 @@
+import { GeneralUser } from "bungie-api-ts/user";
 import { bungieNetOrigin } from "@/core/bungie-api/consants";
-import { BungieNetUser } from "@/core/bungie-api/types";
 import { Avatar } from "@/core/components/Avatar";
 import { TypographyLarge } from "@/core/components/typography";
 import { AccountCounter } from "./AccountCounter";
 
 interface AccountHeaderProps {
-  profile: BungieNetUser;
+  profile: GeneralUser;
 }
 
 export const AccountHeader: React.FC<AccountHeaderProps> = ({

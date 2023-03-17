@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { DestinyCharacter } from "@/core/bungie-api/types";
+import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import {
   bungieNetOrigin,
   characterGenderTypeTitleMap,
@@ -12,7 +12,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/core/utils";
 
 interface DestinyCharacterBannerProps {
-  character: DestinyCharacter;
+  character: DestinyCharacterComponent;
 }
 
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({

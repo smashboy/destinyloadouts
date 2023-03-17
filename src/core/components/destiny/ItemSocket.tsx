@@ -26,7 +26,7 @@ export const ItemSocket: React.FC<ItemSocketProps> = ({
   return (
     <RootElement href={href!} className={rootStyles}>
       <span className="ring-2 rounded w-full h-full ring-slate-300 flex items-center overflow-hidden justify-center p-0.5">
-        {bgIconPath && (
+        {bgIconPath && !children && (
           <Image
             src={bgIconPath}
             width={32}

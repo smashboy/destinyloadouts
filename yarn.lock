@@ -527,6 +527,11 @@ browserslist@^4.21.5:
     node-releases "^2.0.8"
     update-browserslist-db "^1.0.10"
 
+bungie-api-ts@^4.22.2:
+  version "4.22.2"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.22.2.tgz#91b32af6556bff2c750e829ead01b954640dcbb7"
+  integrity sha512-lOgV7K4ejivK7/voYME+3bgdNKK+XdjM42qflfnVEabCshwwwldb/DyNCg9IUjG3TZeGXxqjDECOW6OIM9b+VQ==
+
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.2.tgz#b1d4e89e688119c3c9a903ad30abb2f6a919be3c"

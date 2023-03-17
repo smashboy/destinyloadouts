@@ -1,18 +1,18 @@
 "use client";
 import {
-  DestinyCharacterLoadout,
-  DestinyContentLoadoutColorList,
-  DestinyContentLoadoutIconList,
-} from "@/core/bungie-api/types";
+  DestinyLoadoutComponent,
+  DestinyLoadoutIconDefinition,
+  DestinyLoadoutColorDefinition,
+} from "bungie-api-ts/destiny2";
 import { LoadoutSocket } from "@/core/components/destiny/LoadoutSocket";
 import { TypographyLarge } from "@/core/components/typography";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 interface LoadoutSelectorProps {
   characterId: string;
-  loadouts: DestinyCharacterLoadout[];
-  loadoutIcons: DestinyContentLoadoutIconList;
-  loadoutColors: DestinyContentLoadoutColorList;
+  loadouts: DestinyLoadoutComponent[];
+  loadoutIcons: Record<string, DestinyLoadoutIconDefinition>;
+  loadoutColors: Record<string, DestinyLoadoutColorDefinition>;
 }
 
 export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({

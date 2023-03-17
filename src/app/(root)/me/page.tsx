@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
+import { getBungieNetUserById } from "bungie-api-ts/user";
 import { getAuthSessionServer } from "@/core/auth/utils";
-import { destinyClient } from "@/core/bungie-api/client";
 import { AccountHeader } from "./AccountHeader";
 import { ButtonLink } from "@/core/components/Button";
+import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 
 export default async function AuthUserProfilePage() {
   const session = await getAuthSessionServer();
@@ -11,11 +12,15 @@ export default async function AuthUserProfilePage() {
 
   const { user } = session;
 
-  const profile = await destinyClient.profile.getById(user.id);
+  const fetchHelper = bungieApiFetchHelper(session.accessToken);
+
+  const profile = await getBungieNetUserById(fetchHelper, {
+    id: user.id,
+  });
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <AccountHeader profile={profile} />
+      <AccountHeader profile={profile.Response} />
       <div className="col-span-2">
         <ButtonLink
           href="/me/new-loadout"

@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation";
-import { getAuthSessionServer } from "@/core/auth/utils";
-import { destinyClient } from "@/core/bungie-api/client";
-import { ConsoleLog } from "@/core/components/ConsoleLog";
-import { LoadoutSelector } from "./LoadoutSelector";
 import {
-  DestinyContentLoadoutColorList,
-  DestinyContentLoadoutIconList,
-} from "@/core/bungie-api/types";
+  getProfile,
+  DestinyComponentType,
+  getDestinyManifest,
+  getDestinyManifestSlice,
+} from "bungie-api-ts/destiny2";
+import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
+import { getAuthSessionServer } from "@/core/auth/utils";
+import { LoadoutSelector } from "./LoadoutSelector";
 import { LoadoutsContext } from "@/core/stores/LoadoutContext";
+import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
+import { getSingleMembershipData } from "@/core/bungie-api/user";
 
 interface CharacterLoadoutSelectorLayoutProps {
   children: React.ReactNode;
@@ -22,37 +25,42 @@ export default async function CharacterLoadoutSelectorLayout({
 
   if (!session) return notFound();
 
-  destinyClient.setAuthToken(session.accessToken);
-  const [loadoutsData, destinyManifest] = await Promise.all([
-    destinyClient.characters.getLoadouts(characterId),
-    destinyClient.manifest.get(),
+  const fetchHelper = bungieApiFetchHelper(session.accessToken);
+
+  const destinyMembership = getSingleMembershipData(
+    (await getMembershipDataForCurrentUser(fetchHelper)).Response
+  );
+
+  const [profile, destinyManifest] = await Promise.all([
+    getProfile(fetchHelper, {
+      components: [DestinyComponentType.CharacterLoadouts],
+      destinyMembershipId: destinyMembership.membershipId,
+      membershipType: destinyMembership.membershipType,
+    }),
+    getDestinyManifest(fetchHelper),
   ]);
 
-  const contentPaths = destinyManifest.jsonWorldComponentContentPaths["en"];
+  const loadouts =
+    profile.Response.characterLoadouts.data?.[characterId].loadouts || [];
 
-  const [loadoutIcons, loadoutColors] = await Promise.all([
-    destinyClient.manifest.getDestinyContentFromUrl<DestinyContentLoadoutIconList>(
-      contentPaths.DestinyLoadoutIconDefinition
-    ),
-    destinyClient.manifest.getDestinyContentFromUrl<DestinyContentLoadoutColorList>(
-      contentPaths.DestinyLoadoutColorDefinition
-    ),
-    // destinyClient.manifest.getDestinyContentFromUrl<DestinyContentLoadoutNameList>(
-    //   contentPaths.DestinyLoadoutNameDefinition
-    // ),
-  ]);
+  const {
+    DestinyLoadoutColorDefinition: loadoutColors,
+    DestinyLoadoutIconDefinition: loadoutIcons,
+  } = await getDestinyManifestSlice(fetchHelper, {
+    destinyManifest: destinyManifest.Response,
+    tableNames: [
+      "DestinyLoadoutIconDefinition",
+      "DestinyLoadoutColorDefinition",
+    ],
+    language: "en",
+  });
 
-  const characterLoadouts = loadoutsData.characterLoadouts.data[characterId];
-
-  if (!characterLoadouts) return notFound();
-
-  const filledLoadouts = characterLoadouts.loadouts.filter((loadout) =>
+  const filledLoadouts = loadouts.filter((loadout) =>
     loadout.items.every((item) => item.itemInstanceId !== "0")
   );
 
   return (
     <>
-      <ConsoleLog filledLoadouts={filledLoadouts} />
       <LoadoutSelector
         characterId={characterId}
         loadouts={filledLoadouts}

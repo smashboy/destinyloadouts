@@ -1,6 +1,6 @@
 "use client";
-import { DestinyCharacterLoadout } from "../bungie-api/types";
+import { DestinyLoadoutComponent } from "bungie-api-ts/destiny2";
 import { createContextStore } from "./createContextStore";
 
 export const [LoadoutsContext, useLoadouts] =
-  createContextStore<DestinyCharacterLoadout[]>("Loadouts");
+  createContextStore<DestinyLoadoutComponent[]>("Loadouts");

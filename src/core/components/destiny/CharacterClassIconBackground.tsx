@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useSelectedLayoutSegments } from "next/navigation";
+import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import {
   characterClassIconPathMap,
   destinyLogoIconPath,
 } from "../../bungie-api/consants";
-import { DestinyCharacter } from "../../bungie-api/types";
 
 interface CharacterClassIconBackgroundProps {
-  characters: Record<string, DestinyCharacter>;
+  characters: Record<string, DestinyCharacterComponent>;
 }
 
 export const CharacterClassIconBackground: React.FC<

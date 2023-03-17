@@ -1,9 +1,9 @@
-import { DestinyCharacter } from "@/core/bungie-api/types";
+import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import { TypographyLarge } from "@/core/components/typography";
 import { DestinyCharacterBanner } from "./DestinyCharacterBanner";
 
 interface CharacterSelectorProps {
-  characters: Record<string, DestinyCharacter>;
+  characters: Record<string, DestinyCharacterComponent>;
 }
 
 export const CharacterSelector: React.FC<CharacterSelectorProps> = ({

@@ -1,11 +1,11 @@
 "use client";
-import { DestinyContentLoadoutNameList } from "@/core/bungie-api/types";
+import { DestinyLoadoutNameDefinition } from "bungie-api-ts/destiny2";
 import { TypographyLarge } from "@/core/components/typography";
 import { useLoadouts } from "@/core/stores/LoadoutContext";
 
 interface LoadoutNameProps {
   loadoutIndex: string;
-  loadoutNames: DestinyContentLoadoutNameList;
+  loadoutNames: Record<string, DestinyLoadoutNameDefinition>;
 }
 
 export const LoadoutName: React.FC<LoadoutNameProps> = ({
