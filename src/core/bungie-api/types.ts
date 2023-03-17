@@ -64,3 +64,52 @@ export interface DestinyCharacter {
 //     icon: string;
 //   };
 // }
+
+export interface DestinyCharacterLoadout {
+  iconHash: string;
+  colorHash: string;
+  nameHash: string;
+  items: DestinyCharacterLoadoutItem[];
+}
+
+export interface DestinyCharacterLoadoutItem {
+  itemInstanceId: string;
+}
+
+export interface DestinyManifest {
+  jsonWorldComponentContentPaths: Record<
+    string,
+    DestinyManifestJsonWorldComponentContentPathsData
+  >;
+}
+
+export interface DestinyManifestJsonWorldComponentContentPathsData {
+  DestinyLoadoutColorDefinition: string;
+  DestinyLoadoutIconDefinition: string;
+  DestinyLoadoutNameDefinition: string;
+}
+
+export type DestinyContentLoadoutIconList = Record<
+  string,
+  DestinyContentLoadoutIconItem
+>;
+export type DestinyContentLoadoutColorList = Record<
+  string,
+  DestinyContentLoadoutColorItem
+>;
+export type DestinyContentLoadoutNameList = Record<
+  string,
+  DestinyContentLoadoutNameItem
+>;
+
+export interface DestinyContentLoadoutIconItem {
+  iconImagePath: string;
+}
+
+export interface DestinyContentLoadoutColorItem {
+  colorImagePath: string;
+}
+
+export interface DestinyContentLoadoutNameItem {
+  name: string;
+}

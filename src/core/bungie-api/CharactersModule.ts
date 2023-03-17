@@ -1,25 +1,34 @@
 import ProtectedModule from "./ProtectedModule";
-import { DestinyCharacter } from "./types";
+import { DestinyCharacter, DestinyCharacterLoadout } from "./types";
 
 export default class CharactersModule extends ProtectedModule {
   async getMyCharacters() {
-    const { destinyMemberships, primaryMembershipId } =
-      await this.auth.getMembershipData();
+    const membership = await this.auth.getSingleMembershipData();
 
-    const selectedMembership = primaryMembershipId
-      ? destinyMemberships.find(
-          (membership) => membership.membershipId === primaryMembershipId
-        )
-      : destinyMemberships[0];
+    if (!membership) throw new Error("Destiny membership not found.");
 
-    if (!selectedMembership) throw new Error("Destiny membership not found.");
-
-    const { membershipId, membershipType } = selectedMembership;
+    const { membershipId, membershipType } = membership;
 
     return this.fetch.get<{
       characters: {
         data: Record<string, DestinyCharacter>;
       };
     }>(`/Destiny2/${membershipType}/Profile/${membershipId}/?components=200`);
+  }
+
+  async getLoadouts(characterId: string) {
+    const membership = await this.auth.getSingleMembershipData();
+
+    if (!membership) throw new Error("Destiny membership not found.");
+
+    const { membershipId, membershipType } = membership;
+
+    // `/Destiny2/${membershipType}/Profile/${membershipId}/Character/${characterId}/?components=206`
+
+    return this.fetch.get<{
+      characterLoadouts: {
+        data: Record<string, { loadouts: DestinyCharacterLoadout[] }>;
+      };
+    }>(`/Destiny2/${membershipType}/Profile/${membershipId}/?components=206`);
   }
 }

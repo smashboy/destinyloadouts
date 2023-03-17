@@ -1,7 +1,11 @@
+"use client";
+import Link from "next/link";
 import Image from "next/image";
-import { bungieNetOrigin } from "../bungie-api/consants";
-import { DestinyCharacter } from "../bungie-api/types";
-import { TypographyLarge } from "./typography";
+import { DestinyCharacter } from "@/core/bungie-api/types";
+import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { TypographyLarge } from "@/core/components/typography";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { cn } from "@/core/utils";
 
 interface DestinyCharacterBannerProps {
   character: DestinyCharacter;
@@ -20,8 +24,10 @@ const characterGenderTypeTitleMap = {
 };
 
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
-  character: { emblemBackgroundPath, classType },
+  character: { emblemBackgroundPath, classType, characterId },
 }) => {
+  const segment = useSelectedLayoutSegment();
+
   const characterGenderTypeTitle =
     characterGenderTypeTitleMap[
       classType as keyof typeof characterGenderTypeTitleMap
@@ -30,8 +36,17 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
   const characterIconPath =
     characterIconPathMap[classType as keyof typeof characterIconPathMap];
 
+  const isSelected = segment === characterId;
+
   return (
-    <button className="w-full h-[124px] p-0.5 rounded transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 hover:ring-2 hover:ring-slate-300 hover:ring-offset-2">
+    <Link
+      href={`/me/new-loadout/${characterId}`}
+      className={cn(
+        "w-full h-[124px] p-0.5 rounded transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 hover:ring-2 hover:ring-slate-300 hover:ring-offset-2",
+        isSelected &&
+          "ring-2 ring-sky-300 ring-offset-2 focus:ring-inherit hover:ring-inherit"
+      )}
+    >
       <span className="relative block w-full h-full overflow-hidden rounded">
         <span
           className="absolute inset-0 bg-no-repeat bg-cover -z-10"
@@ -61,6 +76,6 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
           </span>
         </span>
       </span>
-    </button>
+    </Link>
   );
 };

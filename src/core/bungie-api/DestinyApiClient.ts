@@ -1,6 +1,7 @@
 import AuthModule from "./AuthModule";
 import CharactersModule from "./CharactersModule";
 import FetchModule from "./FetchModule";
+import ManifestModule from "./ManifestModule";
 import ProfileModule from "./ProfileModule";
 import { DestinyApiClientProps } from "./types";
 
@@ -9,6 +10,7 @@ export default class DestinyApiClient {
   readonly auth: AuthModule;
   readonly characters: CharactersModule;
   readonly profile: ProfileModule;
+  readonly manifest: ManifestModule;
 
   constructor({ apiKey }: DestinyApiClientProps) {
     this.fetch = new FetchModule({ "X-API-Key": apiKey });
@@ -18,6 +20,7 @@ export default class DestinyApiClient {
       auth: this.auth,
     });
     this.profile = new ProfileModule({ fetch: this.fetch });
+    this.manifest = new ManifestModule({ fetch: this.fetch });
   }
 
   setAuthToken(token: string) {
