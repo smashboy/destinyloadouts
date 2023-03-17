@@ -49,7 +49,7 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
           }}
         />
         <div className="absolute top-2 right-2">
-          <div className="p-1 border flex rounded bg-slate-200/70 items-center">
+          <div className="p-1 border flex rounded bg-slate-200/70 items-center space-x-1">
             <Image
               src="/destiny-icons/power.svg"
               width={16}
