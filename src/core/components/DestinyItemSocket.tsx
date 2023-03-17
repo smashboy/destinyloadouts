@@ -17,7 +17,8 @@ export const DestinyItemSocket: React.FC<DestinyItemSocketProps> = ({
 }) => {
   const rootStyles = cn(
     "w-16 h-16 rounded relative transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-4 hover:ring-2 hover:ring-slate-300 hover:ring-offset-4",
-    isSelected && "ring-2 ring-sky-300  focus:ring-inherit hover:ring-inherit"
+    isSelected &&
+      "ring-2 ring-offset-4 ring-sky-300 focus:ring-inherit hover:ring-inherit"
   );
 
   const RootElement = href ? Link : "button";
