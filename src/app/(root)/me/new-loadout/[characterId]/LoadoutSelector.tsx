@@ -23,8 +23,6 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
 }) => {
   const segment = useSelectedLayoutSegment();
 
-  console.log(segment);
-
   return (
     <div className="flex flex-col space-y-2">
       <TypographyLarge>Select loadout</TypographyLarge>

@@ -20,7 +20,7 @@ export default async function NewLoadoutLaout({
 
   return (
     <div className="flex flex-col space-y-4">
-      <DestinyCharacterClassIconBackground />
+      <DestinyCharacterClassIconBackground characters={data.characters.data} />
       <CharacterSelector characters={data.characters.data} />
       {children}
     </div>

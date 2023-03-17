@@ -40,7 +40,7 @@ export interface DestinyCharacter {
   emblemPath: string;
   emblemBackgroundPath: string;
   genderType: number; // human = 0, awoken = 1, exo = 2, unkown = 3
-
+  light: number;
   // kineticWeapon: DestinyItem;
   // energyWeapon: DestinyItem;
   // powerWeapon: DestinyItem;

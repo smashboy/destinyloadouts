@@ -2,8 +2,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { DestinyCharacter } from "@/core/bungie-api/types";
-import { bungieNetOrigin } from "@/core/bungie-api/consants";
-import { TypographyLarge } from "@/core/components/typography";
+import {
+  bungieNetOrigin,
+  characterGenderTypeTitleMap,
+  characterClassIconPathMap,
+} from "@/core/bungie-api/consants";
+import { TypographyLarge, TypographySmall } from "@/core/components/typography";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/core/utils";
 
@@ -11,20 +15,8 @@ interface DestinyCharacterBannerProps {
   character: DestinyCharacter;
 }
 
-const characterIconPathMap = {
-  0: "/destiny-icons/classes/titan.svg",
-  1: "/destiny-icons/classes/hunter.svg",
-  2: "/destiny-icons/classes/warlock.svg",
-};
-
-const characterGenderTypeTitleMap = {
-  0: "Human",
-  1: "Awoken",
-  2: "Exo",
-};
-
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
-  character: { emblemBackgroundPath, classType, characterId },
+  character: { emblemBackgroundPath, classType, characterId, light },
 }) => {
   const segment = useSelectedLayoutSegment();
 
@@ -34,7 +26,9 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
     ];
 
   const characterIconPath =
-    characterIconPathMap[classType as keyof typeof characterIconPathMap];
+    characterClassIconPathMap[
+      classType as keyof typeof characterClassIconPathMap
+    ];
 
   const isSelected = segment === characterId;
 
@@ -54,6 +48,17 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
             backgroundImage: `url(${bungieNetOrigin}/${emblemBackgroundPath})`,
           }}
         />
+        <div className="absolute top-2 right-2">
+          <div className="p-1 border flex rounded bg-slate-200/70 items-center">
+            <Image
+              src="/destiny-icons/power.svg"
+              width={16}
+              height={16}
+              alt="Character power icon"
+            />
+            <TypographySmall>{light}</TypographySmall>
+          </div>
+        </div>
         {characterIconPath && (
           <div className="absolute bottom-2 right-2">
             <div className="p-1 border rounded bg-slate-200/70">

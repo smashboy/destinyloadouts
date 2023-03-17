@@ -4,7 +4,6 @@ import { DestinyManifest } from "./types";
 
 export default class ManifestModule extends BaseModule {
   get() {
-    console.log("GET MANIFEST");
     return this.fetch.get<DestinyManifest>("/Destiny2/Manifest");
   }
 

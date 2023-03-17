@@ -7,6 +7,7 @@ import {
   DestinyContentLoadoutColorList,
   DestinyContentLoadoutIconList,
 } from "@/core/bungie-api/types";
+import { LoadoutsContext } from "@/core/stores/LoadoutContext";
 
 interface CharacterLoadoutSelectorLayoutProps {
   children: React.ReactNode;
@@ -58,7 +59,7 @@ export default async function CharacterLoadoutSelectorLayout({
         loadoutIcons={loadoutIcons}
         loadoutColors={loadoutColors}
       />
-      {children}
+      <LoadoutsContext value={filledLoadouts}>{children}</LoadoutsContext>
     </>
   );
 }
