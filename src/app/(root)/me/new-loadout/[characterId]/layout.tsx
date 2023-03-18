@@ -1,16 +1,12 @@
 import { notFound } from "next/navigation";
-import {
-  getProfile,
-  DestinyComponentType,
-  getDestinyManifest,
-  getDestinyManifestSlice,
-} from "bungie-api-ts/destiny2";
+import { getProfile, DestinyComponentType } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
 import { getAuthSessionServer } from "@/core/auth/utils";
 import { LoadoutSelector } from "./LoadoutSelector";
 import { LoadoutsContext } from "@/core/stores/LoadoutContext";
 import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 import { getSingleMembershipData } from "@/core/bungie-api/user";
+import { getDestinyManifestTables } from "@/core/bungie-api/getManifestTables";
 
 interface CharacterLoadoutSelectorLayoutProps {
   children: React.ReactNode;
@@ -31,14 +27,11 @@ export default async function CharacterLoadoutSelectorLayout({
     (await getMembershipDataForCurrentUser(fetchHelper)).Response
   );
 
-  const [profile, destinyManifest] = await Promise.all([
-    getProfile(fetchHelper, {
-      components: [DestinyComponentType.CharacterLoadouts],
-      destinyMembershipId: destinyMembership.membershipId,
-      membershipType: destinyMembership.membershipType,
-    }),
-    getDestinyManifest(fetchHelper),
-  ]);
+  const profile = await getProfile(fetchHelper, {
+    components: [DestinyComponentType.CharacterLoadouts],
+    destinyMembershipId: destinyMembership.membershipId,
+    membershipType: destinyMembership.membershipType,
+  });
 
   const loadouts =
     profile.Response.characterLoadouts.data?.[characterId].loadouts || [];
@@ -46,14 +39,10 @@ export default async function CharacterLoadoutSelectorLayout({
   const {
     DestinyLoadoutColorDefinition: loadoutColors,
     DestinyLoadoutIconDefinition: loadoutIcons,
-  } = await getDestinyManifestSlice(fetchHelper, {
-    destinyManifest: destinyManifest.Response,
-    tableNames: [
-      "DestinyLoadoutIconDefinition",
-      "DestinyLoadoutColorDefinition",
-    ],
-    language: "en",
-  });
+  } = await getDestinyManifestTables([
+    "DestinyLoadoutIconDefinition",
+    "DestinyLoadoutColorDefinition",
+  ]);
 
   const filledLoadouts = loadouts.filter((loadout) =>
     loadout.items.every((item) => item.itemInstanceId !== "0")

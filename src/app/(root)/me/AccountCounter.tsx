@@ -1,6 +1,5 @@
 import {
   TypographyLarge,
-  TypographySmall,
   TypographySubtle,
 } from "@/core/components/typography";
 
