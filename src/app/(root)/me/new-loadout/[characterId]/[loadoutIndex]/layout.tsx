@@ -12,6 +12,7 @@ import { LoadoutName } from "./LoadoutName";
 import { getSingleMembershipData } from "@/core/bungie-api/user";
 import { ConsoleLog } from "@/core/components/ConsoleLog";
 import { getDestinyManifestTables } from "@/core/bungie-api/getManifestTables";
+import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
 
 interface SelectedLoadoutLayoutProps {
   children: React.ReactNode;
@@ -45,30 +46,37 @@ export default async function SelectedLoadoutLayout({
     loadout.items.every((item) => item.itemInstanceId !== "0")
   );
 
-  const loadout = filledLoadouts[loadoutIndex as unknown as number];
+  const selectedLoadout = filledLoadouts[loadoutIndex as unknown as number];
 
   const loadoutItems = (
     await Promise.all(
-      loadout.items.map(({ itemInstanceId }) =>
+      selectedLoadout.items.map(({ itemInstanceId }) =>
         getItem(fetchHelper, {
           membershipType,
           itemInstanceId,
-          components: [DestinyComponentType.ItemInstances],
+          components: [
+            DestinyComponentType.ItemInstances,
+            DestinyComponentType.ItemCommonData,
+            DestinyComponentType.ItemStats,
+            DestinyComponentType.ItemSockets,
+            DestinyComponentType.ItemPerks,
+            DestinyComponentType.ItemReusablePlugs,
+          ],
           destinyMembershipId: membershipId,
         })
       )
     )
   ).map((res) => res.Response);
 
-  // const plugItems = await Promise.all(loadout.items.map(item => item.plugItemHashes).flat().map(itemId =>  getItem(fetchHelper, {
-  //   membershipType,
-  //   itemInstanceId: itemId,
-  //   components: [DestinyComponentType.ItemInstances],
-  //   destinyMembershipId: membershipId,
-  // })))
+  const {
+    DestinyLoadoutNameDefinition: loadoutNames,
+    DestinyInventoryItemDefinition: inventoryItems,
+  } = await getDestinyManifestTables([
+    "DestinyLoadoutNameDefinition",
+    "DestinyInventoryItemDefinition",
+  ]);
 
-  const { DestinyLoadoutNameDefinition: loadoutNames } =
-    await getDestinyManifestTables(["DestinyLoadoutNameDefinition"]);
+  const loadout = createDestinyCharacterLoadout(loadoutItems, inventoryItems);
 
   return (
     <div className="flex flex-col space-y-2">

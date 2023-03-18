@@ -1,3 +1,5 @@
+import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
+
 export const bungieNetOrigin = "https://www.bungie.net";
 
 export const characterClassIconPathMap = {
@@ -13,3 +15,17 @@ export const characterGenderTypeTitleMap = {
 };
 
 export const destinyLogoIconPath = "/destiny-icons/destiny.svg";
+
+export const destinyManifestTableNames = [
+  "DestinyLoadoutNameDefinition",
+  "DestinyLoadoutColorDefinition",
+  "DestinyLoadoutIconDefinition",
+  "DestinyInventoryItemDefinition",
+  "DestinyItemCategoryDefinition",
+] satisfies DestinyManifestComponentName[];
+
+export enum DestinyItemCategoryHash {
+  KineticWeapon = 2,
+  EnergyWeapon = 3,
+  PowerWeapon = 4,
+}
