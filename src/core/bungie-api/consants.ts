@@ -8,7 +8,7 @@ export const characterClassIconPathMap = {
   2: "/destiny-icons/classes/warlock.svg",
 };
 
-export const characterGenderTypeTitleMap = {
+export const characterRaceTypeTitleMap = {
   0: "Human",
   1: "Awoken",
   2: "Exo",

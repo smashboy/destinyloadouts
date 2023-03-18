@@ -5,20 +5,7 @@ import {
   DestinyItemType,
 } from "bungie-api-ts/destiny2";
 import { DestinyItemCategoryHash } from "./consants";
-
-export type LoadoutItem = [DestinyItemResponse, DestinyInventoryItemDefinition];
-
-interface Loadout {
-  helmet: LoadoutItem;
-  gauntlets: LoadoutItem;
-  chest: LoadoutItem;
-  legs: LoadoutItem;
-  class: LoadoutItem;
-  kinetic: LoadoutItem;
-  energy: LoadoutItem;
-  power: LoadoutItem;
-  subclass: LoadoutItem;
-}
+import { DestinyCharacterLoadout } from "./types";
 
 const getCharacterArmor = (
   item: DestinyItemResponse,
@@ -69,6 +56,8 @@ export const createDestinyCharacterLoadout = (
   let loadout = {};
 
   for (const characterItem of characterItems) {
+    if (!characterItem) continue;
+
     const {
       item: { data },
     } = characterItem;
@@ -101,5 +90,5 @@ export const createDestinyCharacterLoadout = (
     }
   }
 
-  return loadout as Loadout;
+  return loadout as DestinyCharacterLoadout;
 };

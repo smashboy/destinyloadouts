@@ -80,9 +80,13 @@ export default async function SelectedLoadoutLayout({
 
   return (
     <div className="flex flex-col space-y-2">
-      <ConsoleLog loadout={loadout} loadoutItems={loadoutItems} />
+      <ConsoleLog
+        loadoutItems={loadoutItems}
+        loadout={loadout}
+        wtfAreu={inventoryItems[2357297366]}
+      />
       <LoadoutName loadoutIndex={loadoutIndex} loadoutNames={loadoutNames} />
-      <CharacterSockets />
+      <CharacterSockets loadout={loadout} />
       {children}
     </div>
   );

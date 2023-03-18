@@ -4,7 +4,7 @@ import Image from "next/image";
 import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import {
   bungieNetOrigin,
-  characterGenderTypeTitleMap,
+  characterRaceTypeTitleMap,
   characterClassIconPathMap,
 } from "@/core/bungie-api/consants";
 import { TypographyLarge, TypographySmall } from "@/core/components/typography";
@@ -16,13 +16,13 @@ interface DestinyCharacterBannerProps {
 }
 
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
-  character: { emblemBackgroundPath, classType, characterId, light },
+  character: { emblemBackgroundPath, classType, raceType, characterId, light },
 }) => {
   const segment = useSelectedLayoutSegment();
 
   const characterGenderTypeTitle =
-    characterGenderTypeTitleMap[
-      classType as keyof typeof characterGenderTypeTitleMap
+    characterRaceTypeTitleMap[
+      raceType as keyof typeof characterRaceTypeTitleMap
     ];
 
   const characterIconPath =
