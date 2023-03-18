@@ -6,16 +6,18 @@ import {
 } from "bungie-api-ts/destiny2";
 import { DestinyItemCategoryHash } from "./consants";
 
+export type LoadoutItem = [DestinyItemResponse, DestinyInventoryItemDefinition];
+
 interface Loadout {
-  helmet: DestinyItemResponse;
-  gauntlets: DestinyItemResponse;
-  chest: DestinyItemResponse;
-  legs: DestinyItemResponse;
-  class: DestinyItemResponse;
-  kinetic: DestinyItemResponse;
-  energy: DestinyItemResponse;
-  power: DestinyItemResponse;
-  subclass: DestinyItemResponse;
+  helmet: LoadoutItem;
+  gauntlets: LoadoutItem;
+  chest: LoadoutItem;
+  legs: LoadoutItem;
+  class: LoadoutItem;
+  kinetic: LoadoutItem;
+  energy: LoadoutItem;
+  power: LoadoutItem;
+  subclass: LoadoutItem;
 }
 
 const getCharacterArmor = (
@@ -26,15 +28,15 @@ const getCharacterArmor = (
 
   switch (itemSubType) {
     case DestinyItemSubType.HelmetArmor:
-      return { helmet: item };
+      return { helmet: [item, tableItem] };
     case DestinyItemSubType.GauntletsArmor:
-      return { gauntlets: item };
+      return { gauntlets: [item, tableItem] };
     case DestinyItemSubType.ChestArmor:
-      return { chest: item };
+      return { chest: [item, tableItem] };
     case DestinyItemSubType.LegArmor:
-      return { legs: item };
+      return { legs: [item, tableItem] };
     case DestinyItemSubType.ClassArmor:
-      return { class: item };
+      return { class: [item, tableItem] };
     default:
       return null;
   }
@@ -49,13 +51,13 @@ const getCharacterWeapons = (
   if (!itemCategoryHashes) return null;
 
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.KineticWeapon))
-    return { kinetic: item };
+    return { kinetic: [item, tableItem] };
 
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.EnergyWeapon))
-    return { energy: item };
+    return { energy: [item, tableItem] };
 
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.PowerWeapon))
-    return { power: item };
+    return { power: [item, tableItem] };
 
   return null;
 };
@@ -91,7 +93,7 @@ export const createDestinyCharacterLoadout = (
               ...getCharacterWeapons(characterItem, tableItem),
             };
           case DestinyItemType.Subclass:
-            loadout = { ...loadout, subclass: characterItem };
+            loadout = { ...loadout, subclass: [characterItem, tableItem] };
           default:
             continue;
         }
