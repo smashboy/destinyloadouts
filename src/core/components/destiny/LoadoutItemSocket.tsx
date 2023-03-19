@@ -7,16 +7,18 @@ interface LoadoutItemSocketProps extends ItemSocketProps {
 }
 
 export const LoadoutItemSocket: React.FC<LoadoutItemSocketProps> = ({
-  item,
+  item: loadoutItem,
   ...props
 }) => {
-  if (!item) return <ItemSocket {...props} />;
+  if (!loadoutItem) return <ItemSocket {...props} />;
 
-  const [, inventoryItem] = item;
+  const { item } = loadoutItem;
+
+  const isMasterworked = item.instance.data?.energy?.energyCapacity === 10;
 
   return (
-    <ItemSocket {...props}>
-      <LoadoutItemIcon inventoryItem={inventoryItem} />
+    <ItemSocket isGoldBorder={isMasterworked} {...props}>
+      <LoadoutItemIcon item={loadoutItem} />
     </ItemSocket>
   );
 };

@@ -1,26 +1,39 @@
 import Image from "next/image";
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { LoadoutItem } from "@/core/bungie-api/types";
 
 interface LoadoutItemIconProps {
-  inventoryItem: DestinyInventoryItemDefinition;
+  item: LoadoutItem;
 }
 
 export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
-  inventoryItem: {
+  item: loadoutItem,
+}) => {
+  const { inventoryItem, overrideStyleInventoryItem } = loadoutItem!;
+
+  if (!inventoryItem) return null;
+
+  const {
     iconWatermark,
-    displayProperties: { hasIcon, icon },
-  },
-}) => (
-  <div className="relative rounded overflow-hidden w-full h-full">
-    <Image
-      src={`${bungieNetOrigin}/${iconWatermark}`}
-      alt="Loadout item icon watermark"
-      className="z-10"
-      fill
-    />
-    {hasIcon && (
-      <Image src={`${bungieNetOrigin}/${icon}`} alt="Loadout item icon" fill />
-    )}
-  </div>
-);
+    displayProperties: { icon, hasIcon },
+  } = inventoryItem;
+
+  const itemIcon = overrideStyleInventoryItem?.displayProperties?.icon || icon;
+
+  return (
+    <div className="relative rounded overflow-hidden w-full h-full">
+      {hasIcon && (
+        <Image
+          src={`${bungieNetOrigin}/${itemIcon}`}
+          alt="Loadout item icon"
+          fill
+        />
+      )}
+      <Image
+        src={`${bungieNetOrigin}/${iconWatermark}`}
+        alt="Loadout item icon watermark"
+        fill
+      />
+    </div>
+  );
+};

@@ -5,25 +5,73 @@ import {
   DestinyItemType,
 } from "bungie-api-ts/destiny2";
 import { DestinyItemCategoryHash } from "./consants";
-import { DestinyCharacterLoadout } from "./types";
+import { DestinyCharacterLoadout, LoadoutItem } from "./types";
 
 const getCharacterArmor = (
   item: DestinyItemResponse,
-  tableItem: DestinyInventoryItemDefinition
-) => {
+  tableItem: DestinyInventoryItemDefinition,
+  inventoryItemsTable: Record<number, DestinyInventoryItemDefinition>
+): Record<string, LoadoutItem> | null => {
   const { itemSubType } = tableItem;
+
+  const overrideStyleItemHash = item.item.data?.overrideStyleItemHash;
 
   switch (itemSubType) {
     case DestinyItemSubType.HelmetArmor:
-      return { helmet: [item, tableItem] };
+      return {
+        helmet: {
+          item,
+          inventoryItem: tableItem,
+          overrideStyleInventoryItem:
+            (overrideStyleItemHash &&
+              inventoryItemsTable[overrideStyleItemHash]) ||
+            null,
+        },
+      };
     case DestinyItemSubType.GauntletsArmor:
-      return { gauntlets: [item, tableItem] };
+      return {
+        gauntlets: {
+          item,
+          inventoryItem: tableItem,
+          overrideStyleInventoryItem:
+            (overrideStyleItemHash &&
+              inventoryItemsTable[overrideStyleItemHash]) ||
+            null,
+        },
+      };
     case DestinyItemSubType.ChestArmor:
-      return { chest: [item, tableItem] };
+      return {
+        chest: {
+          item,
+          inventoryItem: tableItem,
+          overrideStyleInventoryItem:
+            (overrideStyleItemHash &&
+              inventoryItemsTable[overrideStyleItemHash]) ||
+            null,
+        },
+      };
     case DestinyItemSubType.LegArmor:
-      return { legs: [item, tableItem] };
+      return {
+        legs: {
+          item,
+          inventoryItem: tableItem,
+          overrideStyleInventoryItem:
+            (overrideStyleItemHash &&
+              inventoryItemsTable[overrideStyleItemHash]) ||
+            null,
+        },
+      };
     case DestinyItemSubType.ClassArmor:
-      return { class: [item, tableItem] };
+      return {
+        class: {
+          item,
+          inventoryItem: tableItem,
+          overrideStyleInventoryItem:
+            (overrideStyleItemHash &&
+              inventoryItemsTable[overrideStyleItemHash]) ||
+            null,
+        },
+      };
     default:
       return null;
   }
@@ -31,20 +79,50 @@ const getCharacterArmor = (
 
 const getCharacterWeapons = (
   item: DestinyItemResponse,
-  tableItem: DestinyInventoryItemDefinition
-) => {
+  tableItem: DestinyInventoryItemDefinition,
+  inventoryItemsTable: Record<number, DestinyInventoryItemDefinition>
+): Record<string, LoadoutItem> | null => {
   const { itemCategoryHashes } = tableItem;
 
   if (!itemCategoryHashes) return null;
 
+  const overrideStyleItemHash = item.item.data?.overrideStyleItemHash;
+
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.KineticWeapon))
-    return { kinetic: [item, tableItem] };
+    return {
+      kinetic: {
+        item,
+        inventoryItem: tableItem,
+        overrideStyleInventoryItem:
+          (overrideStyleItemHash &&
+            inventoryItemsTable[overrideStyleItemHash]) ||
+          null,
+      },
+    };
 
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.EnergyWeapon))
-    return { energy: [item, tableItem] };
+    return {
+      energy: {
+        item,
+        inventoryItem: tableItem,
+        overrideStyleInventoryItem:
+          (overrideStyleItemHash &&
+            inventoryItemsTable[overrideStyleItemHash]) ||
+          null,
+      },
+    };
 
   if (itemCategoryHashes.includes(DestinyItemCategoryHash.PowerWeapon))
-    return { power: [item, tableItem] };
+    return {
+      power: {
+        item,
+        inventoryItem: tableItem,
+        overrideStyleInventoryItem:
+          (overrideStyleItemHash &&
+            inventoryItemsTable[overrideStyleItemHash]) ||
+          null,
+      },
+    };
 
   return null;
 };
@@ -74,15 +152,23 @@ export const createDestinyCharacterLoadout = (
           case DestinyItemType.Armor:
             loadout = {
               ...loadout,
-              ...getCharacterArmor(characterItem, tableItem),
+              ...getCharacterArmor(
+                characterItem,
+                tableItem,
+                inventoryItemsTable
+              ),
             };
           case DestinyItemType.Weapon:
             loadout = {
               ...loadout,
-              ...getCharacterWeapons(characterItem, tableItem),
+              ...getCharacterWeapons(
+                characterItem,
+                tableItem,
+                inventoryItemsTable
+              ),
             };
           case DestinyItemType.Subclass:
-            loadout = { ...loadout, subclass: [characterItem, tableItem] };
+            loadout = { ...loadout, subclass: characterItem };
           default:
             continue;
         }
