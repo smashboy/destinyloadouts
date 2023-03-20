@@ -83,7 +83,8 @@ export default async function SelectedLoadoutLayout({
       <ConsoleLog
         loadoutItems={loadoutItems}
         loadout={loadout}
-        wtfAreu={inventoryItems[2357297366]}
+        hash={400813042}
+        wtfAreu={inventoryItems[400813042]}
       />
       <LoadoutName loadoutIndex={loadoutIndex} loadoutNames={loadoutNames} />
       <CharacterSockets loadout={loadout} />

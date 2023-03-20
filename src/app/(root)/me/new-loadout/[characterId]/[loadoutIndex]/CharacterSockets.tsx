@@ -1,5 +1,6 @@
 import { DestinyCharacterLoadout } from "@/core/bungie-api/types";
-import { LoadoutItemSocket } from "@/core/components/destiny/LoadoutItemSocket";
+import { LoadoutArmorItem } from "@/core/components/destiny/LoadoutArmorItem";
+import { LoadoutWeaponItem } from "@/core/components/destiny/LoadoutWeaponItem";
 import { LoadoutInfoForm } from "./LoadoutInfoForm";
 
 interface CharacterSocketsProps {
@@ -18,45 +19,70 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     chest,
     legs,
     class: classItem,
+    inventoryItems,
   } = loadout;
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <LoadoutInfoForm />
+    <div className="grid grid-cols-2 gap-4">
+      {/* <LoadoutInfoForm /> */}
       <div className="flex flex-col space-y-4">
-        <LoadoutItemSocket
+        <LoadoutWeaponItem
           item={kinetic}
-          bgIconPath="/destiny-icons/weapons/kinetic.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/weapons/kinetic.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutWeaponItem
           item={energy}
-          bgIconPath="/destiny-icons/weapons/energy.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/weapons/energy.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutWeaponItem
           item={power}
-          bgIconPath="/destiny-icons/weapons/power.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/weapons/power.svg",
+          }}
         />
       </div>
       <div className="flex flex-col space-y-4">
-        <LoadoutItemSocket
+        <LoadoutArmorItem
           item={helmet}
-          bgIconPath="/destiny-icons/armor/helmet.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/armor/helmet.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutArmorItem
           item={gauntlets}
-          bgIconPath="/destiny-icons/armor/gloves.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/armor/gloves.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutArmorItem
           item={chest}
-          bgIconPath="/destiny-icons/armor/chest.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/armor/chest.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutArmorItem
           item={legs}
-          bgIconPath="/destiny-icons/armor/boots.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/armor/boots.svg",
+          }}
         />
-        <LoadoutItemSocket
+        <LoadoutArmorItem
           item={classItem}
-          bgIconPath="/destiny-icons/armor/class.svg"
+          inventoryItems={inventoryItems}
+          socketProps={{
+            bgIconPath: "/destiny-icons/armor/class.svg",
+          }}
         />
       </div>
     </div>

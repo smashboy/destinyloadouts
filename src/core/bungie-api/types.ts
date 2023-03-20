@@ -3,11 +3,12 @@ import {
   DestinyItemResponse,
 } from "bungie-api-ts/destiny2";
 
-export type LoadoutItem = {
-  item: DestinyItemResponse;
-  inventoryItem: DestinyInventoryItemDefinition;
-  overrideStyleInventoryItem: DestinyInventoryItemDefinition | null;
-} | null;
+export type LoadoutItem = DestinyItemResponse | null;
+
+export type LoadoutInventoryItemsList = Record<
+  number,
+  DestinyInventoryItemDefinition
+>;
 
 export interface DestinyCharacterLoadout {
   helmet: LoadoutItem;
@@ -19,4 +20,5 @@ export interface DestinyCharacterLoadout {
   energy: LoadoutItem;
   power: LoadoutItem;
   subclass: LoadoutItem;
+  inventoryItems: LoadoutInventoryItemsList;
 }

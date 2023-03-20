@@ -1,30 +1,39 @@
 import Image from "next/image";
 import { bungieNetOrigin } from "@/core/bungie-api/consants";
-import { LoadoutItem } from "@/core/bungie-api/types";
+import {
+  LoadoutInventoryItemsList,
+  LoadoutItem,
+} from "@/core/bungie-api/types";
 
 interface LoadoutItemIconProps {
   item: LoadoutItem;
+  inventoryItems: LoadoutInventoryItemsList;
 }
 
 export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
-  item: loadoutItem,
+  item,
+  inventoryItems,
 }) => {
-  const { inventoryItem, overrideStyleInventoryItem } = loadoutItem!;
+  const itemHash = item?.item?.data?.itemHash;
+  const overrideStyleItemHash = item?.item?.data?.overrideStyleItemHash;
+
+  const inventoryItem = inventoryItems[itemHash!];
+  const overrideInventoryItem = inventoryItems[overrideStyleItemHash!];
 
   if (!inventoryItem) return null;
 
   const {
     iconWatermark,
-    displayProperties: { icon, hasIcon },
+    displayProperties: { hasIcon, icon: initialIcon },
   } = inventoryItem;
 
-  const itemIcon = overrideStyleInventoryItem?.displayProperties?.icon || icon;
+  const icon = overrideInventoryItem?.displayProperties?.icon || initialIcon;
 
   return (
     <div className="relative rounded overflow-hidden w-full h-full">
       {hasIcon && (
         <Image
-          src={`${bungieNetOrigin}/${itemIcon}`}
+          src={`${bungieNetOrigin}/${icon}`}
           alt="Loadout item icon"
           fill
         />
