@@ -1,9 +1,12 @@
 import {
   DestinyInventoryItemDefinition,
+  DestinyLoadoutItemComponent,
   DestinyItemResponse,
 } from "bungie-api-ts/destiny2";
 
-export type LoadoutItem = DestinyItemResponse | null;
+export type LoadoutItem =
+  | [DestinyLoadoutItemComponent, DestinyItemResponse]
+  | null;
 
 export type LoadoutInventoryItemsList = Record<
   number,

@@ -1,8 +1,14 @@
 import {
+  BungieMembershipType,
   DestinyInventoryItemDefinition,
   DestinyItemResponse,
   DestinyItemSubType,
   DestinyItemType,
+  DestinyComponentType,
+  DestinyLoadoutComponent,
+  DestinyLoadoutItemComponent,
+  getItem,
+  HttpClientConfig,
 } from "bungie-api-ts/destiny2";
 import { DestinyItemCategoryHash } from "./consants";
 import {
@@ -11,9 +17,7 @@ import {
   LoadoutInventoryItemsList,
 } from "./types";
 
-type GetLoadoutItemReturnType =
-  | [Record<string, LoadoutItem>, LoadoutInventoryItemsList]
-  | null;
+type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
 
 const getInitialInventoryItems = (
   item: DestinyItemResponse,
@@ -36,136 +40,118 @@ const getInitialInventoryItems = (
 };
 
 const getCharacterArmor = (
+  loadoutItem: DestinyLoadoutItemComponent,
   item: DestinyItemResponse,
-  tableItem: DestinyInventoryItemDefinition,
-  inventoryItemsTable: LoadoutInventoryItemsList
+  tableItem: DestinyInventoryItemDefinition
 ): GetLoadoutItemReturnType => {
   const { itemSubType } = tableItem;
 
-  const socketItems = item.sockets?.data?.sockets || [];
-
-  const inventoryItems = getInitialInventoryItems(
-    item,
-    tableItem,
-    inventoryItemsTable
-  );
-
-  for (const socketItem of socketItems) {
-    const { isEnabled, isVisible, plugHash } = socketItem;
-    if (isEnabled && isVisible && plugHash)
-      inventoryItems[plugHash] = inventoryItemsTable[plugHash];
-  }
-
   switch (itemSubType) {
     case DestinyItemSubType.HelmetArmor:
-      return [{ helmet: item }, inventoryItems];
+      return { helmet: [loadoutItem, item] };
     case DestinyItemSubType.GauntletsArmor:
-      return [{ gauntlets: item }, inventoryItems];
+      return { gauntlets: [loadoutItem, item] };
     case DestinyItemSubType.ChestArmor:
-      return [{ chest: item }, inventoryItems];
+      return { chest: [loadoutItem, item] };
     case DestinyItemSubType.LegArmor:
-      return [{ legs: item }, inventoryItems];
+      return { legs: [loadoutItem, item] };
     case DestinyItemSubType.ClassArmor:
-      return [{ class: item }, inventoryItems];
+      return { class: [loadoutItem, item] };
     default:
       return null;
   }
 };
 
 const getCharacterWeapons = (
+  loadoutItem: DestinyLoadoutItemComponent,
   item: DestinyItemResponse,
-  tableItem: DestinyInventoryItemDefinition,
-  inventoryItemsTable: LoadoutInventoryItemsList
+  tableItem: DestinyInventoryItemDefinition
 ): GetLoadoutItemReturnType => {
   const { itemCategoryHashes } = tableItem;
 
-  if (!itemCategoryHashes) return null;
+  if (itemCategoryHashes?.includes(DestinyItemCategoryHash.KineticWeapon))
+    return { kinetic: [loadoutItem, item] };
 
-  const inventoryItems = getInitialInventoryItems(
-    item,
-    tableItem,
-    inventoryItemsTable
-  );
+  if (itemCategoryHashes?.includes(DestinyItemCategoryHash.EnergyWeapon))
+    return { energy: [loadoutItem, item] };
 
-  if (itemCategoryHashes.includes(DestinyItemCategoryHash.KineticWeapon))
-    return [{ kinetic: item }, inventoryItems];
-
-  if (itemCategoryHashes.includes(DestinyItemCategoryHash.EnergyWeapon))
-    return [{ energy: item }, inventoryItems];
-
-  if (itemCategoryHashes.includes(DestinyItemCategoryHash.PowerWeapon))
-    return [{ power: item }, inventoryItems];
+  if (itemCategoryHashes?.includes(DestinyItemCategoryHash.PowerWeapon))
+    return { power: [loadoutItem, item] };
 
   return null;
 };
 
-export const createDestinyCharacterLoadout = (
-  characterItems: DestinyItemResponse[],
-  inventoryItemsTable: LoadoutInventoryItemsList
-) => {
+export const createDestinyCharacterLoadout = async (
+  loadoutData: DestinyLoadoutComponent,
+  membershipId: string,
+  membershipType: BungieMembershipType,
+  fetchHelper: (config: HttpClientConfig) => Promise<any>,
+  inventoryTable: LoadoutInventoryItemsList
+): Promise<DestinyCharacterLoadout> => {
+  const { items: loadoutItems } = loadoutData;
+
+  const items = (
+    await Promise.all(
+      loadoutItems.map(({ itemInstanceId }) =>
+        getItem(fetchHelper, {
+          membershipType,
+          itemInstanceId,
+          components: [
+            DestinyComponentType.ItemInstances,
+            DestinyComponentType.ItemCommonData,
+            // DestinyComponentType.ItemSockets,
+            // DestinyComponentType.ItemStats,
+          ],
+          destinyMembershipId: membershipId,
+        })
+      )
+    )
+  ).map((res) => res.Response);
+
   let loadout = {
     inventoryItems: {},
   };
 
-  for (const characterItem of characterItems) {
-    if (!characterItem) continue;
+  for (const loadoutItem of loadoutItems) {
+    const { itemInstanceId, plugItemHashes } = loadoutItem;
+    const itemInstance = items.find(
+      (item) => item?.item?.data?.itemInstanceId === itemInstanceId
+    );
 
-    const {
-      item: { data },
-    } = characterItem;
+    if (!itemInstance) continue;
 
-    if (data) {
-      const { itemHash } = data;
+    const { itemHash } = itemInstance.item.data!;
 
-      const tableItem = inventoryItemsTable[itemHash];
+    const tableItem = inventoryTable[itemHash];
 
-      if (tableItem) {
-        const { itemType } = tableItem;
+    if (!tableItem) continue;
 
-        switch (itemType) {
-          case DestinyItemType.Armor: {
-            const characterArmor = getCharacterArmor(
-              characterItem,
-              tableItem,
-              inventoryItemsTable
-            );
+    const { itemType } = tableItem;
 
-            if (!characterArmor) continue;
+    loadout.inventoryItems[tableItem.hash] = tableItem;
 
-            const [armor, inventoryItems] = characterArmor;
+    for (const hash of plugItemHashes) {
+      // const { isEnabled, isVisible, plugHash } = socketItem;
+      // if (isEnabled && isVisible && plugHash)
 
-            const { inventoryItems: prevInventoryItems } = loadout;
+      loadout.inventoryItems[hash] = inventoryTable[hash];
+    }
 
-            loadout = {
-              ...loadout,
-              ...armor,
-              inventoryItems: { ...prevInventoryItems, ...inventoryItems },
-            };
-          }
-          case DestinyItemType.Weapon: {
-            const characterWeapons = getCharacterWeapons(
-              characterItem,
-              tableItem,
-              inventoryItemsTable
-            );
-
-            if (!characterWeapons) continue;
-
-            const [weapons, inventoryItems] = characterWeapons;
-            const { inventoryItems: prevInventoryItems } = loadout;
-
-            loadout = {
-              ...loadout,
-              ...weapons,
-              inventoryItems: { ...prevInventoryItems, ...inventoryItems },
-            };
-          }
-          case DestinyItemType.Subclass:
-            loadout = { ...loadout, subclass: characterItem };
-          default:
-            continue;
-        }
-      }
+    switch (itemType) {
+      case DestinyItemType.Armor:
+        loadout = {
+          ...loadout,
+          ...getCharacterArmor(loadoutItem, itemInstance, tableItem),
+        };
+      case DestinyItemType.Weapon:
+        loadout = {
+          ...loadout,
+          ...getCharacterWeapons(loadoutItem, itemInstance, tableItem),
+        };
+      case DestinyItemType.Subclass:
+        continue;
+      default:
+        continue;
     }
   }
 

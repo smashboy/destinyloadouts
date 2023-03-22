@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import {
   DestinyComponentType,
-  getItem,
+  DestinyItemType,
   getProfile,
 } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
@@ -10,9 +10,9 @@ import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 import { CharacterSockets } from "./CharacterSockets";
 import { LoadoutName } from "./LoadoutName";
 import { getSingleMembershipData } from "@/core/bungie-api/user";
-import { ConsoleLog } from "@/core/components/ConsoleLog";
 import { getDestinyManifestTables } from "@/core/bungie-api/getManifestTables";
 import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
+import { ConsoleLog } from "@/core/components/ConsoleLog";
 
 interface SelectedLoadoutLayoutProps {
   children: React.ReactNode;
@@ -48,26 +48,6 @@ export default async function SelectedLoadoutLayout({
 
   const selectedLoadout = filledLoadouts[loadoutIndex as unknown as number];
 
-  const loadoutItems = (
-    await Promise.all(
-      selectedLoadout.items.map(({ itemInstanceId }) =>
-        getItem(fetchHelper, {
-          membershipType,
-          itemInstanceId,
-          components: [
-            DestinyComponentType.ItemInstances,
-            DestinyComponentType.ItemCommonData,
-            DestinyComponentType.ItemStats,
-            DestinyComponentType.ItemSockets,
-            DestinyComponentType.ItemPerks,
-            DestinyComponentType.ItemReusablePlugs,
-          ],
-          destinyMembershipId: membershipId,
-        })
-      )
-    )
-  ).map((res) => res.Response);
-
   const {
     DestinyLoadoutNameDefinition: loadoutNames,
     DestinyInventoryItemDefinition: inventoryItems,
@@ -76,15 +56,26 @@ export default async function SelectedLoadoutLayout({
     "DestinyInventoryItemDefinition",
   ]);
 
-  const loadout = createDestinyCharacterLoadout(loadoutItems, inventoryItems);
+  const loadout = await createDestinyCharacterLoadout(
+    selectedLoadout,
+    membershipId,
+    membershipType,
+    fetchHelper,
+    inventoryItems
+  );
 
   return (
     <div className="flex flex-col space-y-2">
       <ConsoleLog
-        loadoutItems={loadoutItems}
         loadout={loadout}
-        hash={400813042}
-        wtfAreu={inventoryItems[400813042]}
+        fuckinloadoutitems={Object.values(loadout.inventoryItems).filter(
+          (item) => item?.itemType === DestinyItemType.Armor
+        )}
+        fuckinloadoutplugs={selectedLoadout.items.map((item) =>
+          item.plugItemHashes
+            .map((hash) => inventoryItems[hash])
+            .filter(Boolean)
+        )}
       />
       <LoadoutName loadoutIndex={loadoutIndex} loadoutNames={loadoutNames} />
       <CharacterSockets loadout={loadout} />

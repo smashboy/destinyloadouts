@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DestinyManifest {
+  version                        String                          @unique
+  jsonWorldComponentContentPaths DestinyManifestTablesByLocale[]
+}
+
+model DestinyManifestTablesByLocale {
+  locale          String
+  tables          DestinyManifestTable[]
+  manifest        DestinyManifest        @relation(fields: [manifestVersion], references: [version])
+  manifestVersion String
+
+  @@unique([locale, manifestVersion])
+}
+
+model DestinyManifestTable {
+  name            String
+  components      DestinyManifestTableComponent[]
+  locale          DestinyManifestTablesByLocale   @relation(fields: [localeName, manifestVersion], references: [locale, manifestVersion])
+  localeName      String
+  manifestVersion String
+
+  @@unique([name, localeName, manifestVersion])
+}
+
+model DestinyManifestTableComponent {
+  hashId          BigInt
+  content         Json
+  table           DestinyManifestTable @relation(fields: [tableName, localeName, manifestVersion], references: [name, localeName, manifestVersion])
+  tableName       String
+  localeName      String
+  manifestVersion String
+
+  @@unique([hashId, tableName, localeName, manifestVersion])
+}
