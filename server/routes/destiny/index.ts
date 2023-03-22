@@ -1,0 +1,1 @@
+export { destinyRoutes } from "./destiny";

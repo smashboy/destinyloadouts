@@ -32,7 +32,7 @@ model DestinyManifestTable {
 }
 
 model DestinyManifestTableComponent {
-  hashId          BigInt
+  hashId          String
   content         Json
   table           DestinyManifestTable @relation(fields: [tableName, localeName, manifestVersion], references: [name, localeName, manifestVersion])
   tableName       String

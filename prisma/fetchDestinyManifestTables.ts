@@ -67,7 +67,7 @@ const run = async () => {
         Object.entries(list).map(([hashId, item]) =>
           prisma.destinyManifestTableComponent.create({
             data: {
-              hashId: Number(hashId),
+              hashId,
               content: item,
               table: {
                 connect: {

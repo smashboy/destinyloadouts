@@ -19,26 +19,6 @@ import {
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
 
-const getInitialInventoryItems = (
-  item: DestinyItemResponse,
-  tableItem: DestinyInventoryItemDefinition,
-  inventoryItemsTable: LoadoutInventoryItemsList
-) => {
-  const {
-    item: { data },
-  } = item;
-  const { itemHash } = data!;
-
-  const overrideStyleItemHash = item.item.data?.overrideStyleItemHash;
-
-  return {
-    [itemHash]: tableItem,
-    ...(overrideStyleItemHash && {
-      [overrideStyleItemHash]: inventoryItemsTable[overrideStyleItemHash],
-    }),
-  };
-};
-
 const getCharacterArmor = (
   loadoutItem: DestinyLoadoutItemComponent,
   item: DestinyItemResponse,

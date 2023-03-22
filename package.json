@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:proxy": "local-ssl-proxy --source 3001 --target 3000",
+    "dev:app": "next dev",
+    "dev:app-proxy": "local-ssl-proxy --source 3001 --target 3000",
+    "dev:server": "dotenv -e .env.local -- tsx watch server --tsconfig ./tsconfig.server.json",
     "db:docker": "docker compose up -d",
     "db:migrate-dev": "dotenv -e .env.local -- npx prisma migrate dev",
     "db:manifest": "dotenv -e .env.local -- tsx ./prisma/fetchDestinyManifestTables.ts",
@@ -16,18 +17,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fastify/cors": "^8.2.1",
     "@prisma/client": "^4.11.0",
     "@radix-ui/react-avatar": "^1.0.2",
     "@radix-ui/react-label": "^2.0.1",
+    "@trpc/client": "^10.17.0",
+    "@trpc/server": "^10.17.0",
     "bungie-api-ts": "^4.22.2",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
+    "fastify": "^4.15.0",
     "lucide-react": "^0.125.0",
     "next": "13.2.4",
     "next-auth": "^4.20.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tailwind-merge": "^1.10.0"
+    "superjson": "^1.12.2",
+    "tailwind-merge": "^1.10.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/node": "18.15.0",
