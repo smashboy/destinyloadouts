@@ -23,11 +23,9 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 }) => {
   if (!item) return null;
 
-  const [loadoutItem, itemInstance] = item;
+  const [, plugItemHashes] = item;
 
-  const itemHash = itemInstance.item.data?.itemHash;
-
-  const sockets = loadoutItem.plugItemHashes
+  const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])
     .filter(Boolean);
 
@@ -51,7 +49,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
   )[0];
 
   return (
-    <div className="flex flex-wrap space-x-4 items-center justify-center">
+    <div className="flex flex-wrap space-x-4 items-center">
       <div className="mr-6">
         <SubclassSocket super={subclassSuper} />
       </div>

@@ -25,15 +25,17 @@ const getCharacterArmor = (
 
   switch (itemSubType) {
     case DestinyItemSubType.HelmetArmor:
-      return { helmet: [loadoutItem, item] };
+      return { helmet: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
     case DestinyItemSubType.GauntletsArmor:
-      return { gauntlets: [loadoutItem, item] };
+      return {
+        gauntlets: [item.item.data!.itemHash, loadoutItem.plugItemHashes],
+      };
     case DestinyItemSubType.ChestArmor:
-      return { chest: [loadoutItem, item] };
+      return { chest: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
     case DestinyItemSubType.LegArmor:
-      return { legs: [loadoutItem, item] };
+      return { legs: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
     case DestinyItemSubType.ClassArmor:
-      return { class: [loadoutItem, item] };
+      return { class: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
     default:
       return null;
   }
@@ -47,13 +49,13 @@ const getCharacterWeapons = (
   const { itemCategoryHashes } = tableItem;
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.KineticWeapon))
-    return { kinetic: [loadoutItem, item] };
+    return { kinetic: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.EnergyWeapon))
-    return { energy: [loadoutItem, item] };
+    return { energy: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.PowerWeapon))
-    return { power: [loadoutItem, item] };
+    return { power: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
 
   return null;
 };
@@ -116,7 +118,7 @@ export const createDestinyCharacterLoadout = async (
   };
 
   for (const loadoutItem of loadoutItems) {
-    const { itemInstanceId } = loadoutItem;
+    const { itemInstanceId, plugItemHashes } = loadoutItem;
     const itemInstance = items.find(
       (item) => item?.item?.data?.itemInstanceId === itemInstanceId
     );
@@ -145,7 +147,7 @@ export const createDestinyCharacterLoadout = async (
       case DestinyItemType.Subclass:
         loadout = {
           ...loadout,
-          subclass: [loadoutItem, itemInstance],
+          subclass: [itemHash, plugItemHashes],
         };
       default:
         continue;

@@ -9,7 +9,6 @@ import {
   DestinyItemType,
   DestinyInventoryItemDefinition,
 } from "bungie-api-ts/destiny2";
-import { ConsoleLog } from "../ConsoleLog";
 import { getDestinyItemActiveWatermarkIcon } from "@/core/bungie-api/utils";
 
 interface LoadoutItemIconProps {
@@ -46,8 +45,7 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
   item,
   inventoryItems,
 }) => {
-  const [{ plugItemHashes }, itemInstance] = item!;
-  const itemHash = itemInstance.item.data?.itemHash;
+  const [itemHash, plugItemHashes] = item!;
   const overrideStyleItem = getStyleItem(plugItemHashes, inventoryItems);
 
   const inventoryItem = inventoryItems[itemHash!];

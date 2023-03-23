@@ -26,11 +26,12 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
   } = loadout;
 
   return (
-    <div className="grid grid-cols-1 gap-4">
-      <TypographyLarge>Subclass</TypographyLarge>
-      <LoadoutSubclassItem item={subclass} inventoryItems={inventoryItems} />
-      <div className="grid grid-cols-2 gap-4">
-        {/* <LoadoutInfoForm /> */}
+    <div className="grid grid-cols-2 gap-10">
+      <LoadoutInfoForm />
+      <div className="grid grid-cols-1 gap-4">
+        <TypographyLarge>Subclass</TypographyLarge>
+        <LoadoutSubclassItem item={subclass} inventoryItems={inventoryItems} />
+
         <div className="flex flex-col space-y-4">
           <TypographyLarge>Weapons</TypographyLarge>
           <LoadoutWeaponItem

@@ -50,9 +50,9 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
 }) => {
   if (!item) return <ItemSocket {...socketProps} />;
 
-  const [loadoutItem] = item;
+  const [, plugItemHashes] = item;
 
-  const sockets = getSockets(loadoutItem.plugItemHashes, inventoryItems);
+  const sockets = getSockets(plugItemHashes, inventoryItems);
 
   const modsSockets = sockets.filter((socket) => socket.plug?.energyCost);
   const energyUsed = modsSockets.reduce(

@@ -19,9 +19,9 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
 }) => {
   if (!item) return <ItemSocket {...socketProps} />;
 
-  const [loadoutItem] = item;
+  const [, plugItemHashes] = item;
 
-  const sockets = loadoutItem.plugItemHashes
+  const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])
     .filter((item) => item && item.plug?.plugCategoryHash !== 2947756142);
 
