@@ -1,16 +1,10 @@
 import { notFound } from "next/navigation";
-import {
-  DestinyComponentType,
-  DestinyLoadoutNameDefinition,
-  getProfile,
-} from "bungie-api-ts/destiny2";
+import { DestinyComponentType, getProfile } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
 import { getAuthSessionServer } from "@/core/auth/utils";
 import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 import { getSingleMembershipData } from "@/core/bungie-api/user";
 import { ConsoleLog } from "@/core/components/ConsoleLog";
-import { trpcClient } from "@/core/trpc/client";
-import { TypographyLarge } from "@/core/components/typography";
 import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
 import { CharacterSockets } from "./CharacterSockets";
 
@@ -48,12 +42,12 @@ export default async function SelectedLoadoutLayout({
 
   const selectedLoadout = filledLoadouts[loadoutIndex as unknown as number];
 
-  const loadoutNameComponent =
-    await trpcClient.destiny.manifest.latest.getTableComponent.query({
-      tableName: "DestinyLoadoutNameDefinition",
-      hashId: selectedLoadout.nameHash.toString(),
-      locale: "en",
-    });
+  // const loadoutNameComponent =
+  //   await trpcClient.destiny.manifest.latest.getTableComponent.query({
+  //     tableName: "DestinyLoadoutNameDefinition",
+  //     hashId: selectedLoadout.nameHash.toString(),
+  //     locale: "en",
+  //   });
 
   const loadout = await createDestinyCharacterLoadout(
     selectedLoadout,
@@ -65,7 +59,7 @@ export default async function SelectedLoadoutLayout({
   return (
     <div className="flex flex-col space-y-2">
       <ConsoleLog loadout={loadout} />
-      {loadoutNameComponent && (
+      {/* {loadoutNameComponent && (
         <TypographyLarge>
           {
             (
@@ -73,7 +67,7 @@ export default async function SelectedLoadoutLayout({
             ).name
           }
         </TypographyLarge>
-      )}
+      )} */}
       <CharacterSockets loadout={loadout} />
       {children}
     </div>

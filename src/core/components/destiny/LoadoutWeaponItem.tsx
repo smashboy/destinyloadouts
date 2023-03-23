@@ -28,9 +28,9 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
 
   return (
     <div className="flex space-x-4">
-      <ConsoleLog sockets={sockets} />
+      {/* <ConsoleLog sockets={sockets} /> */}
       <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
-      <div className="flex flex-wrap space-x-4">
+      <div className="grid grid-cols-6 gap-4">
         {sockets.map((socket, index) => (
           <ModSocket key={index} socket={socket} />
         ))}

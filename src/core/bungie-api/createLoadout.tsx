@@ -143,7 +143,10 @@ export const createDestinyCharacterLoadout = async (
           ...getCharacterWeapons(loadoutItem, itemInstance, tableItem),
         };
       case DestinyItemType.Subclass:
-        continue;
+        loadout = {
+          ...loadout,
+          subclass: [loadoutItem, itemInstance],
+        };
       default:
         continue;
     }

@@ -12,7 +12,6 @@ interface ModSocketProps {
 export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
   const {
     displayProperties: { icon: iconPath },
-    iconWatermark,
   } = socket;
 
   const watermarkIcon = getDestinyItemActiveWatermarkIcon(socket);
