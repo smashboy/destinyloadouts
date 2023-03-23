@@ -10,12 +10,9 @@ import {
   getItem,
   HttpClientConfig,
 } from "bungie-api-ts/destiny2";
+import { trpcClient } from "../trpc/client";
 import { DestinyItemCategoryHash } from "./consants";
-import {
-  DestinyCharacterLoadout,
-  LoadoutItem,
-  LoadoutInventoryItemsList,
-} from "./types";
+import { DestinyCharacterLoadout, LoadoutItem } from "./types";
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
 
@@ -65,8 +62,7 @@ export const createDestinyCharacterLoadout = async (
   loadoutData: DestinyLoadoutComponent,
   membershipId: string,
   membershipType: BungieMembershipType,
-  fetchHelper: (config: HttpClientConfig) => Promise<any>,
-  inventoryTable: LoadoutInventoryItemsList
+  fetchHelper: (config: HttpClientConfig) => Promise<any>
 ): Promise<DestinyCharacterLoadout> => {
   const { items: loadoutItems } = loadoutData;
 
@@ -88,12 +84,39 @@ export const createDestinyCharacterLoadout = async (
     )
   ).map((res) => res.Response);
 
+  const inventoryItemHashes: string[] = [];
+
+  for (const item of items) {
+    if (item?.item?.data) {
+      const { itemHash } = item.item.data;
+      inventoryItemHashes.push(itemHash.toString());
+    }
+  }
+
+  inventoryItemHashes.push(
+    ...loadoutItems
+      .map((item) => item.plugItemHashes.map((hash) => hash.toString()))
+      .flat()
+  );
+
+  const inventoryItems =
+    await trpcClient.destiny.manifest.latest.getTableComponents.query({
+      tableName: "DestinyInventoryItemDefinition",
+      locale: "en",
+      hashIds: [...new Set(inventoryItemHashes)],
+    });
+
   let loadout = {
-    inventoryItems: {},
+    inventoryItems: inventoryItems.reduce((acc, item) => {
+      const inventoryItem =
+        item.content as unknown as DestinyInventoryItemDefinition;
+
+      return { ...acc, [inventoryItem.hash]: inventoryItem };
+    }, {}),
   };
 
   for (const loadoutItem of loadoutItems) {
-    const { itemInstanceId, plugItemHashes } = loadoutItem;
+    const { itemInstanceId } = loadoutItem;
     const itemInstance = items.find(
       (item) => item?.item?.data?.itemInstanceId === itemInstanceId
     );
@@ -102,20 +125,11 @@ export const createDestinyCharacterLoadout = async (
 
     const { itemHash } = itemInstance.item.data!;
 
-    const tableItem = inventoryTable[itemHash];
+    const tableItem = loadout.inventoryItems[itemHash];
 
     if (!tableItem) continue;
 
     const { itemType } = tableItem;
-
-    loadout.inventoryItems[tableItem.hash] = tableItem;
-
-    for (const hash of plugItemHashes) {
-      // const { isEnabled, isVisible, plugHash } = socketItem;
-      // if (isEnabled && isVisible && plugHash)
-
-      loadout.inventoryItems[hash] = inventoryTable[hash];
-    }
 
     switch (itemType) {
       case DestinyItemType.Armor:

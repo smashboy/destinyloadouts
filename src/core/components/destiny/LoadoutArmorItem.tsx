@@ -7,6 +7,8 @@ import {
   DestinyItemSubType,
   DestinyItemType,
 } from "bungie-api-ts/destiny2";
+import { ConsoleLog } from "../ConsoleLog";
+import { ArmorEnergy } from "./ArmorEnergy";
 import { ItemSocket, ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
 import { ModSocket } from "./ModSocket";
@@ -53,13 +55,23 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
 
   const sockets = getSockets(loadoutItem.plugItemHashes, inventoryItems);
 
+  const modsSockets = sockets.filter((socket) => socket.plug?.energyCost);
+  const energyUsed = modsSockets.reduce(
+    (acc, socket) => (acc += socket.plug?.energyCost?.energyCost || 0),
+    0
+  );
+
   return (
     <div className="flex space-x-4">
+      <ConsoleLog modsSockets={modsSockets} />
       <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
-      <div className="flex flex-wrap space-x-4">
-        {sockets.map((socket, index) => (
-          <ModSocket key={index} socket={socket} />
-        ))}
+      <div className="flex flex-col space-y-4">
+        <div className="flex flex-wrap space-x-4">
+          {sockets.map((socket, index) => (
+            <ModSocket key={index} socket={socket} />
+          ))}
+        </div>
+        <ArmorEnergy energyUsed={energyUsed} />
       </div>
     </div>
   );

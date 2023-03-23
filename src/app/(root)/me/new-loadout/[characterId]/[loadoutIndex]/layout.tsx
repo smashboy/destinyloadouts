@@ -1,19 +1,18 @@
 import { notFound } from "next/navigation";
 import {
   DestinyComponentType,
-  DestinyItemType,
-  DestinyInventoryItemDefinition,
   DestinyLoadoutNameDefinition,
   getProfile,
 } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
 import { getAuthSessionServer } from "@/core/auth/utils";
 import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
-
 import { getSingleMembershipData } from "@/core/bungie-api/user";
 import { ConsoleLog } from "@/core/components/ConsoleLog";
 import { trpcClient } from "@/core/trpc/client";
 import { TypographyLarge } from "@/core/components/typography";
+import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
+import { CharacterSockets } from "./CharacterSockets";
 
 interface SelectedLoadoutLayoutProps {
   children: React.ReactNode;
@@ -56,33 +55,16 @@ export default async function SelectedLoadoutLayout({
       locale: "en",
     });
 
-  // const loadout = await createDestinyCharacterLoadout(
-  //   selectedLoadout,
-  //   membershipId,
-  //   membershipType,
-  //   fetchHelper,
-  //   inventoryItems
-  // );
-
-  const itemsTest =
-    await trpcClient.destiny.manifest.latest.getTableComponents.query({
-      tableName: "DestinyInventoryItemDefinition",
-      locale: "en",
-      hashIds: selectedLoadout.items
-        .map((item) => item.plugItemHashes.map((hash) => hash.toString()))
-        .flat(),
-    });
+  const loadout = await createDestinyCharacterLoadout(
+    selectedLoadout,
+    membershipId,
+    membershipType,
+    fetchHelper
+  );
 
   return (
     <div className="flex flex-col space-y-2">
-      <ConsoleLog
-        loadoutNameComponent={loadoutNameComponent}
-        itemsTest={itemsTest.filter(
-          (item) =>
-            (item.content as unknown as DestinyInventoryItemDefinition)
-              .itemType === DestinyItemType.Armor
-        )}
-      />
+      <ConsoleLog loadout={loadout} />
       {loadoutNameComponent && (
         <TypographyLarge>
           {
@@ -92,7 +74,7 @@ export default async function SelectedLoadoutLayout({
           }
         </TypographyLarge>
       )}
-      {/* <CharacterSockets loadout={loadout} /> */}
+      <CharacterSockets loadout={loadout} />
       {children}
     </div>
   );

@@ -15,12 +15,12 @@ export const LoadoutItemSocket: React.FC<LoadoutItemSocketProps> = ({
   inventoryItems,
   ...props
 }) => {
-  const [, itemInstance] = item!;
-  const isMasterworked =
-    itemInstance.instance.data?.energy?.energyCapacity === 10;
+  // const [, itemInstance] = item!;
+  // const isMasterworked =
+  //   itemInstance.instance.data?.energy?.energyCapacity === 10;
 
   return (
-    <ItemSocket isGoldBorder={isMasterworked} {...props}>
+    <ItemSocket {...props}>
       <LoadoutItemIcon item={item} inventoryItems={inventoryItems} />
     </ItemSocket>
   );
