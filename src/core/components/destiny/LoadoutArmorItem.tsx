@@ -7,7 +7,6 @@ import {
   DestinyItemSubType,
   DestinyItemType,
 } from "bungie-api-ts/destiny2";
-import { ConsoleLog } from "../ConsoleLog";
 import { ArmorEnergy } from "./ArmorEnergy";
 import { ItemSocket, ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
@@ -32,7 +31,7 @@ const getSockets = (
       inventoryItem &&
       (inventoryItem.itemType === DestinyItemType.Armor ||
         (inventoryItem.itemType === DestinyItemType.Mod &&
-          inventoryItem.plug?.plugCategoryIdentifier !== "intrinsics" &&
+          inventoryItem.plug?.plugCategoryHash !== 1744546145 &&
           (inventoryItem.itemSubType === DestinyItemSubType.Ornament ||
             inventoryItem.itemSubType === DestinyItemSubType.None ||
             inventoryItem.itemSubType === DestinyItemSubType.Shader)))
@@ -63,7 +62,6 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
 
   return (
     <div className="flex space-x-4">
-      <ConsoleLog modsSockets={modsSockets} />
       <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
       <div className="flex flex-col space-y-4">
         <div className="flex flex-wrap space-x-4">
