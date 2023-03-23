@@ -2,7 +2,6 @@ import {
   LoadoutInventoryItemsList,
   LoadoutItem,
 } from "@/core/bungie-api/types";
-import { ConsoleLog } from "../ConsoleLog";
 import { ItemSocket, ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
 import { ModSocket } from "./ModSocket";
