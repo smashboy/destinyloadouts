@@ -11,6 +11,8 @@ interface NewLoadoutLaoutProps {
   children: React.ReactNode;
 }
 
+export const revalidate = 0;
+
 export default async function NewLoadoutLaout({
   children,
 }: NewLoadoutLaoutProps) {

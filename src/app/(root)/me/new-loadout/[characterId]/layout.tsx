@@ -13,6 +13,8 @@ interface CharacterLoadoutSelectorLayoutProps {
   params: { characterId: string };
 }
 
+export const revalidate = 0;
+
 export default async function CharacterLoadoutSelectorLayout({
   children,
   params: { characterId },

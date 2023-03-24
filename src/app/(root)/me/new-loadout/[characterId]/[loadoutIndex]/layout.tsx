@@ -13,6 +13,8 @@ interface SelectedLoadoutLayoutProps {
   params: { loadoutIndex: string; characterId: string };
 }
 
+export const revalidate = 0;
+
 export default async function SelectedLoadoutLayout({
   children,
   params: { loadoutIndex, characterId },
