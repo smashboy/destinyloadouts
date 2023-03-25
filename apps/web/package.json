@@ -1,0 +1,40 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:app": "next dev",
+    "dev:app-proxy": "local-ssl-proxy --source 3001 --target 3000",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.0.2",
+    "@radix-ui/react-label": "^2.0.1",
+    "@trpc/client": "^10.17.0",
+    "bungie-api-ts": "^4.22.2",
+    "class-variance-authority": "^0.4.0",
+    "clsx": "^1.2.1",
+    "lucide-react": "^0.125.0",
+    "next": "13.2.4",
+    "next-auth": "^4.20.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwind-merge": "^1.10.0",
+    "zod": "^3.21.4",
+    "@services/destiny-manifest": "*",
+    "@destiny/shared": "*"
+  },
+  "devDependencies": {
+    "@types/node": "18.15.0",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "^10.4.14",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "local-ssl-proxy": "^2.0.5",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
+    "typescript": "4.9.5"
+  }
+}

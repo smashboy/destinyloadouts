@@ -1,11 +1,11 @@
 import * as dotenv from "dotenv";
-import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
 import {
   DestinyManifestLanguage,
   getDestinyManifest,
   getDestinyManifestSlice,
 } from "bungie-api-ts/destiny2";
-import { destinyManifestTableNames } from "@/core/bungie-api/consants";
+import { bungieApiFetchHelper } from "@destiny/shared/fetchHelper";
+import { destinyManifestTableNames } from "@destiny/shared/constants";
 import { prisma } from "./client";
 
 dotenv.config();

@@ -9,9 +9,9 @@ const server = fastify({
   maxParamLength: 5000,
 });
 
-// server.register(cors, {
-//   origin: process.env.APP_ORIGIN,
-// });
+server.register(cors, {
+  origin: process.env.APP_ORIGIN,
+});
 
 server.register(fastifyTRPCPlugin, {
   prefix: "/trpc",
@@ -20,7 +20,7 @@ server.register(fastifyTRPCPlugin, {
 
 export const initServer = () =>
   server.listen({
-    port: process.env.SERVER_PORT as unknown as number,
+    port: process.env.PORT as unknown as number,
     host: "0.0.0.0",
   });
 

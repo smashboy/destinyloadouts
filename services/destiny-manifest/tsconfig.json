@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["server", "prisma"],
+  "include": ["src", "db"],
   "exclude": ["node_modules"]
 }
