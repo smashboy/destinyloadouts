@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  createdAt     DateTime      @default(value: now())
-  updatedAt     DateTime      @updatedAt
+  id            String            @id @default(cuid())
+  createdAt     DateTime          @default(value: now())
+  updatedAt     DateTime          @updatedAt
   name          String?
-  email         String?       @unique
+  email         String?           @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  loadoutLikes  LoadoutLike[]
+  loadoutsLiked LoadoutLike[]
+  loadoutsSaved LoadoutBookmark[]
 }
 
 model Account {
@@ -67,8 +68,9 @@ model Loadout {
   classType    DestinyClassType
   subclassType DestinySublcassType
   tags         LoadoutTag[]
-  likes        LoadoutLike[]
   items        Json
+  likes        LoadoutLike[]
+  bookmarks    LoadoutBookmark[]
 }
 
 model LoadoutLike {
@@ -78,6 +80,15 @@ model LoadoutLike {
   loadoutId     String
 
   @@unique([likedByUserId, loadoutId])
+}
+
+model LoadoutBookmark {
+  savedBy       User    @relation(fields: [savedByUserId], references: [id])
+  savedByUserId String
+  loadout       Loadout @relation(fields: [loadoutId], references: [id])
+  loadoutId     String
+
+  @@unique([savedByUserId, loadoutId])
 }
 
 enum LoadoutStatus {
