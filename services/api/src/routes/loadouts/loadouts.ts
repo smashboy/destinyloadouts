@@ -25,6 +25,23 @@ export const loadoutsRoutes = createRouter({
         },
       })
     ),
+  getLikedByUser: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(({ input: { userId } }) =>
+      prisma.loadout.findMany({
+        where: {
+          likes: {
+            every: {
+              likedByUserId: userId,
+            },
+          },
+        },
+      })
+    ),
   bookmark: protectedProcedure
     .input(
       z.object({
@@ -119,6 +136,22 @@ export const loadoutsRoutes = createRouter({
             });
       }
     ),
+  getBookmarked: protectedProcedure.query(
+    ({
+      ctx: {
+        authorizedUser: { id: userId },
+      },
+    }) =>
+      prisma.loadout.findMany({
+        where: {
+          bookmarks: {
+            every: {
+              savedByUserId: userId,
+            },
+          },
+        },
+      })
+  ),
   create: protectedProcedure
     .input(
       z.object({
