@@ -1,5 +1,5 @@
-import { Loadout } from "@prisma/client";
 import { LoadoutItem } from "@destiny/shared/types";
+import { Loadout } from "../../prisma/client";
 import { PrismaLoadoutItemsJson } from "./types";
 import { manifestServiceClient } from "./manifestServiceClient";
 import { formatPrismaDestinyManifestTableComponent } from "./manifest";
