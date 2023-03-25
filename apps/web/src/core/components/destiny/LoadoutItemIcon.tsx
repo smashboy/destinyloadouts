@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { bungieNetOrigin } from "@destiny/shared/constants";
 import {
   LoadoutInventoryItemsList,
   LoadoutItem,

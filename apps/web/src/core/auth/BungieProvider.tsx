@@ -1,5 +1,5 @@
 import { OAuthProvider } from "next-auth/providers";
-import { bungieNetOrigin } from "../bungie-api/consants";
+import { bungieNetOrigin } from "@destiny/shared/constants";
 
 export const BungieAuthProvider: OAuthProvider = () => ({
   id: "bungie",

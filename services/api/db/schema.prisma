@@ -6,3 +6,71 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(value: now())
+  updatedAt     DateTime      @updatedAt
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  loadoutLikes  LoadoutLike[]
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(value: now())
+  updatedAt         DateTime @updatedAt
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(value: now())
+  updatedAt    DateTime @updatedAt
+  sessionToken String   @unique
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+}
+
+model VerificationToken {
+  createdAt  DateTime @default(value: now())
+  updatedAt  DateTime @updatedAt
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Loadout {
+  id    String        @id @default(cuid())
+  likes LoadoutLike[]
+}
+
+model LoadoutLike {
+  likedBy       User    @relation(fields: [likedByUserId], references: [id])
+  likedByUserId String
+  loadout       Loadout @relation(fields: [loadoutId], references: [id])
+  loadoutId     String
+
+  @@unique([likedByUserId, loadoutId])
+}

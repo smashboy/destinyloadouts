@@ -10,7 +10,7 @@ import {
 } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
 import { getAuthSessionServer } from "@/core/auth/utils";
-import { bungieApiFetchHelper } from "@/core/bungie-api/fetchHelper";
+import { bungieApiFetchHelper } from "@destiny/shared/fetchHelper";
 import { getSingleMembershipData } from "@/core/bungie-api/user";
 import { CharacterSelector } from "./components/CharacterSelector";
 import { CharacterClassIconBackground } from "@/core/components/destiny/CharacterClassIconBackground";

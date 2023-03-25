@@ -3,7 +3,7 @@ import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import {
   characterClassIconPathMap,
   destinyLogoIconPath,
-} from "../../bungie-api/consants";
+} from "@destiny/shared/constants";
 
 interface CharacterClassIconBackgroundProps {
   characters: Record<string, DestinyCharacterComponent>;

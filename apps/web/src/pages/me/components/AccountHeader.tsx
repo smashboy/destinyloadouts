@@ -1,5 +1,5 @@
 import { GeneralUser } from "bungie-api-ts/user";
-import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { bungieNetOrigin } from "@destiny/shared/constants";
 import { Avatar } from "@/core/components/Avatar";
 import { TypographyLarge } from "@/core/components/typography";
 import { AccountCounter } from "./AccountCounter";

@@ -1,4 +1,4 @@
-import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { bungieNetOrigin } from "@destiny/shared/constants";
 import Image from "next/image";
 
 export interface LoadoutIconProps {

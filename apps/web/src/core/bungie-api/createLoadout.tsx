@@ -11,7 +11,7 @@ import {
   HttpClientConfig,
 } from "bungie-api-ts/destiny2";
 import { trpcClient } from "../trpc/client";
-import { DestinyItemCategoryHash } from "./consants";
+import { DestinyItemCategoryHash } from "@destiny/shared/constants";
 import { DestinyCharacterLoadout, LoadoutItem } from "./types";
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;

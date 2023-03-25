@@ -1,7 +1,6 @@
 import Image from "next/image";
-
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import { bungieNetOrigin } from "@/core/bungie-api/consants";
+import { bungieNetOrigin } from "@destiny/shared/constants";
 
 interface SubclassSocketProps {
   super: DestinyInventoryItemDefinition;
