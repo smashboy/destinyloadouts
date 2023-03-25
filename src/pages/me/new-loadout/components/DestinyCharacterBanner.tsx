@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
@@ -8,8 +7,8 @@ import {
   characterClassIconPathMap,
 } from "@/core/bungie-api/consants";
 import { TypographyLarge, TypographySmall } from "@/core/components/typography";
-import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/core/utils";
+import { useRouter } from "next/router";
 
 interface DestinyCharacterBannerProps {
   character: DestinyCharacterComponent;
@@ -18,9 +17,11 @@ interface DestinyCharacterBannerProps {
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
   character: { emblemBackgroundPath, classType, raceType, characterId, light },
 }) => {
-  const segment = useSelectedLayoutSegment();
+  const router = useRouter();
 
-  const characterGenderTypeTitle =
+  const { characterId: selectedCharacterId } = router.query;
+
+  const characterRaceTypeTitle =
     characterRaceTypeTitleMap[
       raceType as keyof typeof characterRaceTypeTitleMap
     ];
@@ -30,11 +31,14 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
       classType as keyof typeof characterClassIconPathMap
     ];
 
-  const isSelected = segment === characterId;
+  const isSelected = selectedCharacterId === characterId;
+
+  const searchParams = new URLSearchParams();
+  searchParams.set("characterId", characterId);
 
   return (
     <Link
-      href={`/me/new-loadout/${characterId}`}
+      href={`/me/new-loadout?${searchParams.toString()}`}
       className={cn(
         "w-full h-[124px] p-0.5 rounded transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 hover:ring-2 hover:ring-slate-300 hover:ring-offset-2",
         isSelected &&
@@ -43,11 +47,12 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
     >
       <span className="relative block w-full h-full overflow-hidden rounded">
         <span
-          className="absolute inset-0 bg-no-repeat bg-cover -z-10"
+          className="absolute inset-0 bg-no-repeat bg-cover"
           style={{
             backgroundImage: `url(${bungieNetOrigin}/${emblemBackgroundPath})`,
           }}
         />
+
         <div className="absolute top-2 right-2">
           <div className="p-1 border flex rounded bg-slate-200/70 items-center space-x-1">
             <Image
@@ -71,11 +76,11 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
             </div>
           </div>
         )}
-        <span className="flex w-full h-full pl-24 md:pl-32 items-center">
+        <span className="relative z-10 flex w-full h-full pl-24 md:pl-32 items-center">
           <span className="flex space-x-2">
-            {characterGenderTypeTitle && (
+            {characterRaceTypeTitle && (
               <TypographyLarge className="text-slate-50 text-2xl md:text-3xl">
-                {characterGenderTypeTitle}
+                {characterRaceTypeTitle}
               </TypographyLarge>
             )}
           </span>

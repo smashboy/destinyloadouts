@@ -5,6 +5,8 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+export const revalidate = 0;
+
 export default async function RootLayout({ children }: RootLayoutProps) {
   const isAuthenticated = await isAuthenticatedServer();
 

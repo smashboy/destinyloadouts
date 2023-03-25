@@ -1,4 +1,4 @@
-"use client";
+import { useRouter } from "next/router";
 import {
   DestinyLoadoutComponent,
   DestinyLoadoutIconDefinition,
@@ -6,7 +6,6 @@ import {
 } from "bungie-api-ts/destiny2";
 import { LoadoutSocket } from "@/core/components/destiny/LoadoutSocket";
 import { TypographyLarge } from "@/core/components/typography";
-import { useSelectedLayoutSegment } from "next/navigation";
 
 interface LoadoutSelectorProps {
   characterId: string;
@@ -21,21 +20,29 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
   loadoutIcons,
   loadoutColors,
 }) => {
-  const segment = useSelectedLayoutSegment();
+  const router = useRouter();
+
+  const { loadout: selectedLoadout } = router.query;
 
   return (
     <div className="flex flex-col space-y-2">
       <TypographyLarge>Select loadout</TypographyLarge>
       <div className="flex space-x-4">
-        {loadouts.map((loadout, index) => (
-          <LoadoutSocket
-            key={index}
-            href={`/me/new-loadout/${characterId}/${index}`}
-            iconImagePath={loadoutIcons[loadout.iconHash].iconImagePath}
-            colorImagePath={loadoutColors[loadout.colorHash].colorImagePath}
-            isSelected={`${index}` === segment}
-          />
-        ))}
+        {loadouts.map((loadout, index) => {
+          const searchParams = new URLSearchParams();
+          searchParams.set("characterId", characterId);
+          searchParams.set("loadout", index.toString());
+
+          return (
+            <LoadoutSocket
+              key={index}
+              href={`/me/new-loadout?${searchParams.toString()}`}
+              iconImagePath={loadoutIcons[loadout.iconHash].iconImagePath}
+              colorImagePath={loadoutColors[loadout.colorHash].colorImagePath}
+              isSelected={selectedLoadout === index.toString()}
+            />
+          );
+        })}
       </div>
     </div>
   );
