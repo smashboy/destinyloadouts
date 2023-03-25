@@ -62,8 +62,13 @@ model VerificationToken {
 }
 
 model Loadout {
-  id    String        @id @default(cuid())
-  likes LoadoutLike[]
+  id           String              @id @default(cuid())
+  status       LoadoutStatus       @default(DRAFT)
+  classType    DestinyClassType
+  subclassType DestinySublcassType
+  tags         LoadoutTag[]
+  likes        LoadoutLike[]
+  items        Json
 }
 
 model LoadoutLike {
@@ -73,4 +78,35 @@ model LoadoutLike {
   loadoutId     String
 
   @@unique([likedByUserId, loadoutId])
+}
+
+enum LoadoutStatus {
+  PUBLISHED
+  DRAFT
+}
+
+enum DestinyClassType {
+  HUNTER
+  TITAN
+  WARLOCK
+}
+
+enum DestinySublcassType {
+  SOLAR
+  ARC
+  VOID
+  STRAND
+  STATIS
+}
+
+enum LoadoutTag {
+  PVE
+  PVP
+  GAMBIT
+  RAID
+  CRUCIBLE
+  DUNGEON
+  NIGHTFALL
+  TRIALS
+  FASHION
 }
