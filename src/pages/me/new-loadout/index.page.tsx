@@ -66,6 +66,11 @@ export default function NewLoadoutPage({
 export const getServerSideProps: GetServerSideProps<
   NewLoadoutPageProps
 > = async (ctx) => {
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
+
   const session = await getAuthSessionServer(ctx);
 
   const { characterId, loadout: loadoutIndex } = ctx.query;
