@@ -1,4 +1,4 @@
-import { DestinyCharacterLoadout } from "@/core/bungie-api/types";
+import { DestinyCharacterLoadout } from "@destiny/shared/types";
 import { LoadoutArmorItem } from "@/core/components/destiny/LoadoutArmorItem";
 import { LoadoutSubclassItem } from "@/core/components/destiny/LoadoutSubclassItem";
 import { LoadoutWeaponItem } from "@/core/components/destiny/LoadoutWeaponItem";

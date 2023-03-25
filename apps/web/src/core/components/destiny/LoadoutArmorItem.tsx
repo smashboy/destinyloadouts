@@ -1,7 +1,4 @@
-import {
-  LoadoutInventoryItemsList,
-  LoadoutItem,
-} from "@/core/bungie-api/types";
+import { LoadoutInventoryItemsList, LoadoutItem } from "@destiny/shared/types";
 import {
   DestinyInventoryItemDefinition,
   DestinyItemSubType,

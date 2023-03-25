@@ -12,7 +12,7 @@ import {
 } from "bungie-api-ts/destiny2";
 import { trpcClient } from "../trpc/client";
 import { DestinyItemCategoryHash } from "@destiny/shared/constants";
-import { DestinyCharacterLoadout, LoadoutItem } from "./types";
+import { DestinyCharacterLoadout, LoadoutItem } from "@destiny/shared/types";
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
 

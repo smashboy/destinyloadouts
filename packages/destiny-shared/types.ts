@@ -17,5 +17,5 @@ export interface DestinyCharacterLoadout {
   energy: LoadoutItem;
   power: LoadoutItem;
   subclass: LoadoutItem;
-  inventoryItems: LoadoutInventoryItemsList;
+  // inventoryItems: LoadoutInventoryItemsList;
 }

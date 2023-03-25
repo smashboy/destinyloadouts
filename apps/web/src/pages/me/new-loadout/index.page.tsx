@@ -16,7 +16,7 @@ import { CharacterSelector } from "./components/CharacterSelector";
 import { CharacterClassIconBackground } from "@/core/components/destiny/CharacterClassIconBackground";
 import { LoadoutSelector } from "./components/LoadoutSelector";
 import { trpcClient } from "@/core/trpc/client";
-import { DestinyCharacterLoadout } from "@/core/bungie-api/types";
+import { DestinyCharacterLoadout } from "@destiny/shared/types";
 import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
 import { CharacterSockets } from "./components/CharacterSockets";
 

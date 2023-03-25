@@ -435,7 +435,7 @@
   dependencies:
     tslib "^2.4.0"
 
-"@trpc/client@^10.17.0":
+"@trpc/client@^10.17.0", "@trpc/client@^10.18.0":
   version "10.18.0"
   resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.18.0.tgz#02d03ed47e34d6b8a3d3ee0e1f11e6074c2ece18"
   integrity sha512-2d+6r2C/xygTjDWX9jT66defgHzbQP0Z8vrvyT3XtPjqU6JNlRNuS2ZtB8xDPdOQUUVnndzZ43BMr+Zu49K0OQ==
