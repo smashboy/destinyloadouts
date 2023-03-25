@@ -12,6 +12,8 @@ coverage
 .next
 out
 
+.prisma
+
 # production
 /build
 
