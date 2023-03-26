@@ -21,7 +21,7 @@ const avatarRootVariants = cva(
 );
 
 export type AvatarProps = VariantProps<typeof avatarRootVariants> & {
-  src: string;
+  src: string | null | undefined;
   fallback: string;
 };
 

@@ -3,11 +3,20 @@ import Image from "next/image";
 import { TypographyLarge } from "~/core/components/typography";
 import { ButtonLink } from "~/core/components/Button";
 import { useSession } from "next-auth/react";
+import { Avatar } from "./Avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./Menu";
 
 export const AppHeader = () => {
   const session = useSession();
 
   const isAuthenticated = session.status === "authenticated";
+
+  const { user } = session.data || {};
 
   return (
     <header className="w-full border-b border-b-slate-200 z-10 bg-white dark:border-b-slate-700 dark:bg-slate-900">
@@ -23,7 +32,21 @@ export const AppHeader = () => {
           <TypographyLarge>Black Armory</TypographyLarge>
         </Link>
         {isAuthenticated ? (
-          <ButtonLink href="/me">Profile</ButtonLink>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar
+                src={user?.image}
+                fallback={user?.name ?? "User avatar"}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link href="/me">
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Log out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <ButtonLink href="/login">Login</ButtonLink>
         )}
