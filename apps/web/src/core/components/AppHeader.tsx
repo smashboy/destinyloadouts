@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { TypographyLarge } from "~/core/components/typography";
 import { ButtonLink } from "~/core/components/Button";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Avatar } from "./Avatar";
 import {
   DropdownMenu,
@@ -17,6 +17,8 @@ export const AppHeader = () => {
   const isAuthenticated = session.status === "authenticated";
 
   const { user } = session.data || {};
+
+  const handleSignout = () => signOut();
 
   return (
     <header className="w-full border-b border-b-slate-200 z-10 bg-white dark:border-b-slate-700 dark:bg-slate-900">
@@ -44,7 +46,9 @@ export const AppHeader = () => {
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
               <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignout}>
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
