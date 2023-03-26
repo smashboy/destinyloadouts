@@ -1,9 +1,5 @@
-import {
-  inferAsyncReturnType,
-  initTRPC,
-  router,
-  TRPCError,
-} from "@trpc/server";
+import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
+import SuperJSON from "superjson";
 import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import { prisma } from "../prisma/client";
 
@@ -14,7 +10,9 @@ export const createContext = ({ req, res }: CreateFastifyContextOptions) => ({
 
 export type Context = inferAsyncReturnType<typeof createContext>;
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create({
+  transformer: SuperJSON,
+});
 
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;

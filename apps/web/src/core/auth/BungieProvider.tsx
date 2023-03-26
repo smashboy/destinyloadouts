@@ -22,7 +22,7 @@ export const BungieAuthProvider: OAuthProvider = () => ({
       "X-API-Key": process.env.BUNGIE_API_KEY,
     },
   },
-  profile: (profile, tokens) => {
+  profile: (profile) => {
     const { bungieNetUser: user } = profile.Response;
 
     return {
@@ -32,8 +32,6 @@ export const BungieAuthProvider: OAuthProvider = () => ({
       image: `${bungieNetOrigin}${
         user.profilePicturePath.startsWith("/") ? "" : "/"
       }${user.profilePicturePath}`,
-      profile,
-      tokens,
     };
   },
 });

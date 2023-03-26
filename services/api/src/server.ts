@@ -5,7 +5,9 @@ import { appRouter } from "./router";
 import { createContext } from "./trpc";
 
 const server = fastify({
-  logger: true,
+  logger: {
+    level: "info",
+  },
   maxParamLength: 5000,
 });
 
