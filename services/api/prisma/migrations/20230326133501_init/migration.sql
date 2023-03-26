@@ -31,7 +31,7 @@ CREATE TABLE "Loadout" (
     "subclassType" "DestinySublcassType" NOT NULL,
     "tags" "LoadoutTag"[],
     "items" JSONB NOT NULL,
-    "userId" TEXT NOT NULL,
+    "authorId" TEXT NOT NULL,
 
     CONSTRAINT "Loadout_pkey" PRIMARY KEY ("id")
 );
@@ -97,7 +97,7 @@ CREATE UNIQUE INDEX "DestinyManifestTable_name_localeName_manifestVersion_key" O
 CREATE UNIQUE INDEX "DestinyManifestTableComponent_hashId_tableName_localeName_m_key" ON "DestinyManifestTableComponent"("hashId", "tableName", "localeName", "manifestVersion");
 
 -- AddForeignKey
-ALTER TABLE "Loadout" ADD CONSTRAINT "Loadout_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Loadout" ADD CONSTRAINT "Loadout_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LoadoutLike" ADD CONSTRAINT "LoadoutLike_likedByUserId_fkey" FOREIGN KEY ("likedByUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

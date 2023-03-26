@@ -55,23 +55,20 @@ export const loadoutsRoutes = createRouter({
           authorizedUser: { id: userId },
         },
       }) => {
-        const bookmark = await prisma.loadoutBookmark.findUnique({
-          where: {
-            savedByUserId_loadoutId: {
-              savedByUserId: userId,
-              loadoutId,
-            },
+        const where = {
+          savedByUserId_loadoutId: {
+            savedByUserId: userId,
+            loadoutId,
           },
+        };
+
+        const bookmark = await prisma.loadoutBookmark.findUnique({
+          where,
         });
 
         return bookmark
           ? prisma.loadoutBookmark.delete({
-              where: {
-                savedByUserId_loadoutId: {
-                  savedByUserId: userId,
-                  loadoutId,
-                },
-              },
+              where,
             })
           : prisma.loadoutBookmark.create({
               data: {
@@ -102,23 +99,20 @@ export const loadoutsRoutes = createRouter({
           authorizedUser: { id: userId },
         },
       }) => {
-        const like = await prisma.loadoutLike.findUnique({
-          where: {
-            likedByUserId_loadoutId: {
-              likedByUserId: userId,
-              loadoutId,
-            },
+        const where = {
+          likedByUserId_loadoutId: {
+            likedByUserId: userId,
+            loadoutId,
           },
+        };
+
+        const like = await prisma.loadoutLike.findUnique({
+          where,
         });
 
         return like
           ? prisma.loadoutLike.delete({
-              where: {
-                likedByUserId_loadoutId: {
-                  likedByUserId: userId,
-                  loadoutId,
-                },
-              },
+              where,
             })
           : prisma.loadoutLike.create({
               data: {
