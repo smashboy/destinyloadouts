@@ -5,27 +5,37 @@ import { User } from "@services/api/src/web";
 import { GeneralUser, getBungieNetUserById } from "bungie-api-ts/user";
 import { AccountHeader } from "./components/AccountHeader";
 import { ButtonLink } from "~/core/components/Button";
-import { trpcClient } from "~/core/trpc/client";
+import { trpcClient, trpcReact } from "~/core/trpc/client";
 
 interface AuthUserProfilePageProps {
   profile: GeneralUser;
-  user: {
-    user: User;
-    loadoutsCount: number;
-    followersCount: number;
-    likesCount: number;
-  };
+  user: User;
+  loadoutsCount: number;
+  followersCount: number;
+  likesCount: number;
 }
 
 export default function AuthUserProfilePage({
   profile,
   user,
+  ...otherProps
 }: AuthUserProfilePageProps) {
-  console.log(user);
+  const { id: userId } = user;
+
+  const query = trpcReact.loadouts.getByUserId.useInfiniteQuery(
+    {
+      userId,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.cursor,
+    }
+  );
+
+  console.log(query.data);
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <AccountHeader profile={profile} user={user} />
+      <AccountHeader profile={profile} user={user} {...otherProps} />
       <div className="col-span-2">
         <ButtonLink
           href="/me/new-loadout"
@@ -57,24 +67,31 @@ export const getServerSideProps: GetServerSideProps<
 
   const fetchHelper = bungieApiFetchHelper(session.accessToken);
 
-  const [profile, user] = await Promise.all([
+  const [profile, userResponse] = await Promise.all([
     getBungieNetUserById(fetchHelper, {
       id: sessionUser.id,
     }),
-    trpcClient.users.getUserByBungieAccountId.query({
+    trpcClient.users.getByBungieAccountId.query({
       bungieAccountId: sessionUser.id,
     }),
   ]);
 
-  if (!user)
+  if (!userResponse)
     return {
       notFound: true,
     };
+
+  const { user, ...otherData } = userResponse;
+
+  const loadoutsInitialData = await trpcClient.loadouts.getByUserId.query({
+    userId: user.id,
+  });
 
   return {
     props: {
       profile: profile.Response,
       user,
+      ...otherData,
     },
   };
 };

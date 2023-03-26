@@ -11,6 +11,32 @@ import { getPopularDuringDate } from "../../utils/getPopularDuringDate";
 import { getLoadoutsInventoryItems } from "../../utils/loadouts";
 import { paginate } from "../../utils/paginate";
 
+const loadoutItemValidation = z
+  .tuple([z.number().int(), z.array(z.number().int())])
+  .nullable();
+
+const loadoutValidation = z.object({
+  content: z.object({
+    helmet: loadoutItemValidation,
+    gauntlets: loadoutItemValidation,
+    chest: loadoutItemValidation,
+    legs: loadoutItemValidation,
+    class: loadoutItemValidation,
+    kinetic: loadoutItemValidation,
+    energy: loadoutItemValidation,
+    power: loadoutItemValidation,
+    subclass: loadoutItemValidation,
+  }),
+});
+
+const cursorValidation = z
+  .object({
+    take: z.number().int(),
+    skip: z.number().int(),
+  })
+  .nullable()
+  .optional();
+
 export const loadoutsRoutes = createRouter({
   getById: publicProcedure
     .input(
@@ -153,11 +179,12 @@ export const loadoutsRoutes = createRouter({
         subclassType: z.nativeEnum(DestinySublcassType),
         tags: z.array(z.nativeEnum(LoadoutTag)),
         status: z.nativeEnum(LoadoutStatus).optional(),
+        loadout: loadoutValidation,
       })
     )
     .mutation(
       ({
-        input: { classType, subclassType, tags, status },
+        input: { classType, subclassType, tags, status, loadout },
         ctx: {
           authorizedUser: { id: userId },
         },
@@ -168,7 +195,7 @@ export const loadoutsRoutes = createRouter({
             subclassType,
             tags,
             status,
-            items: {}, // TODO
+            items: loadout,
             author: {
               connect: {
                 id: userId,
@@ -177,6 +204,53 @@ export const loadoutsRoutes = createRouter({
           },
         })
     ),
+  getByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        cursor: cursorValidation,
+      })
+    )
+    .query(async ({ input: { userId, cursor } }) => {
+      const { take = 15, skip = 0 } = cursor || {};
+      const where = { authorId: userId };
+      const orderBy = { createdAt: "desc" as const };
+
+      const {
+        items: loadouts,
+        hasMore,
+        nextPage,
+      } = await paginate({
+        take,
+        skip,
+        count: () => prisma.loadout.count({ where, orderBy }),
+        query: (paginateArgs) =>
+          prisma.loadout.findMany({
+            ...paginateArgs,
+            where,
+            orderBy,
+            include: {
+              author: true, // todo, can be improved
+            },
+          }),
+      });
+
+      const manifest = await prisma.destinyManifest.findFirst();
+
+      const inventoryItems = await getLoadoutsInventoryItems(
+        loadouts,
+        manifest!
+      );
+
+      console.log("HELLO!?!?!?!?", inventoryItems.length, loadouts.length);
+
+      return {
+        loadouts,
+        inventoryItems,
+        hasMore,
+        cursor: nextPage,
+      };
+    }),
   feed: publicProcedure
     .input(
       z.object({
@@ -253,7 +327,12 @@ export const loadoutsRoutes = createRouter({
             }),
         });
 
-        const inventoryItems = await getLoadoutsInventoryItems(loadouts);
+        const manifest = await prisma.destinyManifest.findFirst();
+
+        const inventoryItems = await getLoadoutsInventoryItems(
+          loadouts,
+          manifest!
+        );
 
         return {
           loadouts,

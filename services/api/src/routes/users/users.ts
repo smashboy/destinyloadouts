@@ -3,7 +3,7 @@ import { createRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { prisma } from "../../../prisma/client";
 
 export const usersRoutes = createRouter({
-  getUser: publicProcedure
+  getById: publicProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -43,7 +43,7 @@ export const usersRoutes = createRouter({
         likesCount,
       };
     }),
-  getUserByBungieAccountId: publicProcedure
+  getByBungieAccountId: publicProcedure
     .input(
       z.object({
         bungieAccountId: z.string(),

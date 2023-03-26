@@ -6,6 +6,7 @@ import { AppHeader } from "~/core/components/AppHeader";
 import { cn } from "~/core/utils";
 
 import "../core/styles/globals.css";
+import { TRPCProvider } from "~/core/trpc/TRPCProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,7 +29,9 @@ const CommonRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => (
       fontSans.variable
     )}
   >
-    <AuthProvider>{children}</AuthProvider>
+    <AuthProvider>
+      <TRPCProvider>{children}</TRPCProvider>
+    </AuthProvider>
   </div>
 );
 

@@ -7,17 +7,18 @@ import { AccountCounter } from "./AccountCounter";
 
 interface AccountHeaderProps {
   profile: GeneralUser;
-  user: {
-    user: User;
-    loadoutsCount: number;
-    followersCount: number;
-    likesCount: number;
-  };
+  user: User;
+  loadoutsCount: number;
+  followersCount: number;
+  likesCount: number;
 }
 
 export const AccountHeader: React.FC<AccountHeaderProps> = ({
   profile: { uniqueName, displayName, profilePicturePath },
-  user: { user, loadoutsCount, likesCount, followersCount },
+  user,
+  loadoutsCount,
+  likesCount,
+  followersCount,
 }) => (
   <div className="p-4 border border-slate-200 rounded">
     <div className="flex flex-col items-center space-y-4">

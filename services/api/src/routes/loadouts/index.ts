@@ -1,0 +1,1 @@
+export { loadoutsRoutes } from "./loadouts";
