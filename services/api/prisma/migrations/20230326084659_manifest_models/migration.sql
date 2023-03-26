@@ -18,8 +18,8 @@ CREATE TABLE "DestinyManifestTable" (
 
 -- CreateTable
 CREATE TABLE "DestinyManifestTableComponent" (
-    "hashId" INTEGER NOT NULL,
-    "content" TEXT NOT NULL,
+    "hashId" TEXT NOT NULL,
+    "content" JSONB NOT NULL,
     "tableName" TEXT NOT NULL,
     "localeName" TEXT NOT NULL,
     "manifestVersion" TEXT NOT NULL

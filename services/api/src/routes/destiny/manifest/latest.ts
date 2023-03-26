@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { destinyManifestTableNames } from "@destiny/shared/constants";
 import { createRouter, middleware, publicProcedure } from "../../../trpc";
 import { prisma } from "../../../../prisma/client";
 import { destinyManifestLanguages } from "bungie-api-ts/destiny2";
-import { destinyManifestTableNames } from "../../../constants";
 
 const latestDestinyManifestProcedure = publicProcedure.use(
   middleware(async ({ next }) => {

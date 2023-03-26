@@ -253,6 +253,9 @@ export const loadoutsRoutes = createRouter({
               ...paginateArgs,
               where,
               orderBy,
+              include: {
+                author: true, // todo, can be improved
+              },
             }),
         });
 

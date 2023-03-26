@@ -22,7 +22,7 @@ export const destinyManifestTableNames = [
   "DestinyLoadoutIconDefinition",
   "DestinyInventoryItemDefinition",
   "DestinyItemCategoryDefinition",
-] satisfies DestinyManifestComponentName[];
+] as const; // satisfies DestinyManifestComponentName[]
 
 export enum DestinyItemCategoryHash {
   KineticWeapon = 2,

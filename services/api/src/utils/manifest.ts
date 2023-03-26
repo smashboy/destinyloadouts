@@ -1,4 +1,4 @@
-import type { DestinyManifestTableComponent } from "@services/destiny-manifest/src/web";
+import { DestinyManifestTableComponent } from "../../prisma/.prisma";
 
 export const formatPrismaDestinyManifestTableComponent = <T>(
   component: DestinyManifestTableComponent

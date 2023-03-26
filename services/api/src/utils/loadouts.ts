@@ -1,12 +1,12 @@
 import { LoadoutItem } from "@destiny/shared/types";
-import { Loadout } from "../../prisma/client";
+import { DestinyManifest, Loadout, prisma } from "../../prisma/client";
 import { PrismaLoadoutItemsJson } from "./types";
-import { manifestServiceClient } from "./manifestServiceClient";
 import { formatPrismaDestinyManifestTableComponent } from "./manifest";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 
 export const getLoadoutsInventoryItems = async (
-  prismaLoadouts: Loadout[]
+  prismaLoadouts: Loadout[],
+  manifest: DestinyManifest
 ): Promise<DestinyInventoryItemDefinition[]> => {
   const itemHashes: number[] = [];
 
@@ -23,14 +23,24 @@ export const getLoadoutsInventoryItems = async (
 
   if (itemHashes.length === 0) return [];
 
-  const components =
-    await manifestServiceClient.destiny.manifest.latest.getTableComponents.query(
-      {
-        tableName: "DestinyInventoryItemDefinition",
-        locale: "en",
-        hashIds: [...new Set(itemHashes.map((hash) => hash.toString()))],
-      }
-    );
+  const components = await prisma.destinyManifestTableComponent.findMany({
+    where: {
+      AND: [
+        {
+          manifestVersion: manifest.version,
+        },
+        {
+          localeName: "en",
+        },
+        { tableName: "DestinyInventoryItemDefinition" },
+        {
+          hashId: {
+            in: [...new Set(itemHashes.map((hash) => hash.toString()))],
+          },
+        },
+      ],
+    },
+  });
 
   return components.map((component) =>
     formatPrismaDestinyManifestTableComponent<DestinyInventoryItemDefinition>(

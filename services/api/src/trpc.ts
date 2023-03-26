@@ -1,4 +1,9 @@
-import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
+import {
+  inferAsyncReturnType,
+  initTRPC,
+  router,
+  TRPCError,
+} from "@trpc/server";
 import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import { prisma } from "../prisma/client";
 

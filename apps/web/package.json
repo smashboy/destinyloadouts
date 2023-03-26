@@ -22,7 +22,7 @@
     "react-dom": "18.2.0",
     "tailwind-merge": "^1.10.0",
     "zod": "^3.21.4",
-    "@services/destiny-manifest": "*",
+    "@services/api": "*",
     "@destiny/shared": "*"
   },
   "devDependencies": {
