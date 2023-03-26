@@ -6,7 +6,7 @@ import {
   DestinyItemType,
   DestinyInventoryItemDefinition,
 } from "bungie-api-ts/destiny2";
-import { getDestinyItemActiveWatermarkIcon } from "@/core/bungie-api/utils";
+import { getDestinyItemActiveWatermarkIcon } from "~/core/bungie-api/utils";
 
 interface LoadoutItemIconProps {
   item: LoadoutItem;

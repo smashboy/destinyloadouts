@@ -1,4 +1,4 @@
-import { cn } from "@/core/utils";
+import { cn } from "~/core/utils";
 import { TypographySmall } from "../typography";
 
 interface ArmorEnergyProps {

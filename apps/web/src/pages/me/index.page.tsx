@@ -1,9 +1,9 @@
 import { GetServerSideProps } from "next";
-import { getAuthSessionServer } from "@/core/auth/utils";
+import { getAuthSessionServer } from "~/core/auth/utils";
 import { bungieApiFetchHelper } from "@destiny/shared/fetchHelper";
 import { GeneralUser, getBungieNetUserById } from "bungie-api-ts/user";
 import { AccountHeader } from "./components/AccountHeader";
-import { ButtonLink } from "@/core/components/Button";
+import { ButtonLink } from "~/core/components/Button";
 
 interface AuthUserProfilePageProps {
   profile: GeneralUser;

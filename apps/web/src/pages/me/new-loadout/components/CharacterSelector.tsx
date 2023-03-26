@@ -1,5 +1,5 @@
 import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
-import { TypographyLarge } from "@/core/components/typography";
+import { TypographyLarge } from "~/core/components/typography";
 import { DestinyCharacterBanner } from "./DestinyCharacterBanner";
 
 interface CharacterSelectorProps {

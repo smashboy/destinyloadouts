@@ -10,6 +10,7 @@
     "bungie-api-ts": "^4.22.2"
   },
   "devDependencies": {
-    "bungie-api-ts": "^4.22.2"
+    "bungie-api-ts": "^4.22.2",
+    "typescript": "^5.0.2"
   }
 }

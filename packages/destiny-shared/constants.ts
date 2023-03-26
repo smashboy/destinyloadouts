@@ -1,4 +1,4 @@
-import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
+// import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 
 export const bungieNetOrigin = "https://www.bungie.net";
 
@@ -24,8 +24,8 @@ export const destinyManifestTableNames = [
   "DestinyItemCategoryDefinition",
 ] as const; // satisfies DestinyManifestComponentName[]
 
-export enum DestinyItemCategoryHash {
-  KineticWeapon = 2,
-  EnergyWeapon = 3,
-  PowerWeapon = 4,
-}
+export const DestinyItemCategoryHash = {
+  KineticWeapon: 2,
+  EnergyWeapon: 3,
+  PowerWeapon: 4,
+};

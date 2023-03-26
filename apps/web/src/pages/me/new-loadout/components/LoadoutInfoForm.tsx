@@ -1,6 +1,6 @@
-import { Button } from "@/core/components/Button";
-import { Input } from "@/core/components/Input";
-import { Textarea } from "@/core/components/Textarea";
+import { Button } from "~/core/components/Button";
+import { Input } from "~/core/components/Input";
+import { Textarea } from "~/core/components/Textarea";
 
 export const LoadoutInfoForm = () => {
   return (

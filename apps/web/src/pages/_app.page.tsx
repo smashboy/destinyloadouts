@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { Inter as FontSans } from "next/font/google";
-import { AuthProvider } from "@/core/auth/Provider";
-import { AppHeader } from "@/core/components/AppHeader";
-import { cn } from "@/core/utils";
+import { AuthProvider } from "~/core/auth/Provider";
+import { AppHeader } from "~/core/components/AppHeader";
+import { cn } from "~/core/utils";
 
 import "../core/styles/globals.css";
 

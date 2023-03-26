@@ -2,7 +2,7 @@ import Image from "next/image";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ItemSocket } from "./ItemSocket";
 import { bungieNetOrigin } from "@destiny/shared/constants";
-import { getDestinyItemActiveWatermarkIcon } from "@/core/bungie-api/utils";
+import { getDestinyItemActiveWatermarkIcon } from "~/core/bungie-api/utils";
 
 interface ModSocketProps {
   // modTypeIcon: string; local icon path

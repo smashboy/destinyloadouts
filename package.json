@@ -19,9 +19,6 @@
       "apps/*",
       "services/*",
       "packages/*"
-    ],
-    "nohoist": [
-      "@prisma/client"
     ]
   },
   "packageManager": "yarn@1.22.5",

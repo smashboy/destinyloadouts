@@ -1,7 +1,7 @@
 import {
   TypographyLarge,
   TypographySubtle,
-} from "@/core/components/typography";
+} from "~/core/components/typography";
 
 interface AccountCounterProps {
   title: string;

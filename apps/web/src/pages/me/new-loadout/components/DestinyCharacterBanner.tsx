@@ -6,8 +6,8 @@ import {
   characterRaceTypeTitleMap,
   characterClassIconPathMap,
 } from "@destiny/shared/constants";
-import { TypographyLarge, TypographySmall } from "@/core/components/typography";
-import { cn } from "@/core/utils";
+import { TypographyLarge, TypographySmall } from "~/core/components/typography";
+import { cn } from "~/core/utils";
 import { useRouter } from "next/router";
 
 interface DestinyCharacterBannerProps {

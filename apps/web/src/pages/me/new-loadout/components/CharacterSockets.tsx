@@ -1,8 +1,8 @@
 import { DestinyCharacterLoadout } from "@destiny/shared/types";
-import { LoadoutArmorItem } from "@/core/components/destiny/LoadoutArmorItem";
-import { LoadoutSubclassItem } from "@/core/components/destiny/LoadoutSubclassItem";
-import { LoadoutWeaponItem } from "@/core/components/destiny/LoadoutWeaponItem";
-import { TypographyLarge } from "@/core/components/typography";
+import { LoadoutArmorItem } from "~/core/components/destiny/LoadoutArmorItem";
+import { LoadoutSubclassItem } from "~/core/components/destiny/LoadoutSubclassItem";
+import { LoadoutWeaponItem } from "~/core/components/destiny/LoadoutWeaponItem";
+import { TypographyLarge } from "~/core/components/typography";
 import { LoadoutInfoForm } from "./LoadoutInfoForm";
 
 interface CharacterSocketsProps {

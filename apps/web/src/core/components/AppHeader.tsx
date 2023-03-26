@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { TypographyLarge } from "@/core/components/typography";
-import { ButtonLink } from "@/core/components/Button";
+import { TypographyLarge } from "~/core/components/typography";
+import { ButtonLink } from "~/core/components/Button";
 import { useSession } from "next-auth/react";
 
 export const AppHeader = () => {

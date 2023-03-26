@@ -9,15 +9,15 @@ import {
   getProfile,
 } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
-import { getAuthSessionServer } from "@/core/auth/utils";
+import { getAuthSessionServer } from "~/core/auth/utils";
 import { bungieApiFetchHelper } from "@destiny/shared/fetchHelper";
-import { getSingleMembershipData } from "@/core/bungie-api/user";
+import { getSingleMembershipData } from "~/core/bungie-api/user";
 import { CharacterSelector } from "./components/CharacterSelector";
-import { CharacterClassIconBackground } from "@/core/components/destiny/CharacterClassIconBackground";
+import { CharacterClassIconBackground } from "~/core/components/destiny/CharacterClassIconBackground";
 import { LoadoutSelector } from "./components/LoadoutSelector";
-import { trpcClient } from "@/core/trpc/client";
+import { trpcClient } from "~/core/trpc/client";
 import { DestinyCharacterLoadout } from "@destiny/shared/types";
-import { createDestinyCharacterLoadout } from "@/core/bungie-api/createLoadout";
+import { createDestinyCharacterLoadout } from "~/core/bungie-api/createLoadout";
 import { CharacterSockets } from "./components/CharacterSockets";
 
 interface NewLoadoutPageProps {

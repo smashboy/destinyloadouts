@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { Button, ButtonLink } from "@/core/components/Button";
-import { TypographyLarge } from "@/core/components/typography";
+import { Button, ButtonLink } from "~/core/components/Button";
+import { TypographyLarge } from "~/core/components/typography";
 import { NextPageWithLayout } from "./_app.page";
 
 const LoginPage: NextPageWithLayout = () => {
