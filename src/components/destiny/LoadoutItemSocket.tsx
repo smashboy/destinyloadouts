@@ -1,6 +1,10 @@
-import { LoadoutInventoryItemsList, LoadoutItem } from "@destiny/shared/types";
-import { ItemSocket, ItemSocketProps } from "./ItemSocket";
+import {
+  type LoadoutInventoryItemsList,
+  type LoadoutItem,
+} from "~/bungie/types";
+import { ItemSocket, type ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemIcon } from "./LoadoutItemIcon";
+import { HoverCard, HoverCardTrigger, ItemHoverCard } from "./ItemHoverCard";
 
 interface LoadoutItemSocketProps extends ItemSocketProps {
   item: LoadoutItem;
@@ -12,13 +16,20 @@ export const LoadoutItemSocket: React.FC<LoadoutItemSocketProps> = ({
   inventoryItems,
   ...props
 }) => {
-  // const [, itemInstance] = item!;
+  const [itemHash] = item!;
   // const isMasterworked =
   //   itemInstance.instance.data?.energy?.energyCapacity === 10;
 
+  const inventoryItem = inventoryItems[itemHash];
+
   return (
-    <ItemSocket {...props}>
-      <LoadoutItemIcon item={item} inventoryItems={inventoryItems} />
-    </ItemSocket>
+    <HoverCard openDelay={100} closeDelay={100}>
+      <HoverCardTrigger>
+        <ItemSocket {...props}>
+          <LoadoutItemIcon item={item} inventoryItems={inventoryItems} />
+        </ItemSocket>
+      </HoverCardTrigger>
+      <ItemHoverCard item={inventoryItem} />
+    </HoverCard>
   );
 };

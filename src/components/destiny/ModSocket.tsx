@@ -3,6 +3,7 @@ import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ItemSocket } from "./ItemSocket";
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
+import { HoverCard, HoverCardTrigger, ItemHoverCard } from "./ItemHoverCard";
 
 interface ModSocketProps {
   // modTypeIcon: string; local icon path
@@ -17,9 +18,11 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
   const watermarkIcon = getDestinyItemActiveWatermarkIcon(socket);
 
   return (
-    <ItemSocket>
-      <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded bg-slate-400">
-        {/* <Image
+    <HoverCard openDelay={100} closeDelay={100}>
+      <HoverCardTrigger>
+        <ItemSocket>
+          <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded bg-slate-400">
+            {/* <Image
           src="/destiny-icons/modFrame.svg"
           fill
           alt="Mod socket frame"
@@ -32,17 +35,24 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
           className="opacity-30"
         /> */}
 
-        {iconPath && (
-          <Image src={`${bungieNetOrigin}/${iconPath}`} alt="Mod icon" fill />
-        )}
-        {watermarkIcon && (
-          <Image
-            src={`${bungieNetOrigin}/${watermarkIcon}`}
-            alt="Loadout item icon"
-            fill
-          />
-        )}
-      </div>
-    </ItemSocket>
+            {iconPath && (
+              <Image
+                src={`${bungieNetOrigin}/${iconPath}`}
+                alt="Mod icon"
+                fill
+              />
+            )}
+            {watermarkIcon && (
+              <Image
+                src={`${bungieNetOrigin}/${watermarkIcon}`}
+                alt="Loadout item icon"
+                fill
+              />
+            )}
+          </div>
+        </ItemSocket>
+      </HoverCardTrigger>
+      <ItemHoverCard item={socket} />
+    </HoverCard>
   );
 };

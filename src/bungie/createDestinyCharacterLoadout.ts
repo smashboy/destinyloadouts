@@ -7,6 +7,7 @@ import {
   DestinyComponentType,
   type DestinyLoadoutComponent,
   type DestinyLoadoutItemComponent,
+  type DestinyItemSocketState,
   getItem,
   type HttpClientConfig,
 } from "bungie-api-ts/destiny2";
@@ -15,6 +16,23 @@ import { type DestinyCharacterLoadout, type LoadoutItem } from "./types";
 import { DestinyItemCategoryHash } from "./constants";
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
+
+const getSocketHash = (
+  loadoutItem: DestinyLoadoutItemComponent,
+  sockets: DestinyItemSocketState[],
+  isArmor?: boolean
+) => {
+  const hashes = [...loadoutItem.plugItemHashes];
+
+  for (const socket of sockets) {
+    const { plugHash } = socket;
+
+    if (plugHash && !hashes.includes(plugHash) && !isArmor)
+      hashes.push(plugHash);
+  }
+
+  return hashes;
+};
 
 const getCharacterArmor = (
   loadoutItem: DestinyLoadoutItemComponent,
@@ -25,17 +43,40 @@ const getCharacterArmor = (
 
   switch (itemSubType) {
     case DestinyItemSubType.HelmetArmor:
-      return { helmet: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+      return {
+        helmet: [
+          item.item.data!.itemHash,
+          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+        ],
+      };
     case DestinyItemSubType.GauntletsArmor:
       return {
-        gauntlets: [item.item.data!.itemHash, loadoutItem.plugItemHashes],
+        gauntlets: [
+          item.item.data!.itemHash,
+          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+        ],
       };
     case DestinyItemSubType.ChestArmor:
-      return { chest: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+      return {
+        chest: [
+          item.item.data!.itemHash,
+          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+        ],
+      };
     case DestinyItemSubType.LegArmor:
-      return { legs: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+      return {
+        legs: [
+          item.item.data!.itemHash,
+          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+        ],
+      };
     case DestinyItemSubType.ClassArmor:
-      return { class: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+      return {
+        class: [
+          item.item.data!.itemHash,
+          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+        ],
+      };
     default:
       return null;
   }
@@ -49,13 +90,28 @@ const getCharacterWeapons = (
   const { itemCategoryHashes } = tableItem;
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.KineticWeapon))
-    return { kinetic: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+    return {
+      kinetic: [
+        item.item.data!.itemHash,
+        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+      ],
+    };
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.EnergyWeapon))
-    return { energy: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+    return {
+      energy: [
+        item.item.data!.itemHash,
+        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+      ],
+    };
 
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.PowerWeapon))
-    return { power: [item.item.data!.itemHash, loadoutItem.plugItemHashes] };
+    return {
+      power: [
+        item.item.data!.itemHash,
+        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+      ],
+    };
 
   return null;
 };
@@ -78,7 +134,7 @@ export const createDestinyCharacterLoadout = async (
           components: [
             DestinyComponentType.ItemInstances,
             DestinyComponentType.ItemCommonData,
-            // DestinyComponentType.ItemSockets,
+            DestinyComponentType.ItemSockets,
             // DestinyComponentType.ItemStats,
           ],
           destinyMembershipId: membershipId,
@@ -92,7 +148,16 @@ export const createDestinyCharacterLoadout = async (
   for (const item of items) {
     if (item?.item?.data) {
       const { itemHash } = item.item.data;
+
       inventoryItemHashes.push(itemHash.toString());
+    }
+
+    if (item?.sockets?.data) {
+      const sockets = item.sockets.data.sockets;
+      for (const socket of sockets) {
+        const { plugHash } = socket;
+        if (plugHash) inventoryItemHashes.push(plugHash.toString());
+      }
     }
   }
 
@@ -148,7 +213,10 @@ export const createDestinyCharacterLoadout = async (
       case DestinyItemType.Subclass:
         loadout = {
           ...loadout,
-          subclass: [itemHash, plugItemHashes],
+          subclass: [
+            itemHash,
+            getSocketHash(loadoutItem, itemInstance.sockets!.data!.sockets),
+          ],
         };
       default:
         continue;

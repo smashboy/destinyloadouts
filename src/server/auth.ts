@@ -55,8 +55,7 @@ export const authOptions: NextAuthOptions = {
       });
       return true;
     },
-    session({ session, user, token }) {
-      console.log("SET SESSION", { session, user, token });
+    session({ session, token }) {
       if (session.user && token) {
         session.user.id = session.user.email!;
         session.accessToken = token.accessToken as string;
@@ -65,7 +64,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     jwt: ({ token, user, account }) => {
-      console.log("JWT", { token, user, account });
       if (user) token.userId = user.id;
       if (account) token.accessToken = account.access_token;
       return token;

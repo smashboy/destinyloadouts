@@ -1,18 +1,22 @@
-import { LoadoutInventoryItemsList, LoadoutItem } from "@destiny/shared/types";
+import {
+  type LoadoutInventoryItemsList,
+  type LoadoutItem,
+} from "~/bungie/types";
 import { ModSocket } from "./ModSocket";
 import { SubclassSocket } from "./SubclassSocket";
+import { TypographyLarge } from "../typography";
 
 interface LoadoutSubclassItemProps {
   item: LoadoutItem;
   inventoryItems: LoadoutInventoryItemsList;
 }
 
-const abilitySocketIdentifiers = [
-  "class_abilities",
-  "movement",
-  "melee",
-  "grenades",
-];
+// const abilitySocketIdentifiers = [
+//   "class_abilities",
+//   "movement",
+//   "melee",
+//   "grenades",
+// ];
 
 export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
   item,
@@ -45,27 +49,38 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
     socket.plug?.plugCategoryIdentifier.includes("supers")
   )[0];
 
+  console.log({ aspects, fragments, abilities, subclassSuper, sockets });
+
   return (
-    <div className="flex flex-wrap space-x-4 items-center">
-      <div className="mr-6">
-        <SubclassSocket super={subclassSuper} />
+    <div className="grid grid-cols-1 gap-4">
+      <div className="grid w-fit grid-cols-2 gap-4">
+        <div className="flex items-center justify-center">
+          <SubclassSocket super={subclassSuper} />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
+            <TypographyLarge>Abilities</TypographyLarge>
+            <div className="grid w-fit grid-cols-2 gap-4">
+              {abilities.map((ability, index) => (
+                <ModSocket key={index} socket={ability} />
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <TypographyLarge>Aspects</TypographyLarge>
+            <div className="grid w-fit grid-cols-2 gap-4">
+              {aspects.map((aspect, index) => (
+                <ModSocket key={index} socket={aspect} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        {abilities.map((ability, index) => (
-          <ModSocket key={index} socket={ability} />
+      <TypographyLarge>Fragments</TypographyLarge>
+      <div className="flex space-x-4">
+        {fragments.map((fragment, index) => (
+          <ModSocket key={index} socket={fragment} />
         ))}
-      </div>
-      <div className="grid grid-cols-1 gap-4">
-        <div className="flex space-x-4">
-          {aspects.map((aspect, index) => (
-            <ModSocket key={index} socket={aspect} />
-          ))}
-        </div>
-        <div className="flex space-x-4">
-          {fragments.map((fragment, index) => (
-            <ModSocket key={index} socket={fragment} />
-          ))}
-        </div>
       </div>
     </div>
   );

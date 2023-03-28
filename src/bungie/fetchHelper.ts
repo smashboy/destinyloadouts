@@ -22,8 +22,6 @@ export const bungieApiFetchHelper =
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     };
 
-    console.log("BUNGIE API REQUEST:", { headers, config, params });
-
     const response = await fetch(urlWithParams, {
       method,
       headers,

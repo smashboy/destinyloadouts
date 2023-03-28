@@ -12,6 +12,14 @@ interface LoadoutWeaponItemProps {
   inventoryItems: LoadoutInventoryItemsList;
 }
 
+const plugCategoryHashesExcludeList = [
+  2947756142, // Kill tracker
+  1716719962, // Empty Weapon Level Boost Socket
+  3425085882, // Shaped Weapon
+  3520412733, // Extract Pattern
+  3185182717, // ???
+];
+
 export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
   item,
   socketProps,
@@ -23,7 +31,15 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
 
   const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])
-    .filter((item) => item && item.plug?.plugCategoryHash !== 2947756142);
+    .filter(
+      (item) =>
+        item &&
+        !plugCategoryHashesExcludeList.includes(
+          item.plug?.plugCategoryHash as number
+        )
+    );
+
+  console.log(sockets);
 
   return (
     <div className="flex space-x-4">
