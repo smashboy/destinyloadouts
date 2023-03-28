@@ -1,1 +1,0 @@
-export { destinyManifestRoutes } from "./manifest";

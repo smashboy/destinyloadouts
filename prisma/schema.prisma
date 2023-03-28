@@ -1,0 +1,130 @@
+generator client {
+    provider = "prisma-client-js"
+    // output   = "./.prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id              String            @id @default(cuid())
+    createdAt       DateTime          @default(value: now())
+    updatedAt       DateTime          @updatedAt
+    name            String?
+    bungieAccountId String            @unique
+    loadoutsLiked   LoadoutLike[]
+    loadoutsSaved   LoadoutBookmark[]
+    loadouts        Loadout[]
+    following       UserFollower[]    @relation("following")
+    followers       UserFollower[]    @relation("followers")
+}
+
+model UserFollower {
+    following       User   @relation("following", fields: [followingUserId], references: [id])
+    followingUserId String
+    follower        User   @relation("followers", fields: [followerUserId], references: [id])
+    followerUserId  String
+
+    @@unique([followingUserId, followerUserId])
+}
+
+model Loadout {
+    id           String              @id @default(cuid())
+    createdAt    DateTime            @default(value: now())
+    updatedAt    DateTime            @updatedAt
+    status       LoadoutStatus       @default(DRAFT)
+    classType    DestinyClassType
+    subclassType DestinySublcassType
+    tags         LoadoutTag[]
+    items        Json
+    likes        LoadoutLike[]
+    bookmarks    LoadoutBookmark[]
+    author       User                @relation(fields: [authorId], references: [id])
+    authorId     String
+}
+
+model LoadoutLike {
+    likedBy       User    @relation(fields: [likedByUserId], references: [id])
+    likedByUserId String
+    loadout       Loadout @relation(fields: [loadoutId], references: [id])
+    loadoutId     String
+
+    @@unique([likedByUserId, loadoutId])
+}
+
+model LoadoutBookmark {
+    savedBy       User    @relation(fields: [savedByUserId], references: [id])
+    savedByUserId String
+    loadout       Loadout @relation(fields: [loadoutId], references: [id])
+    loadoutId     String
+
+    @@unique([savedByUserId, loadoutId])
+}
+
+enum LoadoutStatus {
+    PUBLISHED
+    DRAFT
+}
+
+enum DestinyClassType {
+    HUNTER
+    TITAN
+    WARLOCK
+}
+
+enum DestinySublcassType {
+    SOLAR
+    ARC
+    VOID
+    STRAND
+    STATIS
+}
+
+enum LoadoutTag {
+    PVE
+    PVP
+    GAMBIT
+    RAID
+    CRUCIBLE
+    DUNGEON
+    NIGHTFALL
+    TRIALS
+    FASHION
+}
+
+model DestinyManifest {
+    version                        String                          @unique
+    jsonWorldComponentContentPaths DestinyManifestTablesByLocale[]
+}
+
+model DestinyManifestTablesByLocale {
+    locale          String
+    tables          DestinyManifestTable[]
+    manifest        DestinyManifest        @relation(fields: [manifestVersion], references: [version])
+    manifestVersion String
+
+    @@unique([locale, manifestVersion])
+}
+
+model DestinyManifestTable {
+    name            String
+    components      DestinyManifestTableComponent[]
+    locale          DestinyManifestTablesByLocale   @relation(fields: [localeName, manifestVersion], references: [locale, manifestVersion])
+    localeName      String
+    manifestVersion String
+
+    @@unique([name, localeName, manifestVersion])
+}
+
+model DestinyManifestTableComponent {
+    hashId          String
+    content         Json
+    table           DestinyManifestTable @relation(fields: [tableName, localeName, manifestVersion], references: [name, localeName, manifestVersion])
+    tableName       String
+    localeName      String
+    manifestVersion String
+
+    @@unique([hashId, tableName, localeName, manifestVersion])
+}
