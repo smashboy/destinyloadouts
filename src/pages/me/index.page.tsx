@@ -1,14 +1,11 @@
 import { type User } from "@prisma/client";
-import { type GeneralUser, getBungieNetUserById } from "bungie-api-ts/user";
 import { type NextPage, type GetServerSideProps } from "next";
-import { bungieApiFetchHelper } from "~/bungie/fetchHelper";
 import { ButtonLink } from "~/components/Button";
 import { getServerAuthSession } from "~/server/auth";
 import { trpsSSG } from "~/utils/ssg";
 import { AccountHeader } from "./components/AccountHeader";
 
 interface AuthUserProfilePageProps {
-  bungieNetUser: GeneralUser;
   user: User;
   loadoutsCount: number;
   followersCount: number;
@@ -46,19 +43,15 @@ export const getServerSideProps: GetServerSideProps<
       },
     };
 
-  const { accessToken, user: sessionUser } = session;
+  const {
+    user: { id: userId },
+  } = session;
 
   const trpc = trpsSSG(session);
-  const fetchHelper = bungieApiFetchHelper(accessToken);
 
-  const [bungieNetUser, userResponse] = await Promise.all([
-    getBungieNetUserById(fetchHelper, {
-      id: sessionUser.id,
-    }),
-    trpc.users.getByBungieAccountId.fetch({
-      bungieAccountId: session.user.id,
-    }),
-  ]);
+  const userResponse = await trpc.users.getByBungieAccountId.fetch({
+    bungieAccountId: userId,
+  });
 
   if (!userResponse)
     return {
@@ -66,10 +59,7 @@ export const getServerSideProps: GetServerSideProps<
     };
 
   return {
-    props: {
-      bungieNetUser: bungieNetUser.Response,
-      ...userResponse,
-    },
+    props: userResponse,
   };
 };
 

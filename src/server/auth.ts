@@ -18,6 +18,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     accessToken: string;
     user: {
+      email: string;
       id: string;
       name: string;
       image: string;
@@ -41,6 +42,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: async ({ user }) => {
       const bungieAccountId = user.id;
+      const bungieAccountDisplayName = user.name as string;
+      const bungieAccountProfilePicturePath = user.image as string;
 
       await prisma.user.upsert({
         where: {
@@ -48,16 +51,20 @@ export const authOptions: NextAuthOptions = {
         },
         update: {
           bungieAccountId,
+          bungieAccountDisplayName,
+          bungieAccountProfilePicturePath,
         },
         create: {
           bungieAccountId,
+          bungieAccountDisplayName,
+          bungieAccountProfilePicturePath,
         },
       });
       return true;
     },
     session({ session, token }) {
       if (session.user && token) {
-        session.user.id = session.user.email!;
+        session.user.id = session.user.email;
         session.accessToken = token.accessToken as string;
         // session.user.role = user.role; <-- put other properties on the session here
       }

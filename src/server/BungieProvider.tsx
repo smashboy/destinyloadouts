@@ -32,9 +32,7 @@ export const BungieAuthProvider: OAuthProvider = () => ({
       id: user.membershipId,
       name: user.displayName,
       email: user.membershipId,
-      image: `${bungieNetOrigin}${
-        user.profilePicturePath.startsWith("/") ? "" : "/"
-      }${user.profilePicturePath}`,
+      image: user.profilePicturePath,
     };
   },
 });
