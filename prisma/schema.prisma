@@ -91,7 +91,7 @@ enum LoadoutTag {
     RAID
     CRUCIBLE
     DUNGEON
-    NIGHTFALL
+    VANGUARD
     TRIALS
     FASHION
 }
