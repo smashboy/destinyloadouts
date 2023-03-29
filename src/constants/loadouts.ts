@@ -3,10 +3,10 @@ import { LoadoutTag } from "@prisma/client";
 export const loadoutTagsList = [
   LoadoutTag.PVE,
   LoadoutTag.PVP,
+  LoadoutTag.VANGUARD,
+  LoadoutTag.CRUCIBLE,
   LoadoutTag.GAMBIT,
   LoadoutTag.RAID,
-  LoadoutTag.CRUCIBLE,
-  LoadoutTag.VANGUARD,
   LoadoutTag.DUNGEON,
   LoadoutTag.TRIALS,
   LoadoutTag.FASHION,

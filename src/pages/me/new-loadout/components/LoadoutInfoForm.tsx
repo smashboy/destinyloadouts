@@ -11,7 +11,19 @@ const Editor = dynamic(() => import("~/components/Editor"), {
   ssr: false,
 });
 
-export const LoadoutInfoForm = () => {
+export interface LoadoutInfoFormSubmitProps {
+  name: string;
+  tags: LoadoutTag[];
+  description: EditorState | undefined;
+}
+
+interface LoadoutInfoFormProps {
+  onSubmit: (args: LoadoutInfoFormSubmitProps) => void;
+}
+
+export const LoadoutInfoForm: React.FC<LoadoutInfoFormProps> = ({
+  onSubmit,
+}) => {
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -25,13 +37,16 @@ export const LoadoutInfoForm = () => {
   const handleNameInput = (event: React.ChangeEvent<HTMLInputElement>) =>
     setName(event.target.value);
 
-  const handleCreateLoadout = () => {
-    console.log({ name, tags, description });
-  };
+  const handleCreateLoadout = () => onSubmit({ name, tags, description });
 
   return (
     <div className="sticky top-4 flex h-fit flex-col space-y-2">
-      <Input label="Loadout name" value={name} onChange={handleNameInput} />
+      <Input
+        label="Loadout name"
+        value={name}
+        onChange={handleNameInput}
+        autoComplete="off"
+      />
       <div className="grid grid-cols-2 gap-2">
         <SelectTagsDialog selected={tags} onSave={setTags} />
         <Button

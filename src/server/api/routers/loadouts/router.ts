@@ -18,7 +18,13 @@ const loadoutItemValidation = z
   .nullable();
 
 const loadoutValidation = z.object({
-  content: z.object({
+  name: z.string().min(1).max(75),
+  description: z.unknown().optional(),
+  classType: z.nativeEnum(DestinyClassType),
+  subclassType: z.nativeEnum(DestinySublcassType),
+  tags: z.array(z.nativeEnum(LoadoutTag)),
+  status: z.nativeEnum(LoadoutStatus).optional(),
+  items: z.object({
     helmet: loadoutItemValidation,
     gauntlets: loadoutItemValidation,
     chest: loadoutItemValidation,
@@ -183,41 +189,41 @@ export const loadoutsRouter = createTRPCRouter({
         },
       })
   ),
-  create: protectedProcedure
-    .input(
-      z.object({
-        classType: z.nativeEnum(DestinyClassType),
-        subclassType: z.nativeEnum(DestinySublcassType),
-        tags: z.array(z.nativeEnum(LoadoutTag)),
-        status: z.nativeEnum(LoadoutStatus).optional(),
-        loadout: loadoutValidation,
-      })
-    )
-    .mutation(
-      ({
-        input: { classType, subclassType, tags, status, loadout },
-        ctx: {
-          session: {
-            user: { id: userId },
-          },
-          prisma,
+  create: protectedProcedure.input(loadoutValidation).mutation(
+    ({
+      input: {
+        classType,
+        subclassType,
+        tags,
+        status,
+        items,
+        name,
+        description,
+      },
+      ctx: {
+        session: {
+          user: { id: userId },
         },
-      }) =>
-        prisma.loadout.create({
-          data: {
-            classType,
-            subclassType,
-            tags,
-            status,
-            items: loadout,
-            author: {
-              connect: {
-                id: userId,
-              },
+        prisma,
+      },
+    }) =>
+      prisma.loadout.create({
+        data: {
+          name,
+          classType,
+          subclassType,
+          description,
+          tags,
+          status,
+          items,
+          author: {
+            connect: {
+              bungieAccountId: userId,
             },
           },
-        })
-    ),
+        },
+      })
+  ),
   getByUserId: publicProcedure
     .input(
       z.object({

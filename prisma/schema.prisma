@@ -37,9 +37,11 @@ model Loadout {
     createdAt    DateTime            @default(value: now())
     updatedAt    DateTime            @updatedAt
     status       LoadoutStatus       @default(DRAFT)
+    name         String
     classType    DestinyClassType
     subclassType DestinySublcassType
     tags         LoadoutTag[]
+    description  Json?
     items        Json
     likes        LoadoutLike[]
     bookmarks    LoadoutBookmark[]

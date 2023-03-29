@@ -1,9 +1,13 @@
 import { type DestinyCharacterLoadout } from "~/bungie/types";
-import { LoadoutInfoForm } from "./LoadoutInfoForm";
+import {
+  LoadoutInfoForm,
+  type LoadoutInfoFormSubmitProps,
+} from "./LoadoutInfoForm";
 import { TypographyLarge } from "~/components/typography";
 import { LoadoutSubclassItem } from "~/components/destiny/LoadoutSubclassItem";
 import { LoadoutWeaponItem } from "~/components/destiny/LoadoutWeaponItem";
 import { LoadoutArmorItem } from "~/components/destiny/LoadoutArmorItem";
+import { trpcNext } from "~/utils/api";
 
 interface CharacterSocketsProps {
   loadout: DestinyCharacterLoadout;
@@ -25,9 +29,24 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     inventoryItems,
   } = loadout;
 
+  const createLoadoutMutation = trpcNext.loadouts.create.useMutation();
+
+  const handleCreateNewLoadout = (formArgs: LoadoutInfoFormSubmitProps) => {
+    const { inventoryItems, ...loadoutProps } = loadout;
+
+    console.log("CREATE");
+
+    createLoadoutMutation.mutate({
+      ...formArgs,
+      items: loadoutProps,
+      classType: "WARLOCK",
+      subclassType: "VOID",
+    });
+  };
+
   return (
     <div className="grid grid-cols-2 gap-10">
-      <LoadoutInfoForm />
+      <LoadoutInfoForm onSubmit={handleCreateNewLoadout} />
       <div className="grid grid-cols-1 gap-4">
         <TypographyLarge>Subclass</TypographyLarge>
         <LoadoutSubclassItem item={subclass} inventoryItems={inventoryItems} />
