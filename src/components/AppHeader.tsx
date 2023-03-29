@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./Menu";
+import { bungieNetOrigin } from "~/bungie/constants";
 
 export const AppHeader = () => {
   const session = useSession();
@@ -37,7 +38,7 @@ export const AppHeader = () => {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar
-                src={user?.image}
+                src={`${bungieNetOrigin}/${user!.image}`}
                 fallback={user?.name ?? "User avatar"}
               />
             </DropdownMenuTrigger>

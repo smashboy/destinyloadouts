@@ -4,6 +4,7 @@ import { ItemSocket } from "./ItemSocket";
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { HoverCard, HoverCardTrigger, ItemHoverCard } from "./ItemHoverCard";
+import { TypographySubtle } from "../typography";
 
 interface ModSocketProps {
   // modTypeIcon: string; local icon path
@@ -13,9 +14,14 @@ interface ModSocketProps {
 export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
   const {
     displayProperties: { icon: iconPath },
+    plug,
   } = socket;
 
   const watermarkIcon = getDestinyItemActiveWatermarkIcon(socket);
+
+  const enegryCost =
+    !plug?.plugCategoryIdentifier.includes("fragments") &&
+    plug?.energyCost?.energyCost;
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>
@@ -48,6 +54,11 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
                 alt="Loadout item icon"
                 fill
               />
+            )}
+            {enegryCost !== undefined && (
+              <TypographySubtle className="absolute top-1.5 right-2.5 z-10 text-white">
+                {enegryCost}
+              </TypographySubtle>
             )}
           </div>
         </ItemSocket>

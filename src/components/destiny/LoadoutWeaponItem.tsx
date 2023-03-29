@@ -39,11 +39,8 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
         )
     );
 
-  console.log(sockets);
-
   return (
     <div className="flex space-x-4">
-      {/* <ConsoleLog sockets={sockets} /> */}
       <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
       <div className="grid grid-cols-6 gap-4">
         {sockets.map((socket, index) => (
