@@ -1,4 +1,8 @@
-import { LoadoutTag } from "@prisma/client";
+import {
+  DestinyClassType,
+  DestinyDamageType,
+  LoadoutTag,
+} from "@prisma/client";
 
 export const loadoutTagsList = [
   LoadoutTag.PVE,
@@ -34,4 +38,18 @@ export const loadoutTagTitlesMap = {
   [LoadoutTag.VANGUARD]: "Vanguard",
   [LoadoutTag.TRIALS]: "Trials",
   [LoadoutTag.FASHION]: "Fashion",
+};
+
+export const bungieCharacterClassToDbClassMap = {
+  0: DestinyClassType.TITAN,
+  1: DestinyClassType.HUNTER,
+  2: DestinyClassType.WARLOCK,
+};
+
+export const bungieDamageTypeToDbDamageTypeMap = {
+  2: DestinyDamageType.ARC,
+  3: DestinyDamageType.SOLAR,
+  4: DestinyDamageType.VOID,
+  6: DestinyDamageType.STATIS,
+  7: DestinyDamageType.STRAND,
 };

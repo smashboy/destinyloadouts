@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+import { type DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
 import {
   LoadoutInfoForm,
@@ -8,14 +10,22 @@ import { LoadoutSubclassItem } from "~/components/destiny/LoadoutSubclassItem";
 import { LoadoutWeaponItem } from "~/components/destiny/LoadoutWeaponItem";
 import { LoadoutArmorItem } from "~/components/destiny/LoadoutArmorItem";
 import { trpcNext } from "~/utils/api";
+import {
+  bungieCharacterClassToDbClassMap,
+  bungieDamageTypeToDbDamageTypeMap,
+} from "~/constants/loadouts";
 
 interface CharacterSocketsProps {
   loadout: DestinyCharacterLoadout;
+  character: DestinyCharacterComponent;
 }
 
 export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
   loadout,
+  character,
 }) => {
+  const router = useRouter();
+
   const {
     kinetic,
     energy,
@@ -31,16 +41,35 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
 
   const createLoadoutMutation = trpcNext.loadouts.create.useMutation();
 
-  const handleCreateNewLoadout = (formArgs: LoadoutInfoFormSubmitProps) => {
+  const handleCreateNewLoadout = async (
+    formArgs: LoadoutInfoFormSubmitProps
+  ) => {
     const { inventoryItems, ...loadoutProps } = loadout;
 
-    console.log("CREATE");
+    const [subclassHash] = subclass!;
 
-    createLoadoutMutation.mutate({
+    const subclassItem = inventoryItems[subclassHash]!;
+
+    const { authorId, id } = await createLoadoutMutation.mutateAsync({
       ...formArgs,
       items: loadoutProps,
-      classType: "WARLOCK",
-      subclassType: "VOID",
+      classType:
+        bungieCharacterClassToDbClassMap[
+          character.classType as keyof typeof bungieCharacterClassToDbClassMap
+        ],
+      subclassType:
+        bungieDamageTypeToDbDamageTypeMap[
+          subclassItem.talentGrid!
+            .hudDamageType as keyof typeof bungieDamageTypeToDbDamageTypeMap
+        ],
+    });
+
+    router.push({
+      pathname: "/[userId]/[loadoutId]",
+      query: {
+        userId: authorId,
+        loadoutId: id,
+      },
     });
   };
 

@@ -39,11 +39,12 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
 
   const { characterId } = router.query;
 
+  const selectedCharacter = characters[characterId as string]
+
   return (
     <div className="flex flex-col space-y-4">
       <CharacterClassIconBackground
-        characters={characters}
-        selecetedCharacterId={characterId as string}
+        character={selectedCharacter}
       />
       <CharacterSelector characters={characters} />
       {loadouts.length > 0 && characterId && (
@@ -56,7 +57,7 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
       )}
       {selectedLoadout && (
         <div className="flex flex-col space-y-2">
-          <CharacterSockets loadout={selectedLoadout} />
+          <CharacterSockets character={selectedCharacter!} loadout={selectedLoadout} />
         </div>
       )}
     </div>

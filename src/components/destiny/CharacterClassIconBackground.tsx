@@ -6,17 +6,15 @@ import {
 } from "~/bungie/constants";
 
 interface CharacterClassIconBackgroundProps {
-  characters: Record<string, DestinyCharacterComponent>;
-  selecetedCharacterId?: string;
+  character?: DestinyCharacterComponent;
 }
 
 export const CharacterClassIconBackground: React.FC<
   CharacterClassIconBackgroundProps
-> = ({ characters, selecetedCharacterId }) => {
+> = ({ character }) => {
   const iconPath =
     characterClassIconPathMap[
-      characters[selecetedCharacterId!]
-        ?.classType as keyof typeof characterClassIconPathMap
+      character?.classType as keyof typeof characterClassIconPathMap
     ] || destinyLogoIconPath;
 
   return (

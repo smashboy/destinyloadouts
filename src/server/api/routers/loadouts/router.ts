@@ -1,6 +1,6 @@
 import {
   DestinyClassType,
-  DestinySublcassType,
+  DestinyDamageType,
   LoadoutStatus,
   LoadoutTag,
 } from "@prisma/client";
@@ -21,7 +21,7 @@ const loadoutValidation = z.object({
   name: z.string().min(1).max(75),
   description: z.unknown().optional(),
   classType: z.nativeEnum(DestinyClassType),
-  subclassType: z.nativeEnum(DestinySublcassType),
+  subclassType: z.nativeEnum(DestinyDamageType),
   tags: z.array(z.nativeEnum(LoadoutTag)),
   status: z.nativeEnum(LoadoutStatus).optional(),
   items: z.object({
@@ -273,7 +273,7 @@ export const loadoutsRouter = createTRPCRouter({
     .input(
       z.object({
         classType: z.nativeEnum(DestinyClassType).optional(),
-        subclassType: z.nativeEnum(DestinySublcassType).optional(),
+        subclassType: z.nativeEnum(DestinyDamageType).optional(),
         tags: z.array(z.nativeEnum(LoadoutTag)).optional(),
         take: z.number().int(),
         skip: z.number().int(),
