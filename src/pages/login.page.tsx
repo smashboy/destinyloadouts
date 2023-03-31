@@ -19,6 +19,7 @@ const LoginPage: NextPageWithLayout = () => {
             src="/destiny-icons/black-armory.svg"
             width={64}
             height={64}
+            className="dark:invert"
             alt="App logo"
           />
           <TypographyLarge>Welcome to Black Armory</TypographyLarge>

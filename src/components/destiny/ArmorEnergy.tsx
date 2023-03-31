@@ -16,8 +16,8 @@ export const ArmorEnergy: React.FC<ArmorEnergyProps> = ({ energyUsed }) => {
           <div
             key={index}
             className={cn(
-              "h-6 bg-slate-400",
-              index < energyUsed && "bg-slate-800"
+              "h-6 bg-slate-400 dark:bg-slate-500",
+              index < energyUsed && "bg-slate-800 dark:bg-slate-50"
             )}
           />
         ))}

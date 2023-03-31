@@ -18,12 +18,13 @@ export const CharacterClassIconBackground: React.FC<
     ] || destinyLogoIconPath;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center opacity-10">
+    <div className="fixed inset-0 flex items-center justify-center opacity-10 dark:bg-neutral-900">
       <Image
         src={iconPath}
         width={256}
         height={256}
         alt="Destiny character class type"
+        className="dark:invert"
       />
     </div>
   );

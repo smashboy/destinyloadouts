@@ -56,7 +56,10 @@ const SelectTagItem: React.FC<SelectTagItemProps> = ({
             width={24}
             height={24}
             alt="Loadout tag icon"
-            className={cn(value === LoadoutTag.DUNGEON && "scale-[2.5]")}
+            className={cn(
+              "dark:invert",
+              value === LoadoutTag.DUNGEON && "scale-[2.5]"
+            )}
           />
         )}
         <TypographyLarge>{title}</TypographyLarge>

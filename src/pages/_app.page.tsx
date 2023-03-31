@@ -31,7 +31,7 @@ const CommonRoot: React.FC<{
 }> = ({ children, session }) => (
   <div
     className={cn(
-      "flex h-full flex-col bg-white font-sans text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-50",
+      "flex h-full flex-col bg-white font-sans text-slate-900 antialiased dark:bg-neutral-900 dark:text-slate-50",
       fontSans.variable
     )}
   >
@@ -44,6 +44,9 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
   const removeLayout = Component.removeLayout || false;
+
+  typeof document !== "undefined" &&
+    document.documentElement.classList.add("dark");
 
   if (removeLayout)
     return (

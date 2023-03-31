@@ -255,7 +255,7 @@ export const loadoutsRouter = createTRPCRouter({
           }),
       });
 
-      const manifest = await prisma.destinyManifest.findFirst();
+      // const manifest = await prisma.destinyManifest.findFirst();
 
       // const inventoryItems = await getLoadoutsInventoryItems(
       //   loadouts,
@@ -346,7 +346,7 @@ export const loadoutsRouter = createTRPCRouter({
             }),
         });
 
-        const manifest = await prisma.destinyManifest.findFirst();
+        // const manifest = await prisma.destinyManifest.findFirst();
 
         // const inventoryItems = await getLoadoutsInventoryItems(
         //   loadouts,

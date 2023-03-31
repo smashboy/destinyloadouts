@@ -22,7 +22,7 @@ export const AppHeader = () => {
   const handleSignout = () => signOut();
 
   return (
-    <header className="z-10 w-full border-b border-b-slate-200 bg-white dark:border-b-slate-700 dark:bg-slate-900">
+    <header className="z-10 w-full border-b border-b-slate-200 bg-white dark:border-b-neutral-700 dark:bg-neutral-900">
       <div className="container flex h-16 items-center px-6">
         <Link href="/" className="flex flex-1 items-center">
           <Image
@@ -30,7 +30,7 @@ export const AppHeader = () => {
             width={32}
             height={32}
             alt="App logo"
-            className="mr-2"
+            className="mr-2 dark:invert"
           />
           <TypographyLarge>Black Armory</TypographyLarge>
         </Link>

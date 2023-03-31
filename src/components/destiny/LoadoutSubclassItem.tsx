@@ -24,7 +24,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 }) => {
   if (!item) return null;
 
-  const [, plugItemHashes] = item;
+  const [itemHash, plugItemHashes] = item;
 
   const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])
@@ -48,6 +48,8 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
   const subclassSuper = sockets.filter((socket) =>
     socket.plug?.plugCategoryIdentifier.includes("supers")
   )[0];
+
+  console.log(inventoryItems[itemHash]);
 
   return (
     <div className="grid grid-cols-1 gap-4">

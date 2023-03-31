@@ -28,9 +28,9 @@ const ItemHoverCard = forwardRef<
       align="center"
       side="top"
       sideOffset={15}
-      className="z-50 w-64 overflow-hidden rounded-md border border-slate-100 bg-white shadow-md outline-none"
+      className="z-50 w-64 overflow-hidden rounded-md border border-slate-100 bg-white shadow-md outline-none dark:border-neutral-600 dark:bg-neutral-800"
     >
-      <div className="bg-slate-200 py-2 px-4">
+      <div className="bg-slate-200 py-2 px-4 dark:bg-neutral-600">
         <TypographyLarge>{name}</TypographyLarge>
         <TypographySubtle className="text-slate-600">
           {itemTypeDisplayName}
