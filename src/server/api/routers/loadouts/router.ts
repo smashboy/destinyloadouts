@@ -10,8 +10,12 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { getPopularDuringDate } from "~/server/utils/getPopularDuringDate";
 import { paginate } from "~/server/utils/paginate";
+import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
+import { type DestinyCharacterLoadout } from "~/bungie/types";
+import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
@@ -228,45 +232,45 @@ export const loadoutsRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        cursor: cursorValidation,
       })
     )
-    .query(async ({ input: { userId, cursor }, ctx: { prisma } }) => {
-      const { take = 15, skip = 0 } = cursor || {};
-      const where = { authorId: userId };
-      const orderBy = { createdAt: "desc" as const };
-
-      const {
-        items: loadouts,
-        hasMore,
-        nextPage,
-      } = await paginate({
-        take,
-        skip,
-        count: () => prisma.loadout.count({ where, orderBy }),
-        query: (paginateArgs) =>
-          prisma.loadout.findMany({
-            ...paginateArgs,
-            where,
-            orderBy,
-            include: {
-              author: true, // todo, can be improved
-            },
-          }),
+    .query(async ({ input: { userId }, ctx: { prisma, session } }) => {
+      const loadouts = await prisma.loadout.findMany({
+        where: { authorId: userId },
+        orderBy: { createdAt: "desc" },
       });
 
-      // const manifest = await prisma.destinyManifest.findFirst();
+      const manifestCaller = destinyLatestManifestRouterCaller({
+        prisma,
+        session,
+      });
 
-      // const inventoryItems = await getLoadoutsInventoryItems(
-      //   loadouts,
-      //   manifest!
-      // );
+      const previewItemHashes: string[] = [];
+
+      for (const loadout of loadouts) {
+        const loadoutItems =
+          loadout.items as unknown as DestinyCharacterLoadout;
+
+        for (const item of Object.values(loadoutItems)) {
+          if (item)
+            previewItemHashes.push(
+              ...[item[0].toString(), ...item[1].map((hash) => hash.toString())]
+            );
+        }
+      }
+
+      const inventoryItems = await manifestCaller.getTableComponents({
+        tableName: "DestinyInventoryItemDefinition",
+        locale: "en",
+        hashIds: [...new Set(previewItemHashes)],
+      });
 
       return {
         loadouts,
-        // inventoryItems,
-        hasMore,
-        cursor: nextPage,
+        inventoryItems:
+          formatPrismaDestinyManifestTableComponents<
+            Record<string, DestinyInventoryItemDefinition>
+          >(inventoryItems),
       };
     }),
   feed: publicProcedure

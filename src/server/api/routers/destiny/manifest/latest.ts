@@ -120,3 +120,6 @@ export const destinyLatestManifestRouter = createTRPCRouter({
         })
     ),
 });
+
+export const destinyLatestManifestRouterCaller =
+  destinyLatestManifestRouter.createCaller;

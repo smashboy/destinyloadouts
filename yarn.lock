@@ -933,6 +933,19 @@
   dependencies:
     tslib "^2.4.0"
 
+"@tabler/icons-react@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.13.0.tgz#2396687e9f5a20912c465f39bb291e1bc719365d"
+  integrity sha512-d1eAnD4+JhFxLnRFwE1h0ukt7el0/KnbqTZ4acSvtZ8yuHuqff266yZU587aCU3ovaX/6zxkgaxJsDnBXiLTEw==
+  dependencies:
+    "@tabler/icons" "2.13.0"
+    prop-types "^15.7.2"
+
+"@tabler/icons@2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.13.0.tgz#46d1f3b0ab50c01928204302ce0a2f3e2d70b1d4"
+  integrity sha512-YF1cl17cdhaAHQayv3zDRzYLT6AX49gm6RGTNkIfFiEcefMsJtyCt1qXbI/mxzFCugrb3LdlPmZPLceYl9kn8A==
+
 "@tanstack/query-core@4.27.0":
   version "4.27.0"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.27.0.tgz#96bcef499008ea080b66611d029655e3ffdf8bea"
@@ -3169,7 +3182,7 @@ prisma@^4.11.0:
   dependencies:
     "@prisma/engines" "4.11.0"
 
-prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==

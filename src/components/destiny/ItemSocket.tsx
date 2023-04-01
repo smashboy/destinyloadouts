@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cva } from "class-variance-authority";
 import { cn } from "~/utils/tailwind";
 
 export interface ItemSocketProps {
@@ -8,7 +9,23 @@ export interface ItemSocketProps {
   href?: string;
   isSelected?: boolean;
   isGoldBorder?: boolean;
+  isSm?: boolean;
 }
+
+const rootVariants = cva(
+  "rounded relative transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-4 hover:ring-2 hover:ring-slate-300 hover:ring-offset-4",
+  {
+    variants: {
+      size: {
+        default: "w-20 h-20",
+        sm: "w-12 h-12",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  }
+);
 
 export const ItemSocket: React.FC<ItemSocketProps> = ({
   bgIconPath,
@@ -16,14 +33,15 @@ export const ItemSocket: React.FC<ItemSocketProps> = ({
   href,
   isSelected,
   isGoldBorder,
+  isSm = false,
 }) => {
   const rootStyles = cn(
-    "w-20 h-20 rounded relative transition ease-out duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-4 hover:ring-2 hover:ring-slate-300 hover:ring-offset-4",
+    rootVariants({ size: isSm ? "sm" : "default" }),
     isSelected &&
       "ring-2 ring-offset-4 ring-sky-300 focus:ring-inherit hover:ring-inherit"
   );
 
-  const RootElement = href ? Link : "button";
+  const RootElement = href ? Link : "div";
 
   return (
     <RootElement href={href!} className={rootStyles}>

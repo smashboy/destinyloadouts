@@ -10,6 +10,8 @@ interface LoadoutWeaponItemProps {
   item: LoadoutItem;
   socketProps: ItemSocketProps;
   inventoryItems: LoadoutInventoryItemsList;
+  isSm?: boolean;
+  hideSockets?: boolean;
 }
 
 const plugCategoryHashesExcludeList = [
@@ -24,8 +26,10 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
   item,
   socketProps,
   inventoryItems,
+  isSm,
+  hideSockets,
 }) => {
-  if (!item) return <ItemSocket {...socketProps} />;
+  if (!item) return <ItemSocket {...socketProps} isSm={isSm} />;
 
   const [, plugItemHashes] = item;
 
@@ -39,9 +43,22 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
         )
     );
 
+  if (sockets.length === 0 || hideSockets)
+    return (
+      <LoadoutItemSocket
+        item={item}
+        inventoryItems={inventoryItems}
+        isSm={isSm}
+      />
+    );
+
   return (
     <div className="flex space-x-4">
-      <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
+      <LoadoutItemSocket
+        item={item}
+        inventoryItems={inventoryItems}
+        isSm={isSm}
+      />
       <div className="grid grid-cols-6 gap-4">
         {sockets.map((socket, index) => (
           <ModSocket key={index} socket={socket} />

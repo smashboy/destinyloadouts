@@ -9,6 +9,7 @@ import { TypographyLarge } from "../typography";
 interface LoadoutSubclassItemProps {
   item: LoadoutItem;
   inventoryItems: LoadoutInventoryItemsList;
+  hideSockets?: boolean;
 }
 
 // const abilitySocketIdentifiers = [
@@ -21,6 +22,7 @@ interface LoadoutSubclassItemProps {
 export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
   item,
   inventoryItems,
+  hideSockets,
 }) => {
   if (!item) return null;
 
@@ -49,7 +51,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
     socket.plug?.plugCategoryIdentifier.includes("supers")
   )[0];
 
-  console.log(inventoryItems[itemHash]);
+  if (hideSockets) return <SubclassSocket super={subclassSuper} />;
 
   return (
     <div className="grid grid-cols-1 gap-4">

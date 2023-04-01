@@ -1,6 +1,5 @@
 import { type Loadout } from "@prisma/client";
 import { Virtuoso, type Components } from "react-virtuoso";
-import { LoadoutPreviewCard } from "./LoadoutPreviewCard";
 import { cn } from "~/utils/tailwind";
 import { forwardRef } from "react";
 import { cx } from "class-variance-authority";
@@ -24,7 +23,8 @@ const components: Components = {
   Item: ({ children, ...props }) => {
     return (
       <div
-        className="relative w-full overflow-hidden rounded transition duration-300 ease-out hover:ring-2 hover:ring-slate-300 hover:ring-offset-4 focus:ring-2 focus:ring-slate-300 focus:ring-offset-4"
+        // hover:ring-2 hover:ring-slate-300 hover:ring-offset-4 focus:ring-2 focus:ring-slate-300 focus:ring-offset-4
+        className="relative w-full overflow-hidden rounded transition duration-300 ease-out dark:bg-neutral-800 hover:dark:bg-neutral-700"
         {...props}
         style={{ margin: 0 }}
       >
@@ -61,9 +61,6 @@ export const LoadoutsList: React.FC<LoadoutsListProps> = ({
       endReached={handleLoadMore}
       components={components}
       useWindowScroll
-      itemContent={(_, loadout) => {
-        return <LoadoutPreviewCard loadout={loadout} />;
-      }}
     />
   );
 };

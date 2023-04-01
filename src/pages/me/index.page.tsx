@@ -1,9 +1,10 @@
-import { type User, type Loadout } from "@prisma/client";
 import { type NextPage, type GetServerSideProps } from "next";
+import { type User, type Loadout } from "@prisma/client";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { getServerAuthSession } from "~/server/auth";
 import { trpsSSG } from "~/utils/ssg";
 import { AccountHeader } from "./components/AccountHeader";
-import { LoadoutsList } from "~/components/loadouts/LoadoutsList";
+import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 
 interface AuthUserProfilePageProps {
   user: User;
@@ -12,23 +13,33 @@ interface AuthUserProfilePageProps {
   likesCount: number;
   feed: {
     loadouts: Loadout[];
+    inventoryItems: Record<string, DestinyInventoryItemDefinition>;
   };
 }
 
 const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = ({
-  feed,
+  feed: { loadouts, inventoryItems },
   ...props
 }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       <AccountHeader {...props} />
-      <LoadoutsList
+      {/* <LoadoutsList
         className="col-span-2 flex flex-col gap-4"
         loadouts={feed.loadouts}
         onFetchMore={() => {}}
         hasMore={false}
         isLoading={false}
-      />
+      /> */}
+      <div className="grid grid-cols-2 gap-2">
+        {loadouts.map((loadout) => (
+          <LoadoutPreviewCard
+            key={loadout.id}
+            loadout={loadout}
+            inventoryItems={inventoryItems}
+          />
+        ))}
+      </div>
     </div>
   );
 };

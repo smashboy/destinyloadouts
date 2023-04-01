@@ -9,8 +9,8 @@ export const AccountCounter: React.FC<AccountCounterProps> = ({
   title,
   count,
 }) => (
-  <div className="flex flex-col items-center space-y-2">
+  <div className="flex items-center space-x-2">
+    <TypographySubtle>{`${title}:`}</TypographySubtle>
     <TypographyLarge>{count}</TypographyLarge>
-    <TypographySubtle>{title}</TypographySubtle>
   </div>
 );

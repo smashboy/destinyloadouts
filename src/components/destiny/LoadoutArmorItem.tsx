@@ -16,6 +16,8 @@ interface LoadoutArmorItemProps {
   item: LoadoutItem;
   inventoryItems: LoadoutInventoryItemsList;
   socketProps: ItemSocketProps;
+  isSm?: boolean;
+  hideSockets?: boolean;
 }
 
 const getSockets = (
@@ -47,8 +49,10 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
   item,
   inventoryItems,
   socketProps,
+  isSm,
+  hideSockets,
 }) => {
-  if (!item) return <ItemSocket {...socketProps} />;
+  if (!item) return <ItemSocket {...socketProps} isSm={isSm} />;
 
   const [, plugItemHashes] = item;
 
@@ -60,9 +64,22 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
     0
   );
 
+  if (sockets.length === 0 || hideSockets)
+    return (
+      <LoadoutItemSocket
+        item={item}
+        inventoryItems={inventoryItems}
+        isSm={isSm}
+      />
+    );
+
   return (
     <div className="flex space-x-4">
-      <LoadoutItemSocket item={item} inventoryItems={inventoryItems} />
+      <LoadoutItemSocket
+        item={item}
+        inventoryItems={inventoryItems}
+        isSm={isSm}
+      />
       <div className="flex flex-col space-y-4">
         <div className="grid grid-cols-6 gap-4">
           {sockets.map((socket, index) => (
