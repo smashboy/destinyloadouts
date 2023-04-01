@@ -1,12 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Loadout, type User, type LoadoutLike } from "@prisma/client";
+import { type Loadout, type User } from "@prisma/client";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import {
-  characterClassIconPathMap,
-  damageTypeIconPathMap,
-} from "~/constants/loadouts";
+import { characterClassIconPathMap } from "~/constants/loadouts";
 import { TypographyLarge, TypographySmall } from "../typography";
 import { Separator } from "../Separator";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
@@ -30,7 +27,6 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     authorId,
     id,
     classType,
-    subclassType,
     tags,
     name,
     items,
@@ -44,7 +40,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
   const loadoutLink = `${authorId}/${id}`;
 
   const classIcon = characterClassIconPathMap[classType];
-  const subclassIcon = damageTypeIconPathMap[subclassType];
+  // const subclassIcon = damageTypeIconPathMap[subclassType];
 
   const isLikedByAuthUser = !!likes.find(
     (like) => like.likedByUserId === authUser?.id
@@ -77,15 +73,6 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
           height={64}
           className="dark:invert"
         />
-        {/* <span
-        className="absolute inset-y-0 right-0 w-1/2"
-        style={{
-          backgroundColor: damageTypesColorMap[DestinyDamageType.ARC],
-          // opacity: 0.3,
-          boxShadow: "rgba(121, 187, 232, 1) -20px 0px 20px 20px",
-        }}
-      /> */}
-        {/* border-2 border-solid border-slate-300 */}
 
         <span className="flex flex-1 flex-col gap-2">
           <TypographyLarge>{name}</TypographyLarge>
@@ -97,7 +84,6 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               </span>
             ))}
           </span>
-
           <div className="flex gap-4 py-3">
             <LoadoutSubclassItem
               item={subclass}
