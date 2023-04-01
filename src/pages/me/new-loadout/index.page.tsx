@@ -1,3 +1,5 @@
+import { type GetServerSideProps, type NextPage } from "next";
+import { useRouter } from "next/router";
 import {
   DestinyComponentType,
   type DestinyLoadoutColorDefinition,
@@ -7,8 +9,6 @@ import {
   type DestinyCharacterComponent,
 } from "bungie-api-ts/destiny2";
 import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
-import { type GetServerSideProps, type NextPage } from "next";
-import { useRouter } from "next/router";
 import { bungieApiFetchHelper } from "~/bungie/fetchHelper";
 import { getSingleMembershipData } from "~/bungie/getSingleMembershipData";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
@@ -39,13 +39,11 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
 
   const { characterId } = router.query;
 
-  const selectedCharacter = characters[characterId as string]
+  const selectedCharacter = characters[characterId as string];
 
   return (
     <div className="flex flex-col space-y-4">
-      <CharacterClassIconBackground
-        character={selectedCharacter}
-      />
+      <CharacterClassIconBackground character={selectedCharacter} />
       <CharacterSelector characters={characters} />
       {loadouts.length > 0 && characterId && (
         <LoadoutSelector
@@ -57,7 +55,10 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
       )}
       {selectedLoadout && (
         <div className="flex flex-col space-y-2">
-          <CharacterSockets character={selectedCharacter!} loadout={selectedLoadout} />
+          <CharacterSockets
+            character={selectedCharacter!}
+            loadout={selectedLoadout}
+          />
         </div>
       )}
     </div>

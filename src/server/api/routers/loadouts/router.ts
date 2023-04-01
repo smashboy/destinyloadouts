@@ -14,7 +14,7 @@ import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { getPopularDuringDate } from "~/server/utils/getPopularDuringDate";
 import { paginate } from "~/server/utils/paginate";
 import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
-import { type DestinyCharacterLoadout } from "~/bungie/types";
+import { type LoadoutItem } from "~/bungie/types";
 import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
 
 const loadoutItemValidation = z
@@ -41,13 +41,13 @@ const loadoutValidation = z.object({
   }),
 });
 
-const cursorValidation = z
-  .object({
-    take: z.number().int(),
-    skip: z.number().int(),
-  })
-  .nullable()
-  .optional();
+// const cursorValidation = z
+//   .object({
+//     take: z.number().int(),
+//     skip: z.number().int(),
+//   })
+//   .nullable()
+//   .optional();
 
 export const loadoutsRouter = createTRPCRouter({
   getById: publicProcedure
@@ -232,47 +232,68 @@ export const loadoutsRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
+        onlyLikedLoadouts: z.boolean().optional(),
       })
     )
-    .query(async ({ input: { userId }, ctx: { prisma, session } }) => {
-      const loadouts = await prisma.loadout.findMany({
-        where: { authorId: userId },
-        orderBy: { createdAt: "desc" },
-      });
+    .query(
+      async ({
+        input: { userId, onlyLikedLoadouts },
+        ctx: { prisma, session },
+      }) => {
+        const loadouts = await prisma.loadout.findMany({
+          where: {
+            ...(onlyLikedLoadouts
+              ? {
+                  likes: {
+                    some: {
+                      likedByUserId: userId,
+                    },
+                  },
+                }
+              : { authorId: userId }),
+          },
+          orderBy: { createdAt: "desc" },
+        });
 
-      const manifestCaller = destinyLatestManifestRouterCaller({
-        prisma,
-        session,
-      });
+        const manifestCaller = destinyLatestManifestRouterCaller({
+          prisma,
+          session,
+        });
 
-      const previewItemHashes: string[] = [];
+        const previewItemHashes: string[] = [];
 
-      for (const loadout of loadouts) {
-        const loadoutItems =
-          loadout.items as unknown as DestinyCharacterLoadout;
+        for (const loadout of loadouts) {
+          const loadoutItems = loadout.items as unknown as Record<
+            string,
+            LoadoutItem
+          >;
 
-        for (const item of Object.values(loadoutItems)) {
-          if (item)
-            previewItemHashes.push(
-              ...[item[0].toString(), ...item[1].map((hash) => hash.toString())]
-            );
+          for (const item of Object.values(loadoutItems)) {
+            if (item)
+              previewItemHashes.push(
+                ...[
+                  item[0].toString(),
+                  ...item[1].map((hash) => hash.toString()),
+                ]
+              );
+          }
         }
+
+        const inventoryItems = await manifestCaller.getTableComponents({
+          tableName: "DestinyInventoryItemDefinition",
+          locale: "en",
+          hashIds: [...new Set(previewItemHashes)],
+        });
+
+        return {
+          loadouts,
+          inventoryItems:
+            formatPrismaDestinyManifestTableComponents<
+              Record<string, DestinyInventoryItemDefinition>
+            >(inventoryItems),
+        };
       }
-
-      const inventoryItems = await manifestCaller.getTableComponents({
-        tableName: "DestinyInventoryItemDefinition",
-        locale: "en",
-        hashIds: [...new Set(previewItemHashes)],
-      });
-
-      return {
-        loadouts,
-        inventoryItems:
-          formatPrismaDestinyManifestTableComponents<
-            Record<string, DestinyInventoryItemDefinition>
-          >(inventoryItems),
-      };
-    }),
+    ),
   feed: publicProcedure
     .input(
       z.object({

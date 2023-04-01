@@ -44,7 +44,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     <div className="flex flex-col gap-2">
       <Link
         href={loadoutLink}
-        className="relative flex w-full gap-4 overflow-hidden rounded p-3 transition duration-300 ease-out dark:bg-neutral-800 hover:dark:bg-neutral-700"
+        className="relative flex w-full gap-4 overflow-hidden rounded p-3 transition duration-300 ease-out dark:bg-neutral-800 hover:dark:bg-neutral-500"
       >
         <Image
           src={classIcon}
