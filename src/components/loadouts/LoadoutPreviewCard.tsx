@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Loadout } from "@prisma/client";
-import { IconHeart, IconBookmark } from "@tabler/icons-react";
+import { type Loadout, type User, type LoadoutLike } from "@prisma/client";
+import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import {
   characterClassIconPathMap,
@@ -13,20 +13,42 @@ import { type DestinyCharacterLoadout } from "~/bungie/types";
 import { LoadoutWeaponItem } from "../destiny/LoadoutWeaponItem";
 import { LoadoutArmorItem } from "../destiny/LoadoutArmorItem";
 import { LoadoutSubclassItem } from "../destiny/LoadoutSubclassItem";
+import { IconButton } from "../IconButton";
 
 interface LoadoutPreviewCardProps {
-  loadout: Loadout;
+  loadout: Loadout & {
+    likes: Array<{ likedByUserId: string }>;
+    _count: { likes: number };
+  };
   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
+  onLike: (loadoutId: string) => void;
+  authUser?: User;
 }
 
 export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
-  loadout: { authorId, id, classType, subclassType, tags, name, items },
+  loadout: {
+    authorId,
+    id,
+    classType,
+    subclassType,
+    tags,
+    name,
+    items,
+    likes,
+    _count: { likes: likesCount },
+  },
   inventoryItems,
+  authUser,
+  onLike,
 }) => {
   const loadoutLink = `${authorId}/${id}`;
 
   const classIcon = characterClassIconPathMap[classType];
   const subclassIcon = damageTypeIconPathMap[subclassType];
+
+  const isLikedByAuthUser = !!likes.find(
+    (like) => like.likedByUserId === authUser?.id
+  );
 
   const {
     kinetic,
@@ -39,6 +61,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     subclass,
     class: classItem,
   } = items as unknown as DestinyCharacterLoadout;
+
+  const handleLikeLoadout = () => onLike(id);
 
   return (
     <div className="flex flex-col gap-2">
@@ -158,10 +182,12 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
         </span>
       </Link>
       <div className="flex flex-row-reverse gap-2">
-        <IconBookmark />
         <div className="flex items-center gap-2">
-          <TypographySmall>43291</TypographySmall>
-          <IconHeart />
+          <TypographySmall>{likesCount}</TypographySmall>
+          <IconButton
+            onClick={handleLikeLoadout}
+            icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
+          />
         </div>
       </div>
     </div>

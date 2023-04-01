@@ -222,7 +222,7 @@ export const loadoutsRouter = createTRPCRouter({
           items,
           author: {
             connect: {
-              bungieAccountId: userId,
+              id: userId,
             },
           },
         },
@@ -253,6 +253,29 @@ export const loadoutsRouter = createTRPCRouter({
               : { authorId: userId }),
           },
           orderBy: { createdAt: "desc" },
+          include: {
+            bookmarks: {
+              where: {
+                savedByUserId: userId,
+              },
+              select: {
+                savedByUserId: true,
+              },
+            },
+            likes: {
+              where: {
+                likedByUserId: userId,
+              },
+              select: {
+                likedByUserId: true,
+              },
+            },
+            _count: {
+              select: {
+                likes: true,
+              },
+            },
+          },
         });
 
         const manifestCaller = destinyLatestManifestRouterCaller({

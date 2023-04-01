@@ -45,6 +45,15 @@ export const trpcNext = createTRPCNext<AppRouter>({
        * @see https://trpc.io/docs/links
        */
       links,
+      abortOnUnmount: true,
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      },
     };
   },
   /**

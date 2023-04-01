@@ -109,14 +109,23 @@ export const createTRPCMiddleware = t.middleware;
 export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = createTRPCMiddleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
+const enforceUserIsAuthed = createTRPCMiddleware(async ({ ctx, next }) => {
+  const { session, prisma } = ctx;
+
+  if (!session || !session.user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+  const user = await prisma.user.findUnique({
+    where: {
+      bungieAccountId: session.user.id,
+    },
+  });
+
+  if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...ctx.session, user },
     },
   });
 });
