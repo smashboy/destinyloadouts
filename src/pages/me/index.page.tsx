@@ -39,10 +39,9 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.getByUserId.cancel(queryParams);
 
-      const prevLoadouts = await trpcCtx.loadouts.getByUserId.getData({
-        userId,
-        onlyLikedLoadouts,
-      });
+      const prevLoadouts = await trpcCtx.loadouts.getByUserId.getData(
+        queryParams
+      );
 
       trpcCtx.loadouts.getByUserId.setData(queryParams, (old) => ({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
