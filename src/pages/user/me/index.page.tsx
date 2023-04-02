@@ -133,9 +133,7 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
     onSettled: () => trpcCtx.loadouts.getByUserId.invalidate(queryParams),
   });
 
-  if (!data) return null;
-
-  const { loadouts, inventoryItems } = data;
+  const { loadouts, inventoryItems } = data || {};
 
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
@@ -149,18 +147,20 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
       className="grid grid-cols-1 gap-4"
     >
       <AccountHeader {...props} isAuthUserPage />
-      <div className="grid grid-cols-2 gap-2">
-        {loadouts.map((loadout) => (
-          <LoadoutPreviewCard
-            key={loadout.id}
-            loadout={loadout}
-            inventoryItems={inventoryItems}
-            onLike={handleLikeLoadout}
-            onSave={handleSaveLoadout}
-            authUser={authUser}
-          />
-        ))}
-      </div>
+      {loadouts && inventoryItems && (
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          {loadouts.map((loadout) => (
+            <LoadoutPreviewCard
+              key={loadout.id}
+              loadout={loadout}
+              inventoryItems={inventoryItems}
+              onLike={handleLikeLoadout}
+              onSave={handleSaveLoadout}
+              authUser={authUser}
+            />
+          ))}
+        </div>
+      )}
     </Tabs>
   );
 };

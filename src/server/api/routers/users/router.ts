@@ -134,3 +134,5 @@ export const usersRouter = createTRPCRouter({
       }
     ),
 });
+
+export const usersRouterCaller = usersRouter.createCaller;

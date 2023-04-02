@@ -36,7 +36,9 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
           fallback={bungieAccountDisplayName}
           size="sm"
         />
-        <TypographyLarge>{bungieAccountDisplayName}</TypographyLarge>
+        <TypographyLarge className="border-r-2 border-neutral-700 pr-4">
+          {bungieAccountDisplayName}
+        </TypographyLarge>
         {/* <div className="h-full py-2">
     <Separator orientation="vertical" />
   </div> */}

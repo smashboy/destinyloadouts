@@ -18,7 +18,8 @@ import { trpsSSG } from "~/utils/ssg";
 import { CharacterSelector } from "./components/CharacterSelector";
 import { LoadoutSelector } from "./components/LoadoutSelector";
 import { createDestinyCharacterLoadout } from "~/bungie/createDestinyCharacterLoadout";
-import { CharacterSockets } from "./components/CharacterSockets";
+import { NewLoadoutForm } from "./components/NewLoadoutForm";
+import { bungieDestinyClassToDbCharacterClassMap } from "~/constants/loadouts";
 
 interface NewLoadoutPageProps {
   characters: Record<string, DestinyCharacterComponent>;
@@ -43,7 +44,15 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
 
   return (
     <div className="flex flex-col space-y-4">
-      <CharacterClassIconBackground character={selectedCharacter} />
+      <CharacterClassIconBackground
+        classType={
+          (selectedCharacter?.classType &&
+            bungieDestinyClassToDbCharacterClassMap[
+              selectedCharacter.classType
+            ]) ||
+          void 0
+        }
+      />
       <CharacterSelector characters={characters} />
       {loadouts.length > 0 && characterId && (
         <LoadoutSelector
@@ -55,7 +64,8 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
       )}
       {selectedLoadout && (
         <div className="flex flex-col space-y-2">
-          <CharacterSockets
+          <NewLoadoutForm
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             character={selectedCharacter!}
             loadout={selectedLoadout}
           />

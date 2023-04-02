@@ -52,7 +52,7 @@ model Loadout {
 model LoadoutLike {
     likedBy       User    @relation(fields: [likedByUserId], references: [id])
     likedByUserId String
-    loadout       Loadout @relation(fields: [loadoutId], references: [id])
+    loadout       Loadout @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
     loadoutId     String
 
     @@unique([likedByUserId, loadoutId])
@@ -61,7 +61,7 @@ model LoadoutLike {
 model LoadoutBookmark {
     savedBy       User    @relation(fields: [savedByUserId], references: [id])
     savedByUserId String
-    loadout       Loadout @relation(fields: [loadoutId], references: [id])
+    loadout       Loadout @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
     loadoutId     String
 
     @@unique([savedByUserId, loadoutId])

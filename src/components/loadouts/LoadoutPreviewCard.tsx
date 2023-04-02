@@ -26,7 +26,6 @@ interface LoadoutPreviewCardProps {
 
 export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
   loadout: {
-    authorId,
     id,
     classType,
     tags,
@@ -41,7 +40,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
   onLike,
   onSave,
 }) => {
-  const loadoutLink = `${authorId}/${id}`;
+  const loadoutLink = `/${id}`;
 
   const classIcon = characterClassIconPathMap[classType];
   // const subclassIcon = damageTypeIconPathMap[subclassType];
@@ -75,13 +74,15 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
         href={loadoutLink}
         className="relative flex w-full gap-4 overflow-hidden rounded p-3 transition duration-300 ease-out dark:bg-neutral-800 hover:dark:bg-neutral-500"
       >
-        <Image
-          src={classIcon}
-          alt="Destiny character class type icon"
-          width={64}
-          height={64}
-          className="dark:invert"
-        />
+        <span className="absolute inset-0 flex items-center justify-center">
+          <Image
+            src={classIcon}
+            alt="Destiny character class type icon"
+            width={148}
+            height={148}
+            className="opacity-10 dark:invert"
+          />
+        </span>
 
         <span className="flex flex-1 flex-col gap-2">
           <TypographyLarge>{name}</TypographyLarge>
@@ -93,13 +94,15 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               </span>
             ))}
           </span>
-          <div className="flex gap-4 py-3">
-            <LoadoutSubclassItem
-              item={subclass}
-              inventoryItems={inventoryItems}
-              hideSockets
-              isSm
-            />
+          <div className="flex gap-4 py-3 pl-2">
+            <div className="pr-1">
+              <LoadoutSubclassItem
+                item={subclass}
+                inventoryItems={inventoryItems}
+                hideSockets
+                isSm
+              />
+            </div>
             <Separator orientation="vertical" />
             <LoadoutWeaponItem
               item={kinetic}

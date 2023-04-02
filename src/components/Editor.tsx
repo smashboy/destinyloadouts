@@ -5,8 +5,9 @@ export type EditorState = OutputData;
 
 interface EditorProps {
   initialState?: EditorState;
-  onChange(val: EditorState): void;
+  onChange?: (val: EditorState) => void;
   placeholder?: string;
+  readOnly?: boolean;
 }
 
 const editorElementId = "editor";
@@ -14,14 +15,16 @@ const editorElementId = "editor";
 const Editor: React.FC<EditorProps> = ({
   initialState,
   placeholder,
+  readOnly = false,
   onChange,
 }) => {
   const editor = useRef<EditorJS>();
 
   const handleOnChange = async (api: API) => {
-    const data = await api.saver.save();
-
-    onChange(data);
+    if (onChange) {
+      const data = await api.saver.save();
+      onChange(data);
+    }
   };
 
   useEffect(() => {
@@ -32,6 +35,7 @@ const Editor: React.FC<EditorProps> = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onChange: handleOnChange,
         placeholder,
+        readOnly,
       });
     }
 

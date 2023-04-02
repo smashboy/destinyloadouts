@@ -3,6 +3,7 @@ import {
   DestinyDamageType,
   LoadoutStatus,
   LoadoutTag,
+  type User,
 } from "@prisma/client";
 import { z } from "zod";
 import {
@@ -17,6 +18,9 @@ import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
 import { type LoadoutItem } from "~/bungie/types";
 import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
 import { LoadoutPreviewIncludeCommon } from "./common";
+import { getLoadoutItemHashes } from "~/utils/loadout";
+import { usersRouterCaller } from "../users/router";
+import { TRPCError } from "@trpc/server";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
@@ -54,33 +58,55 @@ export const loadoutsRouter = createTRPCRouter({
   getById: publicProcedure
     .input(
       z.object({
-        id: z.string(),
+        loadoutId: z.string(),
       })
     )
-    .query(({ input: { id }, ctx: { prisma } }) =>
-      prisma.loadout.findFirst({
+    .query(async ({ input: { loadoutId }, ctx: { prisma, session } }) => {
+      const bungieAccountId = session?.user.id;
+
+      let user: User | null = null;
+
+      if (bungieAccountId) {
+        const res = await usersRouterCaller({
+          prisma,
+          session,
+        }).getByBungieAccountId({ bungieAccountId });
+        if (res) user = res.user;
+      }
+
+      const loadout = await prisma.loadout.findFirst({
         where: {
-          id,
+          id: loadoutId,
         },
-      })
-    ),
-  getLikedByUser: publicProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      })
-    )
-    .query(({ input: { userId }, ctx: { prisma } }) =>
-      prisma.loadout.findMany({
-        where: {
-          likes: {
-            every: {
-              likedByUserId: userId,
-            },
-          },
-        },
-      })
-    ),
+        include: LoadoutPreviewIncludeCommon(user?.id, { includeAuthor: true }),
+      });
+
+      if (!loadout) return null;
+
+      const previewItemHashes = getLoadoutItemHashes(
+        loadout.items as unknown as Record<string, LoadoutItem>
+      );
+
+      const manifestCaller = destinyLatestManifestRouterCaller({
+        prisma,
+        session,
+      });
+
+      const inventoryItems = await manifestCaller.getTableComponents({
+        tableName: "DestinyInventoryItemDefinition",
+        locale: "en",
+        hashIds: [...new Set(previewItemHashes)],
+      });
+
+      return {
+        loadout,
+        inventoryItems:
+          formatPrismaDestinyManifestTableComponents<
+            Record<string, DestinyInventoryItemDefinition>
+          >(inventoryItems),
+      };
+    }),
+
   bookmark: protectedProcedure
     .input(
       z.object({
@@ -175,27 +201,7 @@ export const loadoutsRouter = createTRPCRouter({
             });
       }
     ),
-  getBookmarked: protectedProcedure.query(
-    ({
-      ctx: {
-        session: {
-          user: { id: userId },
-        },
-        prisma,
-      },
-    }) =>
-      prisma.loadout.findMany({
-        where: {
-          bookmarks: {
-            some: {
-              savedByUserId: userId,
-            },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon(userId),
-      })
-  ),
+
   create: protectedProcedure.input(loadoutValidation).mutation(
     ({
       input: {
@@ -231,6 +237,42 @@ export const loadoutsRouter = createTRPCRouter({
         },
       })
   ),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        loadoutId: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { loadoutId },
+        ctx: {
+          session: {
+            user: { id: userId },
+          },
+          prisma,
+        },
+      }) => {
+        const loadout = await prisma.loadout.findFirst({
+          where: {
+            id: loadoutId,
+          },
+          select: {
+            authorId: true,
+          },
+        });
+
+        if (!loadout) throw new TRPCError({ code: "NOT_FOUND" });
+        if (loadout.authorId !== userId)
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        return prisma.loadout.delete({
+          where: {
+            id: loadoutId,
+          },
+        });
+      }
+    ),
   getByUserId: publicProcedure
     .input(
       z.object({
@@ -239,6 +281,18 @@ export const loadoutsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { userId, type }, ctx: { prisma, session } }) => {
+      const bungieAccountId = session?.user.id;
+
+      let user: User | null = null;
+
+      if (bungieAccountId) {
+        const res = await usersRouterCaller({
+          prisma,
+          session,
+        }).getByBungieAccountId({ bungieAccountId });
+        if (res) user = res.user;
+      }
+
       const loadouts = await prisma.loadout.findMany({
         where: {
           ...(type === "LIKED"
@@ -260,7 +314,7 @@ export const loadoutsRouter = createTRPCRouter({
             : { authorId: userId }),
         },
         orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon(userId),
+        include: LoadoutPreviewIncludeCommon(user?.id),
       });
 
       const manifestCaller = destinyLatestManifestRouterCaller({
@@ -268,21 +322,13 @@ export const loadoutsRouter = createTRPCRouter({
         session,
       });
 
-      const previewItemHashes: string[] = [];
-
-      for (const loadout of loadouts) {
-        const loadoutItems = loadout.items as unknown as Record<
-          string,
-          LoadoutItem
-        >;
-
-        for (const item of Object.values(loadoutItems)) {
-          if (item)
-            previewItemHashes.push(
-              ...[item[0].toString(), ...item[1].map((hash) => hash.toString())]
-            );
-        }
-      }
+      const previewItemHashes = loadouts
+        .map((loadout) =>
+          getLoadoutItemHashes(
+            loadout.items as unknown as Record<string, LoadoutItem>
+          )
+        )
+        .flat();
 
       const inventoryItems = await manifestCaller.getTableComponents({
         tableName: "DestinyInventoryItemDefinition",

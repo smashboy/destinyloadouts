@@ -45,35 +45,45 @@ const getCharacterArmor = (
     case DestinyItemSubType.HelmetArmor:
       return {
         helmet: [
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.GauntletsArmor:
       return {
         gauntlets: [
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.ChestArmor:
       return {
         chest: [
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.LegArmor:
       return {
         legs: [
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.ClassArmor:
       return {
         class: [
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
@@ -92,7 +102,9 @@ const getCharacterWeapons = (
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.KineticWeapon))
     return {
       kinetic: [
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         getSocketHash(loadoutItem, item.sockets.data!.sockets),
       ],
     };
@@ -100,7 +112,9 @@ const getCharacterWeapons = (
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.EnergyWeapon))
     return {
       energy: [
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         getSocketHash(loadoutItem, item.sockets.data!.sockets),
       ],
     };
@@ -108,7 +122,9 @@ const getCharacterWeapons = (
   if (itemCategoryHashes?.includes(DestinyItemCategoryHash.PowerWeapon))
     return {
       power: [
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         getSocketHash(loadoutItem, item.sockets.data!.sockets),
       ],
     };
@@ -184,13 +200,14 @@ export const createDestinyCharacterLoadout = async (
   };
 
   for (const loadoutItem of loadoutItems) {
-    const { itemInstanceId, plugItemHashes } = loadoutItem;
+    const { itemInstanceId } = loadoutItem;
     const itemInstance = items.find(
       (item) => item?.item?.data?.itemInstanceId === itemInstanceId
     );
 
     if (!itemInstance) continue;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { itemHash } = itemInstance.item.data!;
 
     const tableItem = loadout.inventoryItems[itemHash];

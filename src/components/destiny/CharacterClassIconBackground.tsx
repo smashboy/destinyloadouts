@@ -1,21 +1,17 @@
 import Image from "next/image";
-import { type DestinyCharacterComponent } from "bungie-api-ts/destiny2";
-import {
-  characterClassIconPathMap,
-  destinyLogoIconPath,
-} from "~/bungie/constants";
+import { type DestinyClassType } from "@prisma/client";
+import { destinyLogoIconPath } from "~/bungie/constants";
+import { characterClassIconPathMap } from "~/constants/loadouts";
 
 interface CharacterClassIconBackgroundProps {
-  character?: DestinyCharacterComponent;
+  classType?: DestinyClassType;
 }
 
 export const CharacterClassIconBackground: React.FC<
   CharacterClassIconBackgroundProps
-> = ({ character }) => {
+> = ({ classType }) => {
   const iconPath =
-    characterClassIconPathMap[
-      character?.classType as keyof typeof characterClassIconPathMap
-    ] || destinyLogoIconPath;
+    (classType && characterClassIconPathMap[classType]) || destinyLogoIconPath;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center opacity-10 dark:bg-neutral-900">

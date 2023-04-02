@@ -3,6 +3,7 @@ import {
   DestinyDamageType,
   LoadoutTag,
 } from "@prisma/client";
+import { DestinyClass } from "bungie-api-ts/destiny2";
 
 export const loadoutTagsList = [
   LoadoutTag.PVE,
@@ -58,6 +59,13 @@ export const characterClassIconPathMap = {
   [DestinyClassType.TITAN]: "/destiny-icons/classes/titan.svg",
   [DestinyClassType.HUNTER]: "/destiny-icons/classes/hunter.svg",
   [DestinyClassType.WARLOCK]: "/destiny-icons/classes/warlock.svg",
+};
+
+export const bungieDestinyClassToDbCharacterClassMap = {
+  [DestinyClass.Hunter]: DestinyClassType.HUNTER,
+  [DestinyClass.Warlock]: DestinyClassType.WARLOCK,
+  [DestinyClass.Titan]: DestinyClassType.TITAN,
+  [DestinyClass.Unknown]: null,
 };
 
 export const damageTypeIconPathMap = {
