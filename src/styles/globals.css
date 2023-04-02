@@ -35,9 +35,9 @@ html, body, #__next {
   color: inherit;
 }
 
-::selection {
+/* ::selection {
   background: #439a86;
-}
+} */
 
 .cdx-settings-button:hover,
 .ce-settings__button:hover,

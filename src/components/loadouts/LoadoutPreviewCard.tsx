@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { type Loadout, type User } from "@prisma/client";
-import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import { IconHeart, IconHeartFilled, IconBookmark } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { characterClassIconPathMap } from "~/constants/loadouts";
 import { TypographyLarge, TypographySmall } from "../typography";
@@ -15,10 +15,12 @@ import { IconButton } from "../IconButton";
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
     likes: Array<{ likedByUserId: string }>;
+    bookmarks: Array<{ savedByUserId: string }>;
     _count: { likes: number };
   };
   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
   onLike: (loadoutId: string) => void;
+  onSave: (loadoutId: string) => void;
   authUser?: User;
 }
 
@@ -31,11 +33,13 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     name,
     items,
     likes,
+    bookmarks,
     _count: { likes: likesCount },
   },
   inventoryItems,
   authUser,
   onLike,
+  onSave,
 }) => {
   const loadoutLink = `${authorId}/${id}`;
 
@@ -44,6 +48,10 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
 
   const isLikedByAuthUser = !!likes.find(
     (like) => like.likedByUserId === authUser?.id
+  );
+
+  const isSavedByAuthUser = !!bookmarks.find(
+    (like) => like.savedByUserId === authUser?.id
   );
 
   const {
@@ -59,6 +67,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
   } = items as unknown as DestinyCharacterLoadout;
 
   const handleLikeLoadout = () => onLike(id);
+  const handleSaveLoadout = () => onSave(id);
 
   return (
     <div className="flex flex-col gap-2">
@@ -167,15 +176,22 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
           </div>
         </span>
       </Link>
-      <div className="flex flex-row-reverse gap-2">
-        <div className="flex items-center gap-2">
-          <TypographySmall>{likesCount}</TypographySmall>
-          <IconButton
-            onClick={handleLikeLoadout}
-            icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
-          />
+      {authUser && (
+        <div className="flex flex-row-reverse gap-2">
+          <div className="flex items-center gap-2">
+            <TypographySmall>{likesCount}</TypographySmall>
+            <IconButton
+              onClick={handleLikeLoadout}
+              icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
+            />
+            <IconButton
+              className={isSavedByAuthUser ? "invert" : void 0}
+              onClick={handleSaveLoadout}
+              icon={IconBookmark}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

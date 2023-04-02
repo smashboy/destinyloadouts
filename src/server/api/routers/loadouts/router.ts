@@ -16,6 +16,7 @@ import { paginate } from "~/server/utils/paginate";
 import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
 import { type LoadoutItem } from "~/bungie/types";
 import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
+import { LoadoutPreviewIncludeCommon } from "./common";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
@@ -186,11 +187,13 @@ export const loadoutsRouter = createTRPCRouter({
       prisma.loadout.findMany({
         where: {
           bookmarks: {
-            every: {
+            some: {
               savedByUserId: userId,
             },
           },
         },
+        orderBy: { createdAt: "desc" },
+        include: LoadoutPreviewIncludeCommon(userId),
       })
   ),
   create: protectedProcedure.input(loadoutValidation).mutation(
@@ -232,91 +235,69 @@ export const loadoutsRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        onlyLikedLoadouts: z.boolean().optional(),
+        type: z.enum(["PERSONAL", "LIKED", "SAVED"]).default("PERSONAL"),
       })
     )
-    .query(
-      async ({
-        input: { userId, onlyLikedLoadouts },
-        ctx: { prisma, session },
-      }) => {
-        const loadouts = await prisma.loadout.findMany({
-          where: {
-            ...(onlyLikedLoadouts
-              ? {
-                  likes: {
-                    some: {
-                      likedByUserId: userId,
-                    },
+    .query(async ({ input: { userId, type }, ctx: { prisma, session } }) => {
+      const loadouts = await prisma.loadout.findMany({
+        where: {
+          ...(type === "LIKED"
+            ? {
+                likes: {
+                  some: {
+                    likedByUserId: userId,
                   },
-                }
-              : { authorId: userId }),
-          },
-          orderBy: { createdAt: "desc" },
-          include: {
-            bookmarks: {
-              where: {
-                savedByUserId: userId,
-              },
-              select: {
-                savedByUserId: true,
-              },
-            },
-            likes: {
-              where: {
-                likedByUserId: userId,
-              },
-              select: {
-                likedByUserId: true,
-              },
-            },
-            _count: {
-              select: {
-                likes: true,
-              },
-            },
-          },
-        });
+                },
+              }
+            : type === "SAVED"
+            ? {
+                bookmarks: {
+                  some: {
+                    savedByUserId: userId,
+                  },
+                },
+              }
+            : { authorId: userId }),
+        },
+        orderBy: { createdAt: "desc" },
+        include: LoadoutPreviewIncludeCommon(userId),
+      });
 
-        const manifestCaller = destinyLatestManifestRouterCaller({
-          prisma,
-          session,
-        });
+      const manifestCaller = destinyLatestManifestRouterCaller({
+        prisma,
+        session,
+      });
 
-        const previewItemHashes: string[] = [];
+      const previewItemHashes: string[] = [];
 
-        for (const loadout of loadouts) {
-          const loadoutItems = loadout.items as unknown as Record<
-            string,
-            LoadoutItem
-          >;
+      for (const loadout of loadouts) {
+        const loadoutItems = loadout.items as unknown as Record<
+          string,
+          LoadoutItem
+        >;
 
-          for (const item of Object.values(loadoutItems)) {
-            if (item)
-              previewItemHashes.push(
-                ...[
-                  item[0].toString(),
-                  ...item[1].map((hash) => hash.toString()),
-                ]
-              );
-          }
+        for (const item of Object.values(loadoutItems)) {
+          if (item)
+            previewItemHashes.push(
+              ...[item[0].toString(), ...item[1].map((hash) => hash.toString())]
+            );
         }
-
-        const inventoryItems = await manifestCaller.getTableComponents({
-          tableName: "DestinyInventoryItemDefinition",
-          locale: "en",
-          hashIds: [...new Set(previewItemHashes)],
-        });
-
-        return {
-          loadouts,
-          inventoryItems:
-            formatPrismaDestinyManifestTableComponents<
-              Record<string, DestinyInventoryItemDefinition>
-            >(inventoryItems),
-        };
       }
-    ),
+
+      const inventoryItems = await manifestCaller.getTableComponents({
+        tableName: "DestinyInventoryItemDefinition",
+        locale: "en",
+        hashIds: [...new Set(previewItemHashes)],
+      });
+
+      return {
+        loadouts,
+        inventoryItems:
+          formatPrismaDestinyManifestTableComponents<
+            Record<string, DestinyInventoryItemDefinition>
+          >(inventoryItems),
+      };
+    }),
   feed: publicProcedure
     .input(
       z.object({

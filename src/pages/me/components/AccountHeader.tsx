@@ -24,10 +24,9 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
 }) => {
   const baseLink = isAuthUserPage ? "/me" : `/${id}`;
 
-  const params = new URLSearchParams();
-  params.append("liked", "true");
-
-  const likedRoute = `${baseLink}?${params.toString()}`;
+  const personalRoute = `${baseLink}?type=PERSONAL`;
+  const likedRoute = `${baseLink}?type=LIKED`;
+  const savedRoute = `${baseLink}?type=SAVED`;
 
   return (
     <div className="sticky top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700">
@@ -52,12 +51,17 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
         </ButtonLink>
       </div>
       <TabsList>
-        <Link href={baseLink}>
-          <TabsTrigger value="personal">Personal</TabsTrigger>
+        <Link href={personalRoute}>
+          <TabsTrigger value="PERSONAL">Personal</TabsTrigger>
         </Link>
         <Link href={likedRoute}>
-          <TabsTrigger value="liked">Liked</TabsTrigger>
+          <TabsTrigger value="LIKED">Liked</TabsTrigger>
         </Link>
+        {isAuthUserPage && (
+          <Link href={savedRoute}>
+            <TabsTrigger value="SAVED">Saved</TabsTrigger>
+          </Link>
+        )}
       </TabsList>
     </div>
   );

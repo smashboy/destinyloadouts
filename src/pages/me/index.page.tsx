@@ -9,12 +9,14 @@ import { Tabs } from "~/components/Tabs";
 import { trpcNext } from "~/utils/api";
 import { useAuthUser } from "~/hooks/useAuthUser";
 
+type UserLoadoutType = "PERSONAL" | "LIKED" | "SAVED" | undefined;
+
 interface AuthUserProfilePageProps {
   user: User;
   loadoutsCount: number;
   followersCount: number;
   likesCount: number;
-  onlyLikedLoadouts: boolean;
+  userLoadoutType: UserLoadoutType;
   // feed: {
   //   loadouts: Array<Loadout & { _count: { likes: number } }>;
   //   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
@@ -24,14 +26,14 @@ interface AuthUserProfilePageProps {
 const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
   const {
     user: { id: userId },
-    onlyLikedLoadouts,
+    userLoadoutType,
   } = props;
 
   const router = useRouter();
   const trpcCtx = trpcNext.useContext();
   const [authUser] = useAuthUser();
 
-  const queryParams = { userId, onlyLikedLoadouts };
+  const queryParams = { userId, type: userLoadoutType };
 
   const { data } = trpcNext.loadouts.getByUserId.useQuery(queryParams);
 
@@ -59,7 +61,8 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
               ? likes.filter((like) => like.likedByUserId !== authUser?.id)
               : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               id === loadoutId
-              ? [...likes, { likedByUserId: authUser!.id }]
+              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                [...likes, { likedByUserId: authUser!.id }]
               : [...likes],
             _count: {
               ..._count,
@@ -75,13 +78,58 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
 
       return { prevLoadouts };
     },
-    onError: (_, __, ctx) => {
+    onError: (_, __, ctx) =>
       trpcCtx.loadouts.getByUserId.setData(
         queryParams,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ctx!.prevLoadouts
+      ),
+    onSettled: () => trpcCtx.loadouts.getByUserId.invalidate(queryParams),
+  });
+
+  const saveLoadoutMutation = trpcNext.loadouts.bookmark.useMutation({
+    onMutate: async ({ loadoutId }) => {
+      await trpcCtx.loadouts.getByUserId.cancel(queryParams);
+
+      const prevLoadouts = await trpcCtx.loadouts.getByUserId.getData(
+        queryParams
       );
+
+      trpcCtx.loadouts.getByUserId.setData(queryParams, (old) => ({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        inventoryItems: old!.inventoryItems,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        loadouts: old!.loadouts.map(({ id, bookmarks, ...loadout }) => {
+          const isSaveddByAuthUser =
+            id === loadoutId &&
+            bookmarks.find(
+              (bookmark) => bookmark.savedByUserId === authUser?.id
+            );
+
+          return {
+            ...loadout,
+            id,
+            bookmarks: isSaveddByAuthUser
+              ? bookmarks.filter(
+                  (bookmark) => bookmark.savedByUserId !== authUser?.id
+                )
+              : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              id === loadoutId
+              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                [...bookmarks, { savedByUserId: authUser!.id }]
+              : [...bookmarks],
+          };
+        }),
+      }));
+
+      return { prevLoadouts };
     },
+    onError: (_, __, ctx) =>
+      trpcCtx.loadouts.getByUserId.setData(
+        queryParams,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ctx!.prevLoadouts
+      ),
     onSettled: () => trpcCtx.loadouts.getByUserId.invalidate(queryParams),
   });
 
@@ -92,9 +140,12 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
 
+  const handleSaveLoadout = (loadoutId: string) =>
+    saveLoadoutMutation.mutate({ loadoutId });
+
   return (
     <Tabs
-      value={router.query?.liked ? "liked" : "personal"}
+      value={(router.query?.type as string) || "PERSONAL"}
       className="grid grid-cols-1 gap-4"
     >
       <AccountHeader {...props} isAuthUserPage />
@@ -112,6 +163,7 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
             loadout={loadout}
             inventoryItems={inventoryItems}
             onLike={handleLikeLoadout}
+            onSave={handleSaveLoadout}
             authUser={authUser}
           />
         ))}
@@ -150,15 +202,19 @@ export const getServerSideProps: GetServerSideProps<
 
   const { id: userId } = userResponse.user;
 
-  const onlyLikedLoadouts = !!ctx.query.liked;
+  const userLoadoutType = ctx.query.type as
+    | "LIKED"
+    | "SAVED"
+    | "PERSONAL"
+    | undefined;
 
   await trpc.loadouts.getByUserId.prefetch({
     userId,
-    onlyLikedLoadouts,
+    type: userLoadoutType,
   });
 
   return {
-    props: { ...userResponse, onlyLikedLoadouts, trpcState: trpc.dehydrate() },
+    props: { ...userResponse, userLoadoutType, trpcState: trpc.dehydrate() },
   };
 };
 
