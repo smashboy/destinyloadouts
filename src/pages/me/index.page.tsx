@@ -149,13 +149,6 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
       className="grid grid-cols-1 gap-4"
     >
       <AccountHeader {...props} isAuthUserPage />
-      {/* <LoadoutsList
-        className="col-span-2 flex flex-col gap-4"
-        loadouts={feed.loadouts}
-        onFetchMore={() => {}}
-        hasMore={false}
-        isLoading={false}
-      /> */}
       <div className="grid grid-cols-2 gap-2">
         {loadouts.map((loadout) => (
           <LoadoutPreviewCard
