@@ -43,7 +43,7 @@ export const AppHeader = () => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <Link href="/me">
+              <Link href="/user/me">
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
               <DropdownMenuItem>Settings</DropdownMenuItem>

@@ -50,7 +50,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
 
     const subclassItem = inventoryItems[subclassHash]!;
 
-    const { authorId, id } = await createLoadoutMutation.mutateAsync({
+    const { id } = await createLoadoutMutation.mutateAsync({
       ...formArgs,
       items: loadoutProps,
       classType:
@@ -65,9 +65,8 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     });
 
     router.push({
-      pathname: "/[userId]/[loadoutId]",
+      pathname: "/[loadoutId]",
       query: {
-        userId: authorId,
         loadoutId: id,
       },
     });

@@ -98,6 +98,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               item={subclass}
               inventoryItems={inventoryItems}
               hideSockets
+              isSm
             />
             <Separator orientation="vertical" />
             <LoadoutWeaponItem
@@ -106,8 +107,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/weapons/kinetic.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutWeaponItem
               item={energy}
@@ -115,8 +116,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/weapons/energy.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutWeaponItem
               item={power}
@@ -124,8 +125,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/weapons/power.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <Separator orientation="vertical" />
             <LoadoutArmorItem
@@ -134,8 +135,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/armor/helmet.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutArmorItem
               item={gauntlets}
@@ -143,8 +144,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/armor/gloves.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutArmorItem
               item={chest}
@@ -152,8 +153,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/armor/chest.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutArmorItem
               item={legs}
@@ -161,8 +162,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/armor/boots.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
             <LoadoutArmorItem
               item={classItem}
@@ -170,8 +171,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               socketProps={{
                 bgIconPath: "/destiny-icons/armor/class.svg",
               }}
-              isSm
               hideSockets
+              isSm
             />
           </div>
         </span>

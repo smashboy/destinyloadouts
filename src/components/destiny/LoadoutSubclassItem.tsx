@@ -10,6 +10,7 @@ interface LoadoutSubclassItemProps {
   item: LoadoutItem;
   inventoryItems: LoadoutInventoryItemsList;
   hideSockets?: boolean;
+  isSm?: boolean;
 }
 
 // const abilitySocketIdentifiers = [
@@ -23,6 +24,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
   item,
   inventoryItems,
   hideSockets,
+  isSm,
 }) => {
   if (!item) return null;
 
@@ -51,13 +53,13 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
     socket.plug?.plugCategoryIdentifier.includes("supers")
   )[0];
 
-  if (hideSockets) return <SubclassSocket super={subclassSuper} />;
+  if (hideSockets) return <SubclassSocket super={subclassSuper} isSm={isSm} />;
 
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="grid w-fit grid-cols-2 gap-4">
         <div className="flex items-center justify-center">
-          <SubclassSocket super={subclassSuper} />
+          <SubclassSocket super={subclassSuper} isSm={isSm} />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">

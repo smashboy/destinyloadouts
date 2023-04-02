@@ -22,7 +22,7 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
   followersCount,
   isAuthUserPage = false,
 }) => {
-  const baseLink = isAuthUserPage ? "/me" : `/${id}`;
+  const baseLink = isAuthUserPage ? "/user/me" : `/user/${id}`;
 
   const personalRoute = `${baseLink}?type=PERSONAL`;
   const likedRoute = `${baseLink}?type=LIKED`;
@@ -46,7 +46,7 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
           <AccountCounter title="Loadouts" count={loadoutsCount} />
         </div>
 
-        <ButtonLink href="/me/new-loadout" size="lg">
+        <ButtonLink href="/new-loadout" size="lg">
           New Loadout +
         </ButtonLink>
       </div>

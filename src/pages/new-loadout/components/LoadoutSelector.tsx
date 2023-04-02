@@ -36,7 +36,7 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
           return (
             <LoadoutSocket
               key={index}
-              href={`/me/new-loadout?${searchParams.toString()}`}
+              href={`/new-loadout?${searchParams.toString()}`}
               iconImagePath={loadoutIcons[loadout.iconHash].iconImagePath}
               colorImagePath={loadoutColors[loadout.colorHash].colorImagePath}
               isSelected={selectedLoadout === index.toString()}

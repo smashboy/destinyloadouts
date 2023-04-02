@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { type User } from "@prisma/client";
 import { getServerAuthSession } from "~/server/auth";
 import { trpsSSG } from "~/utils/ssg";
-import { AccountHeader } from "./components/AccountHeader";
+import { AccountHeader } from "../components/AccountHeader";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { Tabs } from "~/components/Tabs";
 import { trpcNext } from "~/utils/api";

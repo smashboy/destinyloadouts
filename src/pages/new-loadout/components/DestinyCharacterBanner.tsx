@@ -38,7 +38,7 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
 
   return (
     <Link
-      href={`/me/new-loadout?${searchParams.toString()}`}
+      href={`/new-loadout?${searchParams.toString()}`}
       className={cn(
         "h-[124px] w-full rounded p-0.5 transition duration-300 ease-out hover:ring-2 hover:ring-slate-300 hover:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2",
         isSelected &&
