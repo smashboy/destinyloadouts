@@ -11,6 +11,7 @@ import { LoadoutWeaponItem } from "../destiny/LoadoutWeaponItem";
 import { LoadoutArmorItem } from "../destiny/LoadoutArmorItem";
 import { LoadoutSubclassItem } from "../destiny/LoadoutSubclassItem";
 import { IconButton } from "../IconButton";
+import { LoadoutTagsList } from "./LoadoutTagsList";
 
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
@@ -86,14 +87,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
 
         <span className="flex flex-1 flex-col gap-2">
           <TypographyLarge>{name}</TypographyLarge>
-          <span className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span key={tag} className="flex space-x-2">
-                <TypographySmall>{tag}</TypographySmall>
-                <Separator orientation="vertical" />
-              </span>
-            ))}
-          </span>
+          <LoadoutTagsList tags={tags} />
           <div className="flex gap-4 py-3 pl-2">
             <div className="pr-1">
               <LoadoutSubclassItem

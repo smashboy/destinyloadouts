@@ -22,6 +22,7 @@ import { trpsSSG } from "~/utils/ssg";
 import { Button, ButtonLink } from "~/components/Button";
 import { cn } from "~/utils/tailwind";
 import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
+import { LoadoutTagsList } from "~/components/loadouts/LoadoutTagsList";
 
 interface LoadoutPageProps {
   loadoutId: string;
@@ -104,7 +105,10 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
             <Button>Follow</Button>
           </div>
         )}
-        <TypographyLarge className="flex-1">{name}</TypographyLarge>
+        <div className="flex flex-1 flex-col gap-2">
+          <TypographyLarge>{name}</TypographyLarge>
+          <LoadoutTagsList tags={tags} />
+        </div>
         <TypographySmall>{likesCount}</TypographySmall>
         <IconButton
           // onClick={handleLikeLoadout}
@@ -137,6 +141,17 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
     </div>
   );
 };
+
+// export const getStaticPaths: GetStaticPaths = async () => ({
+//   paths: [],
+//   fallback: 'blocking'
+// })
+
+// export const getStaticProps: GetStaticProps = async (ctx) => {
+//   const loadoutId = ctx.params?.loadoutId as string;
+
+//   const session = await getServerAuthSession(ctx);
+// }
 
 export const getServerSideProps: GetServerSideProps<LoadoutPageProps> = async (
   ctx
