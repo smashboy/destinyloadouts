@@ -8,6 +8,10 @@ import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { Tabs } from "~/components/Tabs";
 import { trpcNext } from "~/utils/api";
 import { useAuthUser } from "~/hooks/useAuthUser";
+import {
+  handleAuthUserLoadoutBookmark,
+  handleAuthUserLoadoutLike,
+} from "~/utils/loadout";
 
 type UserLoadoutType = "PERSONAL" | "LIKED" | "SAVED" | undefined;
 
@@ -28,12 +32,11 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
     user: { id: userId },
     userLoadoutType,
   } = props;
+  const queryParams = { userId, type: userLoadoutType };
 
   const router = useRouter();
   const trpcCtx = trpcNext.useContext();
   const [authUser] = useAuthUser();
-
-  const queryParams = { userId, type: userLoadoutType };
 
   const { data } = trpcNext.loadouts.getByUserId.useQuery(queryParams);
 
@@ -49,31 +52,9 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         inventoryItems: old!.inventoryItems,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        loadouts: old!.loadouts.map(({ _count, id, likes, ...loadout }) => {
-          const isLikedByAuthUser =
-            id === loadoutId &&
-            likes.find((like) => like.likedByUserId === authUser?.id);
-
-          return {
-            ...loadout,
-            id,
-            likes: isLikedByAuthUser
-              ? likes.filter((like) => like.likedByUserId !== authUser?.id)
-              : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              id === loadoutId
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                [...likes, { likedByUserId: authUser!.id }]
-              : [...likes],
-            _count: {
-              ..._count,
-              likes: isLikedByAuthUser
-                ? _count.likes - 1
-                : id === loadoutId
-                ? _count.likes + 1
-                : _count.likes,
-            },
-          };
-        }),
+        loadouts: old!.loadouts.map((loadout) =>
+          handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
+        ),
       }));
 
       return { prevLoadouts };
@@ -87,7 +68,7 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
     onSettled: () => trpcCtx.loadouts.getByUserId.invalidate(queryParams),
   });
 
-  const saveLoadoutMutation = trpcNext.loadouts.bookmark.useMutation({
+  const saveMutation = trpcNext.loadouts.bookmark.useMutation({
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.getByUserId.cancel(queryParams);
 
@@ -99,27 +80,9 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         inventoryItems: old!.inventoryItems,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        loadouts: old!.loadouts.map(({ id, bookmarks, ...loadout }) => {
-          const isSaveddByAuthUser =
-            id === loadoutId &&
-            bookmarks.find(
-              (bookmark) => bookmark.savedByUserId === authUser?.id
-            );
-
-          return {
-            ...loadout,
-            id,
-            bookmarks: isSaveddByAuthUser
-              ? bookmarks.filter(
-                  (bookmark) => bookmark.savedByUserId !== authUser?.id
-                )
-              : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              id === loadoutId
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                [...bookmarks, { savedByUserId: authUser!.id }]
-              : [...bookmarks],
-          };
-        }),
+        loadouts: old!.loadouts.map((loadout) =>
+          handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
+        ),
       }));
 
       return { prevLoadouts };
@@ -139,7 +102,7 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
     likeMutation.mutate({ loadoutId });
 
   const handleSaveLoadout = (loadoutId: string) =>
-    saveLoadoutMutation.mutate({ loadoutId });
+    saveMutation.mutate({ loadoutId });
 
   return (
     <Tabs

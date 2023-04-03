@@ -14,8 +14,6 @@ import { IconButton } from "~/components/IconButton";
 import { CharacterSockets } from "~/components/loadouts/CharacterSockets";
 import { TypographyLarge, TypographySmall } from "~/components/typography";
 import { useAuthUser } from "~/hooks/useAuthUser";
-// import { type Loadout } from "@prisma/client";
-// import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { getServerAuthSession } from "~/server/auth";
 import { trpcNext } from "~/utils/api";
 import { trpsSSG } from "~/utils/ssg";
@@ -23,15 +21,13 @@ import { Button, ButtonLink } from "~/components/Button";
 import { cn } from "~/utils/tailwind";
 import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
 import { LoadoutTagsList } from "~/components/loadouts/LoadoutTagsList";
+import {
+  handleAuthUserLoadoutBookmark,
+  handleAuthUserLoadoutLike,
+} from "~/utils/loadout";
 
 interface LoadoutPageProps {
   loadoutId: string;
-  // loadout: Loadout & {
-  //   likes: Array<{ likedByUserId: string }>;
-  //   bookmarks: Array<{ savedByUserId: string }>;
-  //   _count: { likes: number };
-  // };
-  // inventoryItems: Record<string, DestinyInventoryItemDefinition>;
 }
 
 const Editor = dynamic(() => import("~/components/Editor"), {
@@ -39,15 +35,74 @@ const Editor = dynamic(() => import("~/components/Editor"), {
 });
 
 const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
+  const queryParams = { loadoutId };
+
   const router = useRouter();
-
-  const { data } = trpcNext.loadouts.getById.useQuery({ loadoutId });
-
+  const trpcCtx = trpcNext.useContext();
   const [authUser] = useAuthUser();
+
+  const { data } = trpcNext.loadouts.getById.useQuery(queryParams);
+
+  const likeMutation = trpcNext.loadouts.like.useMutation({
+    onMutate: async ({ loadoutId }) => {
+      await trpcCtx.loadouts.getById.cancel(queryParams);
+
+      const prevLoadout = await trpcCtx.loadouts.getById.getData(queryParams);
+
+      trpcCtx.loadouts.getById.setData(queryParams, (old) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { inventoryItems, loadout } = old!;
+
+        return {
+          inventoryItems,
+          loadout: handleAuthUserLoadoutLike({ loadout, loadoutId, authUser }),
+        };
+      });
+
+      return { prevLoadout };
+    },
+    onError: (_, __, ctx) =>
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      trpcCtx.loadouts.getById.setData(queryParams, ctx!.prevLoadout),
+    onSettled: () => trpcCtx.loadouts.getById.invalidate(queryParams),
+  });
+
+  const saveMutation = trpcNext.loadouts.bookmark.useMutation({
+    onMutate: async ({ loadoutId }) => {
+      await trpcCtx.loadouts.getById.cancel(queryParams);
+
+      const prevLoadout = await trpcCtx.loadouts.getById.getData(queryParams);
+
+      trpcCtx.loadouts.getById.setData(queryParams, (old) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { inventoryItems, loadout } = old!;
+
+        return {
+          inventoryItems,
+          loadout: handleAuthUserLoadoutBookmark({
+            loadout,
+            loadoutId,
+            authUser,
+          }),
+        };
+      });
+
+      return { prevLoadout };
+    },
+    onError: (_, __, ctx) =>
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      trpcCtx.loadouts.getById.setData(queryParams, ctx!.prevLoadout),
+    onSettled: () => trpcCtx.loadouts.getById.invalidate(queryParams),
+  });
 
   const deleteLoadoutMutation = trpcNext.loadouts.delete.useMutation({
     onSuccess: () => router.push("/"),
   });
+
+  const handleLikeLoadout = () => likeMutation.mutate({ loadoutId });
+  const handleSaveLoadout = () => saveMutation.mutate({ loadoutId });
+
+  const handleDeleteLoadout = () => deleteLoadoutMutation.mutate({ loadoutId });
 
   if (!data) return null;
 
@@ -77,8 +132,6 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
   const isSavedByAuthUser = !!bookmarks.find(
     (like) => like.savedByUserId === authUser?.id
   );
-
-  const handleDeleteLoadout = () => deleteLoadoutMutation.mutate({ loadoutId });
 
   return (
     <div className="flex flex-col gap-6">
@@ -111,12 +164,12 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
         </div>
         <TypographySmall>{likesCount}</TypographySmall>
         <IconButton
-          // onClick={handleLikeLoadout}
+          onClick={handleLikeLoadout}
           icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
         />
         <IconButton
           className={isSavedByAuthUser ? "invert" : void 0}
-          // onClick={handleSaveLoadout}
+          onClick={handleSaveLoadout}
           icon={IconBookmark}
         />
         {authUser && authUser.id === authorId && (
