@@ -1,9 +1,11 @@
+import Image from "next/image";
 import { cn } from "~/utils/tailwind";
 import { Button } from "./Button";
 
 export type ToggleGroupOption = {
   value: string;
-  children: React.ReactNode;
+  title: string;
+  iconPath: string | null | undefined;
 };
 
 export type ToggleGroupProps = {
@@ -29,7 +31,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
   return (
     <div className={cn("flex", className)}>
       {options.map((option) => {
-        const { children, value } = option;
+        const { iconPath, title, value } = option;
 
         const isSelected = selected.includes(value);
 
@@ -40,7 +42,18 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
             className="rounded-none first:rounded-l-md last:rounded-r-md"
             onClick={handleChange(option)}
           >
-            {children}
+            <span className="flex gap-1">
+              {iconPath && (
+                <Image
+                  src={iconPath}
+                  alt={title}
+                  width={18}
+                  height={18}
+                  className={cn(!isSelected && "invert")}
+                />
+              )}
+              <span>{title}</span>
+            </span>
           </Button>
         );
       })}

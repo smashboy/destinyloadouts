@@ -17,6 +17,20 @@ export const loadoutTagsList = [
   LoadoutTag.FASHION,
 ];
 
+export const destinyCharacterClassTypesList = [
+  DestinyClassType.HUNTER,
+  DestinyClassType.TITAN,
+  DestinyClassType.WARLOCK,
+];
+
+export const damageTypesList = [
+  DestinyDamageType.ARC,
+  DestinyDamageType.VOID,
+  DestinyDamageType.SOLAR,
+  DestinyDamageType.STATIS,
+  DestinyDamageType.STRAND,
+];
+
 export const loadoutTagIconsMap = {
   [LoadoutTag.PVE]: null,
   [LoadoutTag.PVP]: null,

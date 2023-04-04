@@ -23,6 +23,7 @@ const avatarRootVariants = cva(
 
 export type AvatarProps = VariantProps<typeof avatarRootVariants> & {
   src: string | null | undefined;
+  className?: string;
   fallback: string;
 };
 
@@ -63,8 +64,13 @@ const AvatarFallback = forwardRef<
   />
 ));
 
-export const Avatar: React.FC<AvatarProps> = ({ src, fallback, size }) => (
-  <AvatarRoot size={size}>
+export const Avatar: React.FC<AvatarProps> = ({
+  src,
+  fallback,
+  className,
+  size,
+}) => (
+  <AvatarRoot size={size} className={className}>
     <AvatarImage src={src} />
     <AvatarFallback>{fallback.split("")[0] || "U"}</AvatarFallback>
   </AvatarRoot>

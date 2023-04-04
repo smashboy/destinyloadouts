@@ -1,21 +1,30 @@
 import { forwardRef, useState } from "react";
 import { type NextPage } from "next";
+import Image from "next/image";
 import {
-  DestinyClassType,
-  DestinyDamageType,
+  type DestinyClassType,
+  type DestinyDamageType,
   type LoadoutTag,
 } from "@prisma/client";
-import { Virtuoso, type Components } from "react-virtuoso";
+import { VirtuosoGrid, type Components } from "react-virtuoso";
 import { trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
-import { ToggleGroup } from "~/components/ToggleGroup";
+import { ToggleGroup, type ToggleGroupOption } from "~/components/ToggleGroup";
 import { TypographySmall } from "~/components/typography";
+import {
+  characterClassIconPathMap,
+  characterClassTitleMap,
+  damageTypeIconPathMap,
+  damageTypeTitleMap,
+  damageTypesList,
+  destinyCharacterClassTypesList,
+} from "~/constants/loadouts";
 
 const components: Components = {
   List: forwardRef(({ children, style }, ref) => (
-    <div ref={ref} className="grid grid-cols-1 gap-2 pr-4" style={style}>
+    <div ref={ref} className="grid grid-cols-2 gap-2 pr-4" style={style}>
       {children}
     </div>
   )),
@@ -38,6 +47,21 @@ const initialFeedFilter: FeedFilter = {
   sortBy: "LATEST",
   popularDuring: "TODAY",
 };
+
+const classTypeFilerOptions: ToggleGroupOption[] =
+  destinyCharacterClassTypesList.map((type) => ({
+    value: type,
+    iconPath: characterClassIconPathMap[type],
+    title: characterClassTitleMap[type],
+  }));
+
+const subclassTypeFilerOptions: ToggleGroupOption[] = damageTypesList.map(
+  (type) => ({
+    value: type,
+    iconPath: damageTypeIconPathMap[type],
+    title: damageTypeTitleMap[type],
+  })
+);
 
 const Home: NextPage = () => {
   const [authUser] = useAuthUser();
@@ -94,50 +118,16 @@ const Home: NextPage = () => {
           className="border-r border-neutral-700 pr-2"
           selected={filter.classTypes}
           onChange={handleClassFilter}
-          options={[
-            {
-              value: DestinyClassType.HUNTER,
-              children: "Hunter",
-            },
-            {
-              value: DestinyClassType.WARLOCK,
-              children: "Warlock",
-            },
-            {
-              value: DestinyClassType.TITAN,
-              children: "Titan",
-            },
-          ]}
+          options={classTypeFilerOptions}
         />
         <TypographySmall>Subclass:</TypographySmall>
         <ToggleGroup
           selected={filter.subclassTypes}
           onChange={handleSubClassFilter}
-          options={[
-            {
-              value: DestinyDamageType.SOLAR,
-              children: "Solar",
-            },
-            {
-              value: DestinyDamageType.ARC,
-              children: "Arc",
-            },
-            {
-              value: DestinyDamageType.VOID,
-              children: "Void",
-            },
-            {
-              value: DestinyDamageType.STRAND,
-              children: "Strand",
-            },
-            {
-              value: DestinyDamageType.STATIS,
-              children: "Stasis",
-            },
-          ]}
+          options={subclassTypeFilerOptions}
         />
       </div>
-      <Virtuoso
+      <VirtuosoGrid
         data={loadouts}
         overscan={15}
         // className="pr-4"
