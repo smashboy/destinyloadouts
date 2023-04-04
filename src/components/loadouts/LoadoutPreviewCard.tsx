@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { type Loadout, type User } from "@prisma/client";
 import { IconHeart, IconHeartFilled, IconBookmark } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
@@ -12,12 +13,16 @@ import { LoadoutArmorItem } from "../destiny/LoadoutArmorItem";
 import { LoadoutSubclassItem } from "../destiny/LoadoutSubclassItem";
 import { IconButton } from "../IconButton";
 import { LoadoutTagsList } from "./LoadoutTagsList";
+import { Avatar } from "../Avatar";
+import { bungieNetOrigin } from "~/bungie/constants";
+import { ButtonLink } from "../Button";
 
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
     likes: Array<{ likedByUserId: string }>;
     bookmarks: Array<{ savedByUserId: string }>;
     _count: { likes: number };
+    author: User | undefined;
   };
   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
   onLike: (loadoutId: string) => void;
@@ -34,6 +39,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     items,
     likes,
     bookmarks,
+    author,
     _count: { likes: likesCount },
   },
   inventoryItems,
@@ -41,6 +47,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
   onLike,
   onSave,
 }) => {
+  const router = useRouter();
+
   const loadoutLink = `/${id}`;
 
   const classIcon = characterClassIconPathMap[classType];
@@ -66,11 +74,29 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     class: classItem,
   } = items as unknown as DestinyCharacterLoadout;
 
-  const handleLikeLoadout = () => onLike(id);
-  const handleSaveLoadout = () => onSave(id);
+  const handleLikeLoadout = () => {
+    if (authUser) return onLike(id);
+    router.push("/login");
+  };
+  const handleSaveLoadout = () => {
+    if (authUser) return onSave(id);
+    router.push("/login");
+  };
 
   return (
     <div className="flex flex-col gap-2">
+      {author && (
+        <div className="flex items-center gap-0.5">
+          <Avatar
+            src={`${bungieNetOrigin}/${author.bungieAccountProfilePicturePath}`}
+            fallback={author.bungieAccountDisplayName}
+            size="xxs"
+          />
+          <ButtonLink href={`/user/${author.id}`} variant="link">
+            {author.bungieAccountDisplayName}
+          </ButtonLink>
+        </div>
+      )}
       <Link
         href={loadoutLink}
         className="relative flex w-full gap-4 overflow-hidden rounded p-3 transition duration-300 ease-out dark:bg-neutral-800 hover:dark:bg-neutral-500"
@@ -174,22 +200,21 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
           </div>
         </span>
       </Link>
-      {authUser && (
-        <div className="flex flex-row-reverse gap-2">
-          <div className="flex items-center gap-2">
-            <TypographySmall>{likesCount}</TypographySmall>
-            <IconButton
-              onClick={handleLikeLoadout}
-              icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
-            />
-            <IconButton
-              className={isSavedByAuthUser ? "invert" : void 0}
-              onClick={handleSaveLoadout}
-              icon={IconBookmark}
-            />
-          </div>
+
+      <div className="flex flex-row-reverse gap-2">
+        <div className="flex items-center gap-2">
+          <TypographySmall>{likesCount}</TypographySmall>
+          <IconButton
+            onClick={handleLikeLoadout}
+            icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
+          />
+          <IconButton
+            className={isSavedByAuthUser ? "invert" : void 0}
+            onClick={handleSaveLoadout}
+            icon={IconBookmark}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };

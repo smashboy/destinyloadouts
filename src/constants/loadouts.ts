@@ -3,7 +3,7 @@ import {
   DestinyDamageType,
   LoadoutTag,
 } from "@prisma/client";
-import { DestinyClass } from "bungie-api-ts/destiny2";
+import { DestinyClass, DamageType } from "bungie-api-ts/destiny2";
 
 export const loadoutTagsList = [
   LoadoutTag.PVE,
@@ -41,31 +41,38 @@ export const loadoutTagTitlesMap = {
   [LoadoutTag.FASHION]: "Fashion",
 };
 
-export const bungieCharacterClassToDbClassMap = {
-  0: DestinyClassType.TITAN,
-  1: DestinyClassType.HUNTER,
-  2: DestinyClassType.WARLOCK,
-};
-
-export const bungieDamageTypeToDbDamageTypeMap = {
-  2: DestinyDamageType.ARC,
-  3: DestinyDamageType.SOLAR,
-  4: DestinyDamageType.VOID,
-  6: DestinyDamageType.STATIS,
-  7: DestinyDamageType.STRAND,
-};
-
 export const characterClassIconPathMap = {
   [DestinyClassType.TITAN]: "/destiny-icons/classes/titan.svg",
   [DestinyClassType.HUNTER]: "/destiny-icons/classes/hunter.svg",
   [DestinyClassType.WARLOCK]: "/destiny-icons/classes/warlock.svg",
 };
 
+export const characterClassTitleMap = {
+  [DestinyClassType.TITAN]: "Titan",
+  [DestinyClassType.HUNTER]: "Hunter",
+  [DestinyClassType.WARLOCK]: "Warlcock",
+};
+
 export const bungieDestinyClassToDbCharacterClassMap = {
   [DestinyClass.Hunter]: DestinyClassType.HUNTER,
   [DestinyClass.Warlock]: DestinyClassType.WARLOCK,
   [DestinyClass.Titan]: DestinyClassType.TITAN,
-  [DestinyClass.Unknown]: null,
+};
+
+export const bungieDamageTypeToDbDamageTypeMap = {
+  [DamageType.Arc]: DestinyDamageType.ARC,
+  [DamageType.Thermal]: DestinyDamageType.SOLAR,
+  [DamageType.Void]: DestinyDamageType.VOID,
+  [DamageType.Stasis]: DestinyDamageType.STATIS,
+  [DamageType.Strand]: DestinyDamageType.STRAND,
+};
+
+export const damageTypeTitleMap = {
+  [DestinyDamageType.ARC]: "Arc",
+  [DestinyDamageType.VOID]: "Void",
+  [DestinyDamageType.SOLAR]: "Solar",
+  [DestinyDamageType.STATIS]: "Stasis",
+  [DestinyDamageType.STRAND]: "Strand",
 };
 
 export const damageTypeIconPathMap = {
@@ -76,7 +83,7 @@ export const damageTypeIconPathMap = {
   [DestinyDamageType.STRAND]: null,
 };
 
-export const damageTypesColorMap = {
+export const damageTypeColorMap = {
   [DestinyDamageType.ARC]: "#79bbe8",
   [DestinyDamageType.VOID]: "#8e749e",
   [DestinyDamageType.SOLAR]: "#f0631e",

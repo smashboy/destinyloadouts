@@ -6,7 +6,7 @@ interface LoadoutPreviewIncludeCommonProps {
 
 export const LoadoutPreviewIncludeCommon = (
   userId?: string,
-  { includeAuthor }: LoadoutPreviewIncludeCommonProps = {}
+  { includeAuthor = false }: LoadoutPreviewIncludeCommonProps = {}
 ) => {
   const include = {
     bookmarks: {

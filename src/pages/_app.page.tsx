@@ -31,7 +31,7 @@ const CommonRoot: React.FC<{
 }> = ({ children, session }) => (
   <div
     className={cn(
-      "flex h-full flex-col bg-white font-sans text-slate-900 antialiased dark:bg-neutral-900 dark:text-slate-50",
+      "flex h-full overflow-hidden bg-white font-sans text-slate-900 antialiased dark:bg-neutral-900 dark:text-slate-50",
       fontSans.variable
     )}
   >
@@ -58,8 +58,10 @@ const MyApp = ({
   return (
     <CommonRoot session={session}>
       <AppHeader />
-      <div className="container flex-1 py-4 px-3 pb-20">
-        <Component {...pageProps} />
+      <div className="flex-1 overflow-auto">
+        <div className="container px-3 pt-4">
+          <Component {...pageProps} />
+        </div>
       </div>
     </CommonRoot>
   );

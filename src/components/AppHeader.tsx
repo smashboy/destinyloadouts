@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { TypographyLarge } from "~/components/typography";
 import { ButtonLink } from "~/components/Button";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Avatar } from "./Avatar";
 import {
   DropdownMenu,
@@ -11,18 +11,15 @@ import {
   DropdownMenuTrigger,
 } from "./Menu";
 import { bungieNetOrigin } from "~/bungie/constants";
+import { useAuthUser } from "~/hooks/useAuthUser";
 
 export const AppHeader = () => {
-  const session = useSession();
-
-  const isAuthenticated = session.status === "authenticated";
-
-  const { user } = session.data || {};
+  const [authUser] = useAuthUser();
 
   const handleSignout = () => signOut();
 
   return (
-    <header className="z-10 w-full border-b border-b-slate-200 bg-white dark:border-b-neutral-700 dark:bg-neutral-900">
+    <header className="sticky top-0 z-10 h-full w-1/6 border-r border-b-slate-200 bg-white dark:border-r-neutral-700 dark:bg-neutral-900">
       <div className="container flex h-16 items-center px-6">
         <Link href="/" className="flex flex-1 items-center">
           <Image
@@ -34,16 +31,16 @@ export const AppHeader = () => {
           />
           <TypographyLarge>Black Armory</TypographyLarge>
         </Link>
-        {isAuthenticated ? (
+        {authUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar
-                src={`${bungieNetOrigin}/${user!.image}`}
-                fallback={user?.name ?? "User avatar"}
+                src={`${bungieNetOrigin}/${authUser.bungieAccountProfilePicturePath}`}
+                fallback={authUser.bungieAccountDisplayName ?? "User avatar"}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <Link href="/user/me">
+              <Link href={`/user/${authUser.id}`}>
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
               <DropdownMenuItem>Settings</DropdownMenuItem>

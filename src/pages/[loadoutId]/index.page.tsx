@@ -99,8 +99,15 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
     onSuccess: () => router.push("/"),
   });
 
-  const handleLikeLoadout = () => likeMutation.mutate({ loadoutId });
-  const handleSaveLoadout = () => saveMutation.mutate({ loadoutId });
+  const handleLikeLoadout = () => {
+    if (authUser) return likeMutation.mutate({ loadoutId });
+    router.push("/login");
+  };
+
+  const handleSaveLoadout = () => {
+    if (authUser) return saveMutation.mutate({ loadoutId });
+    router.push("/login");
+  };
 
   const handleDeleteLoadout = () => deleteLoadoutMutation.mutate({ loadoutId });
 
@@ -153,14 +160,14 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
         >
           {bungieAccountDisplayName}
         </ButtonLink>
-        {authUser?.id !== authorId && (
+        {authUser && authUser.id !== authorId && (
           <div className="border-r-2 border-neutral-700 pr-4 text-lg">
             <Button>Follow</Button>
           </div>
         )}
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-1 flex-col justify-center gap-2">
           <TypographyLarge>{name}</TypographyLarge>
-          <LoadoutTagsList tags={tags} />
+          {tags.length > 0 && <LoadoutTagsList tags={tags} />}
         </div>
         <TypographySmall>{likesCount}</TypographySmall>
         <IconButton

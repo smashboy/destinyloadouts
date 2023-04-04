@@ -9,7 +9,7 @@ const LoginPage: NextPageWithLayout = () => {
   const handleLogin = () => signIn("bungie");
 
   return (
-    <div className="h-full px-12 py-6">
+    <div className="h-full w-full px-12 py-6">
       <ButtonLink href="/" variant="ghost" iconLeft={ChevronLeft}>
         Back
       </ButtonLink>

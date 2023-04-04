@@ -109,7 +109,7 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
       value={(router.query?.type as string) || "PERSONAL"}
       className="grid grid-cols-1 gap-4"
     >
-      <AccountHeader {...props} isAuthUserPage />
+      <AccountHeader {...props} />
       {loadouts && inventoryItems && (
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           {loadouts.map((loadout) => (
@@ -131,32 +131,20 @@ const AuthUserProfilePage: NextPage<AuthUserProfilePageProps> = (props) => {
 export const getServerSideProps: GetServerSideProps<
   AuthUserProfilePageProps
 > = async (ctx) => {
+  const userId = ctx.query.userId as string;
+
   const session = await getServerAuthSession(ctx);
-
-  if (!session)
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-
-  const {
-    user: { id: bungieAccountId },
-  } = session;
 
   const trpc = trpsSSG(session);
 
-  const userResponse = await trpc.users.getByBungieAccountId.fetch({
-    bungieAccountId,
+  const userResponse = await trpc.users.getById.fetch({
+    userId,
   });
 
   if (!userResponse)
     return {
       notFound: true,
     };
-
-  const { id: userId } = userResponse.user;
 
   const userLoadoutType = ctx.query.type as
     | "LIKED"

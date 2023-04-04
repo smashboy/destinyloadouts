@@ -4,6 +4,7 @@ import {
   LoadoutStatus,
   LoadoutTag,
   type User,
+  type Prisma,
 } from "@prisma/client";
 import { z } from "zod";
 import {
@@ -46,13 +47,12 @@ const loadoutValidation = z.object({
   }),
 });
 
-// const cursorValidation = z
-//   .object({
-//     take: z.number().int(),
-//     skip: z.number().int(),
-//   })
-//   .nullable()
-//   .optional();
+const cursorValidation = z
+  .object({
+    take: z.number().int(),
+    skip: z.number().int(),
+  })
+  .optional();
 
 export const loadoutsRouter = createTRPCRouter({
   getById: publicProcedure
@@ -347,41 +347,78 @@ export const loadoutsRouter = createTRPCRouter({
   feed: publicProcedure
     .input(
       z.object({
-        classType: z.nativeEnum(DestinyClassType).optional(),
-        subclassType: z.nativeEnum(DestinyDamageType).optional(),
+        classTypes: z.array(z.nativeEnum(DestinyClassType)).optional(),
+        subclassTypes: z.array(z.nativeEnum(DestinyDamageType)).optional(),
         tags: z.array(z.nativeEnum(LoadoutTag)).optional(),
-        take: z.number().int(),
-        skip: z.number().int(),
-        sortBy: z.enum(["LATEST", "POPULAR"]).default("LATEST"),
+        cursor: cursorValidation,
+        section: z.enum(["ALL", "FOLLOWING"]).default("ALL"),
+        sortBy: z.enum(["LATEST", "POPULAR"]).default("POPULAR"),
         popularDuring: z
           .enum(["TODAY", "WEEK", "MONTH", "ALL_TIME"])
-          .default("TODAY"),
+          .default("ALL_TIME"),
       })
     )
     .query(
       async ({
         input: {
-          take,
-          skip,
+          cursor = { take: 15, skip: 0 },
           sortBy,
-          classType,
-          subclassType,
+          classTypes,
+          subclassTypes,
           tags,
           popularDuring,
+          section,
         },
-        ctx: { prisma },
+        ctx: { prisma, session },
       }) => {
+        if (!session && section === "FOLLOWING")
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        const bungieAccountId = session?.user.id;
+
+        let authUser: User | null = null;
+
+        if (bungieAccountId && section === "FOLLOWING") {
+          const res = await usersRouterCaller({
+            prisma,
+            session,
+          }).getByBungieAccountId({ bungieAccountId });
+          if (res) authUser = res.user;
+        }
+
         const popularDuringDate =
           sortBy === "POPULAR" && popularDuring !== "ALL_TIME"
             ? getPopularDuringDate(popularDuring)
             : null;
 
         const where = {
-          classType,
-          subclassType,
-          tags: {
-            hasSome: tags,
-          },
+          ...(classTypes &&
+            classTypes.length > 0 && {
+              classType: {
+                in: classTypes,
+              },
+            }),
+          ...(subclassTypes &&
+            subclassTypes.length > 0 && {
+              subclassType: {
+                in: subclassTypes,
+              },
+            }),
+          ...(tags &&
+            tags.length > 0 && {
+              tags: {
+                hasSome: tags,
+              },
+            }),
+          ...(authUser && {
+            author: {
+              followers: {
+                some: {
+                  followerUserId: authUser.id,
+                },
+              },
+            },
+          }),
           createdAt:
             sortBy === "POPULAR" && popularDuringDate
               ? {
@@ -389,48 +426,66 @@ export const loadoutsRouter = createTRPCRouter({
                   lt: new Date(),
                 }
               : void 0,
-        };
+        } satisfies Prisma.LoadoutFindManyArgs["where"];
 
-        const orderBy =
+        const orderBy = (
           sortBy === "POPULAR"
             ? {
                 likes: {
-                  _count: "asc" as const,
+                  _count: "desc",
                 },
               }
             : {
-                createdAt: "asc" as const,
-              };
+                createdAt: "desc",
+              }
+        ) satisfies Prisma.LoadoutFindManyArgs["orderBy"];
+
+        console.log("FEED", { where, orderBy });
 
         const {
           items: loadouts,
           hasMore,
           nextPage,
         } = await paginate({
-          take,
-          skip,
+          take: cursor.take,
+          skip: cursor.skip,
           count: () => prisma.loadout.count({ where, orderBy }),
           query: (paginateArgs) =>
             prisma.loadout.findMany({
               ...paginateArgs,
               where,
               orderBy,
-              include: {
-                author: true, // todo, can be improved
-              },
+              include: LoadoutPreviewIncludeCommon(authUser?.id, {
+                includeAuthor: true,
+              }),
             }),
         });
 
-        // const manifest = await prisma.destinyManifest.findFirst();
+        const manifestCaller = destinyLatestManifestRouterCaller({
+          prisma,
+          session,
+        });
 
-        // const inventoryItems = await getLoadoutsInventoryItems(
-        //   loadouts,
-        //   manifest!
-        // );
+        const previewItemHashes = loadouts
+          .map((loadout) =>
+            getLoadoutItemHashes(
+              loadout.items as unknown as Record<string, LoadoutItem>
+            )
+          )
+          .flat();
+
+        const inventoryItems = await manifestCaller.getTableComponents({
+          tableName: "DestinyInventoryItemDefinition",
+          locale: "en",
+          hashIds: [...new Set(previewItemHashes)],
+        });
 
         return {
           loadouts,
-          // inventoryItems,
+          inventoryItems:
+            formatPrismaDestinyManifestTableComponents<
+              Record<string, DestinyInventoryItemDefinition>
+            >(inventoryItems),
           hasMore,
           nextPage,
         };

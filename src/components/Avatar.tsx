@@ -11,6 +11,7 @@ const avatarRootVariants = cva(
         default: "h-10 w-10",
         sm: "w-16 h-16",
         xs: "w-12 h-12",
+        xxs: "w-8 h-8",
         lg: "w-32 h-32",
       },
     },

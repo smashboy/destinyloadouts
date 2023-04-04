@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { type DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
 import {
-  bungieCharacterClassToDbClassMap,
   bungieDamageTypeToDbDamageTypeMap,
+  bungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { trpcNext } from "~/utils/api";
 import {
@@ -46,8 +46,8 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
       ...formArgs,
       items: { ...loadoutProps, subclass },
       classType:
-        bungieCharacterClassToDbClassMap[
-          character.classType as keyof typeof bungieCharacterClassToDbClassMap
+        bungieDestinyClassToDbCharacterClassMap[
+          character.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
         ],
       subclassType:
         bungieDamageTypeToDbDamageTypeMap[

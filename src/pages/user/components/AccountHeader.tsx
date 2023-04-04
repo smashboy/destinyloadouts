@@ -6,23 +6,28 @@ import { AccountCounter } from "./AccountCounter";
 import { type User } from "@prisma/client";
 import { ButtonLink } from "~/components/Button";
 import { TabsList, TabsTrigger } from "~/components/Tabs";
+import { useAuthUser } from "~/hooks/useAuthUser";
 
 interface AccountHeaderProps {
   user: User;
   loadoutsCount: number;
   followersCount: number;
   likesCount: number;
-  isAuthUserPage?: boolean;
 }
 
 export const AccountHeader: React.FC<AccountHeaderProps> = ({
-  user: { bungieAccountDisplayName, bungieAccountProfilePicturePath, id },
+  user: {
+    bungieAccountDisplayName,
+    bungieAccountProfilePicturePath,
+    id: userId,
+  },
   loadoutsCount,
   likesCount,
   followersCount,
-  isAuthUserPage = false,
 }) => {
-  const baseLink = isAuthUserPage ? "/user/me" : `/user/${id}`;
+  const [authUser] = useAuthUser();
+
+  const baseLink = `/user/${userId}`;
 
   const personalRoute = `${baseLink}?type=PERSONAL`;
   const likedRoute = `${baseLink}?type=LIKED`;
@@ -48,9 +53,11 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
           <AccountCounter title="Loadouts" count={loadoutsCount} />
         </div>
 
-        <ButtonLink href="/new-loadout" size="lg">
-          New Loadout +
-        </ButtonLink>
+        {userId === authUser?.id && (
+          <ButtonLink href="/new-loadout" size="lg">
+            New Loadout +
+          </ButtonLink>
+        )}
       </div>
       <TabsList>
         <Link href={personalRoute}>
@@ -59,7 +66,7 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
         <Link href={likedRoute}>
           <TabsTrigger value="LIKED">Liked</TabsTrigger>
         </Link>
-        {isAuthUserPage && (
+        {userId === authUser?.id && (
           <Link href={savedRoute}>
             <TabsTrigger value="SAVED">Saved</TabsTrigger>
           </Link>
