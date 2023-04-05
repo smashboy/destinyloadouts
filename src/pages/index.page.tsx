@@ -48,7 +48,7 @@ const initialFeedFilter: FeedFilter = {
   tags: [],
   section: "ALL",
   sortBy: "LATEST",
-  popularDuring: "TODAY",
+  popularDuring: "WEEK",
 };
 
 const classTypeFilerOptions: ToggleGroupOption[] =
