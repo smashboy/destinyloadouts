@@ -122,7 +122,7 @@ export const authOptions: NextAuthOptions = {
             expiresAt: Math.floor(Date.now() / 1000 + tokens.expires_in),
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
-            refreshToken: tokens.refresh_token ?? token.refresh_token,
+            refreshToken: tokens.refresh_token ?? token.refreshToken,
           };
 
           console.log("TOKEN REFRESHED SUCCESSFULLY:", { newToken, tokens });
