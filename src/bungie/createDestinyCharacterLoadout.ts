@@ -232,6 +232,7 @@ export const createDestinyCharacterLoadout = async (
           ...loadout,
           subclass: [
             itemHash,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             getSocketHash(loadoutItem, itemInstance.sockets!.data!.sockets),
           ],
         };

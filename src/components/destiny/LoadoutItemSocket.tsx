@@ -16,6 +16,7 @@ export const LoadoutItemSocket: React.FC<LoadoutItemSocketProps> = ({
   inventoryItems,
   ...props
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const [itemHash] = item!;
   // const isMasterworked =
   //   itemInstance.instance.data?.energy?.energyCapacity === 10;

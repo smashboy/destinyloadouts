@@ -31,7 +31,6 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
 
   const personalRoute = `${baseLink}?type=PERSONAL`;
   const likedRoute = `${baseLink}?type=LIKED`;
-  const savedRoute = `${baseLink}?type=SAVED`;
 
   return (
     <div className="sticky top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700">
@@ -66,11 +65,6 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
         <Link href={likedRoute}>
           <TabsTrigger value="LIKED">Liked</TabsTrigger>
         </Link>
-        {userId === authUser?.id && (
-          <Link href={savedRoute}>
-            <TabsTrigger value="SAVED">Saved</TabsTrigger>
-          </Link>
-        )}
       </TabsList>
     </div>
   );

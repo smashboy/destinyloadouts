@@ -28,7 +28,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 }) => {
   if (!item) return null;
 
-  const [itemHash, plugItemHashes] = item;
+  const [, plugItemHashes] = item;
 
   const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])

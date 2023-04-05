@@ -44,6 +44,7 @@ export const ItemSocket: React.FC<ItemSocketProps> = ({
   const RootElement = href ? Link : "div";
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <RootElement href={href!} className={rootStyles}>
       <span
         className={cn(

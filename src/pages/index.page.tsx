@@ -123,12 +123,16 @@ const Home: NextPageWithLayout = () => {
             loadout={loadout}
             inventoryItems={inventoryItems}
             authUser={authUser}
-            onLike={() => {}}
-            onSave={() => {}}
+            onLike={() => {
+              return void 0;
+            }}
+            onSave={() => {
+              return void 0;
+            }}
           />
         )}
       />
-      <div className="sticky top-4 z-10 flex h-fit flex-col gap-2 rounded border-2 border-neutral-700 bg-neutral-900 p-4">
+      <div className="sticky top-4 z-10 flex h-fit flex-col gap-2 rounded border border-neutral-700 bg-neutral-900 p-4">
         <Tabs value={filter.section} onValueChange={handleSectionFilter}>
           <TabsList>
             <TabsTrigger value="ALL">All</TabsTrigger>

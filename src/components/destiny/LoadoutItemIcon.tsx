@@ -45,9 +45,11 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
   item,
   inventoryItems,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const [itemHash, plugItemHashes] = item!;
   const overrideStyleItem = getStyleItem(plugItemHashes, inventoryItems);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const inventoryItem = inventoryItems[itemHash!];
 
   if (!inventoryItem) return null;

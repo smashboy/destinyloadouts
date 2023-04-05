@@ -25,6 +25,8 @@ const run = async () => {
 
   const slices = await getDestinyManifestSlice(fetchHelper, {
     destinyManifest: manifestData,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     tableNames: destinyManifestTableNames,
     language,
   });

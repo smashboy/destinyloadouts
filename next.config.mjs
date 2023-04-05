@@ -6,6 +6,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { withSuperjson } from "next-superjson";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -32,4 +33,6 @@ const config = {
   //   defaultLocale: "en",
   // },
 };
+// export default withSuperjson()(withBundleAnalyzer()(config));
+
 export default withSuperjson()(config);

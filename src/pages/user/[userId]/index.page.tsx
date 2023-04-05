@@ -13,7 +13,7 @@ import {
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
 
-type UserLoadoutType = "PERSONAL" | "LIKED" | "SAVED" | undefined;
+type UserLoadoutType = "PERSONAL" | "LIKED" | undefined;
 
 interface AuthUserProfilePageProps {
   user: User;
@@ -146,11 +146,7 @@ export const getServerSideProps: GetServerSideProps<
       notFound: true,
     };
 
-  const userLoadoutType = ctx.query.type as
-    | "LIKED"
-    | "SAVED"
-    | "PERSONAL"
-    | undefined;
+  const userLoadoutType = ctx.query.type as "LIKED" | "PERSONAL" | undefined;
 
   await trpc.loadouts.getByUserId.prefetch({
     userId,

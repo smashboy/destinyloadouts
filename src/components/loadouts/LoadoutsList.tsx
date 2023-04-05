@@ -1,8 +1,6 @@
+import { forwardRef } from "react";
 import { type Loadout } from "@prisma/client";
 import { Virtuoso, type Components } from "react-virtuoso";
-import { cn } from "~/utils/tailwind";
-import { forwardRef } from "react";
-import { cx } from "class-variance-authority";
 
 interface LoadoutsListProps {
   loadouts: Loadout[];

@@ -273,11 +273,57 @@ export const loadoutsRouter = createTRPCRouter({
         });
       }
     ),
+  getAuthBookmarked: protectedProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const {
+        user: { id: userId },
+      } = session;
+
+      const loadouts = await prisma.loadout.findMany({
+        where: {
+          bookmarks: {
+            some: {
+              savedByUserId: userId,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        include: LoadoutPreviewIncludeCommon(userId, { includeAuthor: true }),
+      });
+
+      const manifestCaller = destinyLatestManifestRouterCaller({
+        prisma,
+        session: null,
+      });
+
+      const previewItemHashes = loadouts
+        .map((loadout) =>
+          getLoadoutItemHashes(
+            loadout.items as unknown as Record<string, LoadoutItem>
+          )
+        )
+        .flat();
+
+      const inventoryItems = await manifestCaller.getTableComponents({
+        tableName: "DestinyInventoryItemDefinition",
+        locale: "en",
+        hashIds: [...new Set(previewItemHashes)],
+      });
+
+      return {
+        loadouts,
+        inventoryItems:
+          formatPrismaDestinyManifestTableComponents<
+            Record<string, DestinyInventoryItemDefinition>
+          >(inventoryItems),
+      };
+    }
+  ),
   getByUserId: publicProcedure
     .input(
       z.object({
         userId: z.string(),
-        type: z.enum(["PERSONAL", "LIKED", "SAVED"]).default("PERSONAL"),
+        type: z.enum(["PERSONAL", "LIKED"]).default("PERSONAL"),
       })
     )
     .query(async ({ input: { userId, type }, ctx: { prisma, session } }) => {
@@ -303,18 +349,12 @@ export const loadoutsRouter = createTRPCRouter({
                   },
                 },
               }
-            : type === "SAVED"
-            ? {
-                bookmarks: {
-                  some: {
-                    savedByUserId: userId,
-                  },
-                },
-              }
             : { authorId: userId }),
         },
         orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon(user?.id),
+        include: LoadoutPreviewIncludeCommon(user?.id, {
+          includeAuthor: type === "LIKED",
+        }),
       });
 
       const manifestCaller = destinyLatestManifestRouterCaller({

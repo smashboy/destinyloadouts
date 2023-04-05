@@ -6,7 +6,9 @@
     "dev": "next dev",
     "dev:proxy": "local-ssl-proxy --source 3001 --target 3000",
     "postinstall": "prisma generate",
+    "analyze": "dotenv -- next build",
     "lint": "next lint",
+    "ts": "tsc --noEmit --incremental",
     "build": "next build",
     "start": "next start",
     "db:docker": "docker compose up -d",
@@ -49,6 +51,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.2.4",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",
     "@types/prettier": "^2.7.2",
