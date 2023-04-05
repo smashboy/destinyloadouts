@@ -17,6 +17,7 @@ const fontSans = FontSans({
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   removeLayout?: boolean;
+  disableContainer?: boolean;
 };
 
 type AppPropsWithLayout = AppProps<{
@@ -44,6 +45,7 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
   const removeLayout = Component.removeLayout || false;
+  const disableContainer = Component.disableContainer ?? false;
 
   typeof document !== "undefined" &&
     document.documentElement.classList.add("dark");
@@ -59,7 +61,7 @@ const MyApp = ({
     <CommonRoot session={session}>
       <AppHeader />
       <div className="flex-1 overflow-auto">
-        <div className="container px-3 pt-4">
+        <div className={cn("px-3 pt-4", !disableContainer && "container")}>
           <Component {...pageProps} />
         </div>
       </div>

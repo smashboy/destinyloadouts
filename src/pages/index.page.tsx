@@ -1,12 +1,11 @@
-import { forwardRef, useState } from "react";
-import { type NextPage } from "next";
-import Image from "next/image";
+import { useState } from "react";
 import {
   type DestinyClassType,
   type DestinyDamageType,
   type LoadoutTag,
 } from "@prisma/client";
-import { VirtuosoGrid, type Components } from "react-virtuoso";
+import { useDebounce } from "use-debounce";
+import { Virtuoso } from "react-virtuoso";
 import { trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
@@ -20,15 +19,19 @@ import {
   damageTypeTitleMap,
   damageTypesList,
   destinyCharacterClassTypesList,
+  loadoutTagIconsMap,
+  loadoutTagTitlesMap,
+  loadoutTagsList,
 } from "~/constants/loadouts";
+import { type NextPageWithLayout } from "./_app.page";
 
-const components: Components = {
-  List: forwardRef(({ children, style }, ref) => (
-    <div ref={ref} className="grid grid-cols-2 gap-2 pr-4" style={style}>
-      {children}
-    </div>
-  )),
-};
+// const components: Components = {
+//   List: forwardRef(({ children, style }, ref) => (
+//     <div ref={ref} className="grid grid-cols-2 gap-2 pr-4" style={style}>
+//       {children}
+//     </div>
+//   )),
+// };
 
 interface FeedFilter {
   classTypes: DestinyClassType[];
@@ -63,17 +66,29 @@ const subclassTypeFilerOptions: ToggleGroupOption[] = damageTypesList.map(
   })
 );
 
-const Home: NextPage = () => {
+const loadoutTagFilterOptions: ToggleGroupOption[] = loadoutTagsList.map(
+  (tag) => ({
+    value: tag,
+    iconPath: loadoutTagIconsMap[tag],
+    title: loadoutTagTitlesMap[tag],
+  })
+);
+
+const Home: NextPageWithLayout = () => {
   const [authUser] = useAuthUser();
 
   const [filter, setFilter] = useState(initialFeedFilter);
 
-  const { data } = trpcNext.loadouts.feed.useInfiniteQuery({ ...filter });
+  const [debouncedFilter] = useDebounce(filter, 500);
 
-  if (!data) return null;
+  const { data } = trpcNext.loadouts.feed.useInfiniteQuery({
+    ...debouncedFilter,
+  });
 
-  const loadouts = data.pages.map((page) => page.loadouts).flat();
-  const inventoryItems = data.pages.reduce(
+  const { pages = [] } = data || {};
+
+  const loadouts = pages.map((page) => page.loadouts).flat();
+  const inventoryItems = pages.reduce(
     (acc, page) => ({ ...acc, ...page.inventoryItems }),
     {}
   );
@@ -90,49 +105,18 @@ const Home: NextPage = () => {
   const handleSubClassFilter = (subclassTypes: FeedFilter["subclassTypes"]) =>
     setFilter((prev) => ({ ...prev, subclassTypes }));
 
+  const handleTagsFilter = (tags: FeedFilter["tags"]) =>
+    setFilter((prev) => ({ ...prev, tags }));
+
   return (
-    <div className="grid grid-cols-1 gap-2">
-      <div className="sticky top-0 z-10 flex h-fit items-center gap-2 border-b-2 border-neutral-700 bg-neutral-900 p-4">
-        <Tabs
-          value={filter.section}
-          onValueChange={handleSectionFilter}
-          className="border-r border-neutral-700 pr-2"
-        >
-          <TabsList>
-            <TabsTrigger value="ALL">All</TabsTrigger>
-            <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <Tabs
-          value={filter.sortBy}
-          onValueChange={handleSortByFilter}
-          className="border-r border-neutral-700 pr-2"
-        >
-          <TabsList>
-            <TabsTrigger value="LATEST">Latest</TabsTrigger>
-            <TabsTrigger value="POPULAR">Popular</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <TypographySmall>Class:</TypographySmall>
-        <ToggleGroup
-          className="border-r border-neutral-700 pr-2"
-          selected={filter.classTypes}
-          onChange={handleClassFilter}
-          options={classTypeFilerOptions}
-        />
-        <TypographySmall>Subclass:</TypographySmall>
-        <ToggleGroup
-          selected={filter.subclassTypes}
-          onChange={handleSubClassFilter}
-          options={subclassTypeFilerOptions}
-        />
-      </div>
-      <VirtuosoGrid
+    <div className="grid grid-cols-4 gap-2">
+      <Virtuoso
         data={loadouts}
         overscan={15}
-        // className="pr-4"
-        style={{ height: "calc(100vh - 110px)" }}
-        components={components}
+        className="col-span-3"
+        // style={{ height: "calc(100vh - 110px)" }}
+        // components={components}
+        useWindowScroll
         itemContent={(_, loadout) => (
           <LoadoutPreviewCard
             key={loadout.id}
@@ -144,8 +128,44 @@ const Home: NextPage = () => {
           />
         )}
       />
+      <div className="sticky top-4 z-10 flex h-fit flex-col gap-2 rounded border-2 border-neutral-700 bg-neutral-900 p-4">
+        <Tabs value={filter.section} onValueChange={handleSectionFilter}>
+          <TabsList>
+            <TabsTrigger value="ALL">All</TabsTrigger>
+            <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Tabs value={filter.sortBy} onValueChange={handleSortByFilter}>
+          <TabsList>
+            <TabsTrigger value="LATEST">Latest</TabsTrigger>
+            <TabsTrigger value="POPULAR">Popular</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <TypographySmall>Classes:</TypographySmall>
+        <ToggleGroup
+          selected={filter.classTypes}
+          onChange={handleClassFilter}
+          options={classTypeFilerOptions}
+        />
+        <TypographySmall>Subclasses:</TypographySmall>
+        <ToggleGroup
+          selected={filter.subclassTypes}
+          onChange={handleSubClassFilter}
+          options={subclassTypeFilerOptions}
+          disableSolid
+        />
+        <TypographySmall>Tags:</TypographySmall>
+        <ToggleGroup
+          selected={filter.tags}
+          onChange={handleTagsFilter}
+          options={loadoutTagFilterOptions}
+          disableSolid
+        />
+      </div>
     </div>
   );
 };
+
+Home.disableContainer = true;
 
 export default Home;

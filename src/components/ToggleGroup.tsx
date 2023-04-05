@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { LoadoutTag } from "@prisma/client";
 import { cn } from "~/utils/tailwind";
 import { Button } from "./Button";
+import { loadoutTagIconsMap } from "~/constants/loadouts";
 
 export type ToggleGroupOption = {
   value: string;
@@ -13,6 +15,7 @@ export type ToggleGroupProps = {
   selected: string[];
   onChange: (options: string[]) => void;
   className?: string;
+  disableSolid?: boolean;
 };
 
 export const ToggleGroup: React.FC<ToggleGroupProps> = ({
@@ -20,6 +23,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
   selected,
   onChange,
   className,
+  disableSolid = false,
 }) => {
   const handleChange = (option: ToggleGroupOption) => () => {
     if (selected.includes(option.value))
@@ -29,7 +33,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
   };
 
   return (
-    <div className={cn("flex", className)}>
+    <div className={cn("flex", disableSolid && "flex-wrap gap-2", className)}>
       {options.map((option) => {
         const { iconPath, title, value } = option;
 
@@ -39,7 +43,10 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
           <Button
             key={value}
             variant={isSelected ? "default" : "subtle"}
-            className="rounded-none first:rounded-l-md last:rounded-r-md"
+            className={cn(
+              !disableSolid &&
+                "rounded-none first:rounded-l-md last:rounded-r-md"
+            )}
             onClick={handleChange(option)}
           >
             <span className="flex gap-1">
@@ -49,7 +56,11 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
                   alt={title}
                   width={18}
                   height={18}
-                  className={cn(!isSelected && "invert")}
+                  className={cn(
+                    !isSelected && "invert",
+                    iconPath === loadoutTagIconsMap[LoadoutTag.DUNGEON] &&
+                      "scale-[2.5]"
+                  )}
                 />
               )}
               <span>{title}</span>

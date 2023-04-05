@@ -45,6 +45,7 @@
     "react-virtuoso": "^4.1.1",
     "superjson": "1.12.2",
     "tailwind-merge": "^1.10.0",
+    "use-debounce": "^9.0.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {
