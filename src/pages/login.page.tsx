@@ -1,9 +1,11 @@
+import { type GetServerSideProps } from "next";
 import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { type NextPageWithLayout } from "./_app.page";
 import { Button, ButtonLink } from "~/components/Button";
 import { TypographyLarge } from "~/components/typography";
+import { getServerAuthSession } from "~/server/auth";
 
 const LoginPage: NextPageWithLayout = () => {
   const handleLogin = () => signIn("bungie");
@@ -32,5 +34,21 @@ const LoginPage: NextPageWithLayout = () => {
 };
 
 LoginPage.removeLayout = true;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+
+  if (session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {},
+  };
+};
 
 export default LoginPage;

@@ -208,7 +208,7 @@ export const loadoutsRouter = createTRPCRouter({
         classType,
         subclassType,
         tags,
-        status,
+        // status,
         items,
         name,
         description,
@@ -225,9 +225,9 @@ export const loadoutsRouter = createTRPCRouter({
           name,
           classType,
           subclassType,
+          status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
           description,
           tags,
-          status,
           items,
           author: {
             connect: {

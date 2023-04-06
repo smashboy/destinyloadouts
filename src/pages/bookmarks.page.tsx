@@ -7,7 +7,7 @@ import { trpsSSG } from "~/utils/ssg";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 
-interface BookmarksPage {
+interface BookmarksPageProps {
   loadouts: Array<
     Loadout & {
       _count: { likes: number };
@@ -23,7 +23,7 @@ interface BookmarksPage {
   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
 }
 
-export const BookmarksPage: NextPage<BookmarksPage> = ({
+export const BookmarksPage: NextPage<BookmarksPageProps> = ({
   loadouts,
   inventoryItems,
 }) => {
@@ -50,7 +50,9 @@ export const BookmarksPage: NextPage<BookmarksPage> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<
+  BookmarksPageProps
+> = async (ctx) => {
   const session = await getServerAuthSession(ctx);
 
   if (!session)

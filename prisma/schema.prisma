@@ -24,9 +24,11 @@ model User {
 }
 
 model UserFollower {
-    following       User   @relation("following", fields: [followingUserId], references: [id])
+    createdAt       DateTime @default(value: now())
+    updatedAt       DateTime @updatedAt
+    following       User     @relation("following", fields: [followingUserId], references: [id])
     followingUserId String
-    follower        User   @relation("followers", fields: [followerUserId], references: [id])
+    follower        User     @relation("followers", fields: [followerUserId], references: [id])
     followerUserId  String
 
     @@unique([followingUserId, followerUserId])
@@ -50,18 +52,20 @@ model Loadout {
 }
 
 model LoadoutLike {
-    likedBy       User    @relation(fields: [likedByUserId], references: [id])
+    createdAt     DateTime @default(value: now())
+    likedBy       User     @relation(fields: [likedByUserId], references: [id])
     likedByUserId String
-    loadout       Loadout @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
+    loadout       Loadout  @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
     loadoutId     String
 
     @@unique([likedByUserId, loadoutId])
 }
 
 model LoadoutBookmark {
-    savedBy       User    @relation(fields: [savedByUserId], references: [id])
+    createdAt     DateTime @default(value: now())
+    savedBy       User     @relation(fields: [savedByUserId], references: [id])
     savedByUserId String
-    loadout       Loadout @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
+    loadout       Loadout  @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
     loadoutId     String
 
     @@unique([savedByUserId, loadoutId])
