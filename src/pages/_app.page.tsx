@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { type AppProps } from "next/app";
 import { type Session } from "next-auth";
+import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
 import { Inter as FontSans } from "next/font/google";
 import { AppSidebar } from "~/components/AppSidebar";
@@ -37,6 +38,7 @@ const CommonRoot: React.FC<{
     )}
   >
     <SessionProvider session={session}>{children}</SessionProvider>
+    <Analytics />
   </div>
 );
 
