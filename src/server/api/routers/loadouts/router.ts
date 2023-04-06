@@ -25,7 +25,8 @@ import { TRPCError } from "@trpc/server";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
-  .nullable();
+  .nullable()
+  .optional();
 
 const loadoutValidation = z.object({
   name: z.string().min(1).max(75),
