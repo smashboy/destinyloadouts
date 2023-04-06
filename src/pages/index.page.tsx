@@ -24,6 +24,10 @@ import {
   loadoutTagsList,
 } from "~/constants/loadouts";
 import { type NextPageWithLayout } from "./_app.page";
+import {
+  handleAuthUserLoadoutBookmark,
+  handleAuthUserLoadoutLike,
+} from "~/utils/loadout";
 
 const components: Components = {
   List: forwardRef(({ children, style }, ref) => (
@@ -101,12 +105,26 @@ const Home: NextPageWithLayout = () => {
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.feed.cancel();
 
-      const prevFeed = await trpcCtx.loadouts.feed.getData(debouncedFilter);
+      const prevFeed = await trpcCtx.loadouts.feed.getInfiniteData(
+        debouncedFilter
+      );
+
+      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (old) => ({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...old!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        pages: old!.pages.map(({ loadouts, ...page }) => ({
+          ...page,
+          loadouts: loadouts.map((loadout) =>
+            handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
+          ),
+        })),
+      }));
 
       return { prevFeed };
     },
     onError: (_, __, ctx) =>
-      trpcCtx.loadouts.feed.setData(
+      trpcCtx.loadouts.feed.setInfiniteData(
         debouncedFilter,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ctx!.prevFeed
@@ -117,12 +135,26 @@ const Home: NextPageWithLayout = () => {
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.feed.cancel();
 
-      const prevFeed = await trpcCtx.loadouts.feed.getData(debouncedFilter);
+      const prevFeed = await trpcCtx.loadouts.feed.getInfiniteData(
+        debouncedFilter
+      );
+
+      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (old) => ({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...old!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        pages: old!.pages.map(({ loadouts, ...page }) => ({
+          ...page,
+          loadouts: loadouts.map((loadout) =>
+            handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
+          ),
+        })),
+      }));
 
       return { prevFeed };
     },
     onError: (_, __, ctx) =>
-      trpcCtx.loadouts.feed.setData(
+      trpcCtx.loadouts.feed.setInfiniteData(
         debouncedFilter,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ctx!.prevFeed
