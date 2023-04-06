@@ -13,6 +13,7 @@
     "start": "next start",
     "db:docker": "docker compose up -d",
     "db:migrate-dev": "dotenv -- npx prisma migrate dev",
+    "db:migrate-deploy": "dotenv -- npx prisma migrate deploy",
     "db:manifest": "dotenv -- tsx ./prisma/fetchDestinyManifestTables.ts",
     "db:reset": "dotenv -- npx prisma migrate reset --force --preview-feature",
     "prisma:generate": "npx prisma generate",
