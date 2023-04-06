@@ -141,23 +141,29 @@ export const createDestinyCharacterLoadout = async (
 ): Promise<DestinyCharacterLoadout> => {
   const { items: loadoutItems } = loadoutData;
 
-  const items = (
-    await Promise.all(
-      loadoutItems.map(({ itemInstanceId }) =>
-        getItem(fetchHelper, {
-          membershipType,
-          itemInstanceId,
-          components: [
-            DestinyComponentType.ItemInstances,
-            DestinyComponentType.ItemCommonData,
-            DestinyComponentType.ItemSockets,
-            // DestinyComponentType.ItemStats,
-          ],
-          destinyMembershipId: membershipId,
-        })
-      )
+  const responses = await Promise.allSettled(
+    loadoutItems.map(({ itemInstanceId }) =>
+      getItem(fetchHelper, {
+        membershipType,
+        itemInstanceId,
+        components: [
+          DestinyComponentType.ItemInstances,
+          DestinyComponentType.ItemCommonData,
+          DestinyComponentType.ItemSockets,
+          // DestinyComponentType.ItemStats,
+        ],
+        destinyMembershipId: membershipId,
+      })
     )
-  ).map((res) => res.Response);
+  );
+
+  const items: DestinyItemResponse[] = [];
+
+  for (const response of responses) {
+    if (response.status === "fulfilled") {
+      items.push(response.value.Response);
+    }
+  }
 
   const inventoryItemHashes: string[] = [];
 

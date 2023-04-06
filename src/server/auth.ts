@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
     },
     session({ session, token }) {
       if (session.user && token) {
-        console.log("SESSION", { session, token });
+        // console.log("SESSION", { session, token });
         session.user.id = token.userId;
         session.accessToken = token.accessToken as string;
         // session.user.role = user.role; <-- put other properties on the session here
@@ -85,15 +85,15 @@ export const authOptions: NextAuthOptions = {
 
         if (user) newToken.userId = user.id;
 
-        console.log("NEW AUTH TOKEN:", newToken);
+        // console.log("NEW AUTH TOKEN:", newToken);
 
         return newToken;
       } else if (Date.now() < token.expiresAt * 1000) {
-        console.log("TOKEN NOT EXPIRED:", token);
+        // console.log("TOKEN NOT EXPIRED:", token);
         // If the access token has not expired yet, return it
         return token;
       } else {
-        console.log("TRYING TO REFRESH TOKEN:", token);
+        // console.log("TRYING TO REFRESH TOKEN:", token);
         try {
           const response = await fetch(
             `${bungieNetOrigin}/platform/app/oauth/token/`,

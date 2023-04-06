@@ -58,7 +58,7 @@ export const ItemSocket: React.FC<ItemSocketProps> = ({
             width={32}
             height={32}
             alt="Item socket slot icon"
-            className="opacity-40"
+            className="opacity-40 invert"
           />
         )}
         {children}
