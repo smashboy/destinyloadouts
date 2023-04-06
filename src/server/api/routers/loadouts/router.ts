@@ -107,7 +107,6 @@ export const loadoutsRouter = createTRPCRouter({
           >(inventoryItems),
       };
     }),
-
   bookmark: protectedProcedure
     .input(
       z.object({
