@@ -22,7 +22,7 @@ const server = z.object({
   BUNGIE_CLIENT_ID: z.string().min(1),
   BUNGIE_CLIENT_SECRET: z.string().min(1),
   BUNGIE_API_KEY: z.string().min(1),
-  ANALYZE: z.enum(["false", "true"]),
+  ANALYZE: z.enum(["false", "true"]).optional(),
 });
 
 /**
