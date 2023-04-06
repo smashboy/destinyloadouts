@@ -15,7 +15,7 @@ import { useAuthUser } from "~/hooks/useAuthUser";
 import { SidebarNavLink } from "./SidebarNavLink";
 import { IconBookmark, IconHome, IconUser } from "@tabler/icons-react";
 
-export const AppHeader = () => {
+export const AppSidebar = () => {
   const [authUser] = useAuthUser();
 
   const handleSignout = () => signOut();
@@ -67,7 +67,7 @@ export const AppHeader = () => {
               <Link href={`/user/${authUser.id}`}>
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
               {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <DropdownMenuItem onClick={handleSignout}>
                 Log out

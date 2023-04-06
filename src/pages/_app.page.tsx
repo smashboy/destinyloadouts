@@ -3,7 +3,7 @@ import { type AppProps } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Inter as FontSans } from "next/font/google";
-import { AppHeader } from "~/components/AppHeader";
+import { AppSidebar } from "~/components/AppSidebar";
 import { cn } from "~/utils/tailwind";
 import { trpcNext } from "~/utils/api";
 
@@ -59,7 +59,7 @@ const MyApp = ({
 
   return (
     <CommonRoot session={session}>
-      <AppHeader />
+      <AppSidebar />
       <div className="flex-1 overflow-auto">
         <div className={cn(!disableContainer && "container px-3 pt-4")}>
           <Component {...pageProps} />
