@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import {
   type DestinyClassType,
   type DestinyDamageType,
   type LoadoutTag,
 } from "@prisma/client";
 import { useDebounce } from "use-debounce";
-import { Virtuoso } from "react-virtuoso";
+import { Virtuoso, type Components } from "react-virtuoso";
 import { trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
@@ -25,13 +25,17 @@ import {
 } from "~/constants/loadouts";
 import { type NextPageWithLayout } from "./_app.page";
 
-// const components: Components = {
-//   List: forwardRef(({ children, style }, ref) => (
-//     <div ref={ref} className="grid grid-cols-2 gap-2 pr-4" style={style}>
-//       {children}
-//     </div>
-//   )),
-// };
+const components: Components = {
+  List: forwardRef(({ children, style }, ref) => (
+    <div
+      ref={ref}
+      className="grid grid-cols-1 gap-2 py-4 pl-4 pr-2"
+      style={style}
+    >
+      {children}
+    </div>
+  )),
+};
 
 interface FeedFilter {
   classTypes: DestinyClassType[];
@@ -81,8 +85,48 @@ const Home: NextPageWithLayout = () => {
 
   const [debouncedFilter] = useDebounce(filter, 500);
 
-  const { data } = trpcNext.loadouts.feed.useInfiniteQuery({
-    ...debouncedFilter,
+  const trpcCtx = trpcNext.useContext();
+
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    trpcNext.loadouts.feed.useInfiniteQuery(
+      {
+        ...debouncedFilter,
+      },
+      {
+        getNextPageParam: (page) => page.nextPage,
+      }
+    );
+
+  const likeMutation = trpcNext.loadouts.like.useMutation({
+    onMutate: async ({ loadoutId }) => {
+      await trpcCtx.loadouts.feed.cancel();
+
+      const prevFeed = await trpcCtx.loadouts.feed.getData(debouncedFilter);
+
+      return { prevFeed };
+    },
+    onError: (_, __, ctx) =>
+      trpcCtx.loadouts.feed.setData(
+        debouncedFilter,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ctx!.prevFeed
+      ),
+  });
+
+  const saveMutation = trpcNext.loadouts.bookmark.useMutation({
+    onMutate: async ({ loadoutId }) => {
+      await trpcCtx.loadouts.feed.cancel();
+
+      const prevFeed = await trpcCtx.loadouts.feed.getData(debouncedFilter);
+
+      return { prevFeed };
+    },
+    onError: (_, __, ctx) =>
+      trpcCtx.loadouts.feed.setData(
+        debouncedFilter,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ctx!.prevFeed
+      ),
   });
 
   const { pages = [] } = data || {};
@@ -108,31 +152,39 @@ const Home: NextPageWithLayout = () => {
   const handleTagsFilter = (tags: FeedFilter["tags"]) =>
     setFilter((prev) => ({ ...prev, tags }));
 
+  const handleLikeLoadout = (loadoutId: string) =>
+    likeMutation.mutate({ loadoutId });
+
+  const handleSaveLoadout = (loadoutId: string) =>
+    saveMutation.mutate({ loadoutId });
+
+  const handleLoadMoreLoadouts = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
     <div className="grid grid-cols-4 gap-2">
       <Virtuoso
         data={loadouts}
         overscan={15}
-        className="col-span-3"
-        // style={{ height: "calc(100vh - 110px)" }}
-        // components={components}
-        useWindowScroll
+        className="col-span-3 mt-3"
+        endReached={handleLoadMoreLoadouts}
+        style={{ height: "calc(100vh - 15px)" }}
+        components={components}
         itemContent={(_, loadout) => (
           <LoadoutPreviewCard
             key={loadout.id}
             loadout={loadout}
             inventoryItems={inventoryItems}
             authUser={authUser}
-            onLike={() => {
-              return void 0;
-            }}
-            onSave={() => {
-              return void 0;
-            }}
+            onLike={handleLikeLoadout}
+            onSave={handleSaveLoadout}
           />
         )}
       />
-      <div className="sticky top-4 z-10 flex h-fit flex-col gap-2 rounded border border-neutral-700 bg-neutral-900 p-4">
+      <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
         <Tabs value={filter.section} onValueChange={handleSectionFilter}>
           <TabsList>
             <TabsTrigger value="ALL">All</TabsTrigger>

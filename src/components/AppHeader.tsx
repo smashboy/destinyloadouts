@@ -21,7 +21,7 @@ export const AppHeader = () => {
   const handleSignout = () => signOut();
 
   return (
-    <div className="sticky top-0 z-10 h-full w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900">
+    <div className="sticky top-0 z-10 h-screen w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900">
       <div className="container flex h-full flex-col items-start px-6">
         <Link href="/" className="flex items-center">
           <Image

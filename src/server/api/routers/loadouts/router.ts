@@ -401,7 +401,7 @@ export const loadoutsRouter = createTRPCRouter({
     .query(
       async ({
         input: {
-          cursor = { take: 15, skip: 0 },
+          cursor = { take: 10, skip: 0 },
           sortBy,
           classTypes,
           subclassTypes,
