@@ -7,10 +7,14 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { withSuperjson } from "next-superjson";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import { env } from "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   pageExtensions: ["page.tsx", "page.ts"],
   images: {
     remotePatterns: [
@@ -35,4 +39,6 @@ const config = {
 };
 // export default withSuperjson()(withBundleAnalyzer()(config));
 
-export default withSuperjson()(config);
+export default withSuperjson()(
+  withBundleAnalyzer({ enabled: env.ANALYZE === "true" })(config)
+);

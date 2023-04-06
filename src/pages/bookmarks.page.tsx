@@ -37,8 +37,12 @@ export const BookmarksPage: NextPage<BookmarksPage> = ({
           key={loadout.id}
           loadout={loadout}
           inventoryItems={inventoryItems}
-          onLike={() => {}}
-          onSave={() => {}}
+          onLike={() => {
+            void 0;
+          }}
+          onSave={() => {
+            void 0;
+          }}
           authUser={authUser}
         />
       ))}

@@ -22,6 +22,7 @@ const server = z.object({
   BUNGIE_CLIENT_ID: z.string().min(1),
   BUNGIE_CLIENT_SECRET: z.string().min(1),
   BUNGIE_API_KEY: z.string().min(1),
+  ANALYZE: z.enum(["false", "true"]),
 });
 
 /**
@@ -46,6 +47,7 @@ const processEnv = {
   BUNGIE_CLIENT_ID: process.env.BUNGIE_CLIENT_ID,
   BUNGIE_CLIENT_SECRET: process.env.BUNGIE_CLIENT_SECRET,
   BUNGIE_API_KEY: process.env.BUNGIE_API_KEY,
+  ANALYZE: process.env.ANALYZE,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

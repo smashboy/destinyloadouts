@@ -19,6 +19,8 @@ next-env.d.ts
 
 .prisma
 
+analyze
+
 # production
 /build
 
