@@ -1,5 +1,10 @@
 import { useEffect, useRef } from "react";
 import EditorJS, { type OutputData, type API } from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+import List from "@editorjs/list";
+import Checklist from "@editorjs/checklist";
+import Quote from "@editorjs/quote";
+import SimpleImage from "@editorjs/simple-image";
 
 export type EditorState = OutputData;
 
@@ -36,6 +41,13 @@ const Editor: React.FC<EditorProps> = ({
         onChange: handleOnChange,
         placeholder,
         readOnly,
+        tools: {
+          header: Header,
+          list: List,
+          checklist: Checklist,
+          quote: Quote,
+          image: SimpleImage,
+        },
       });
     }
 
