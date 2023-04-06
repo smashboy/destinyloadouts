@@ -5,7 +5,7 @@ export const useAuthUser = () => {
   const session = useSession();
 
   const { data: user } = trpcNext.auth.getMe.useQuery(void 0, {
-    enabled: !!session,
+    enabled: !!session.data,
   });
 
   return [user, session] as const;

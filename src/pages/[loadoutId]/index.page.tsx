@@ -25,6 +25,7 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
+import { FollowButton } from "~/components/FollowButton";
 
 interface LoadoutPageProps {
   loadoutId: string;
@@ -160,11 +161,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadoutId }) => {
         >
           {bungieAccountDisplayName}
         </ButtonLink>
-        {authUser && authUser.id !== authorId && (
-          <div className="border-r-2 border-neutral-700 pr-4 text-lg">
-            <Button>Follow</Button>
-          </div>
-        )}
+        <FollowButton authUser={authUser} followUserId={authorId} />
         <div className="flex flex-1 flex-col justify-center gap-2">
           <TypographyLarge>{name}</TypographyLarge>
           {tags.length > 0 && <LoadoutTagsList tags={tags} />}

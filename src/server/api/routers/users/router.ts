@@ -133,6 +133,31 @@ export const usersRouter = createTRPCRouter({
             });
       }
     ),
+  isFollowing: protectedProcedure
+    .input(
+      z.object({
+        followingUserId: z.string(),
+      })
+    )
+    .query(
+      ({
+        input: { followingUserId },
+        ctx: {
+          prisma,
+          session: {
+            user: { id: userId },
+          },
+        },
+      }) =>
+        prisma.userFollower.findUnique({
+          where: {
+            followingUserId_followerUserId: {
+              followingUserId,
+              followerUserId: userId,
+            },
+          },
+        })
+    ),
 });
 
 export const usersRouterCaller = usersRouter.createCaller;

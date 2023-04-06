@@ -7,6 +7,7 @@ import { type User } from "@prisma/client";
 import { ButtonLink } from "~/components/Button";
 import { TabsList, TabsTrigger } from "~/components/Tabs";
 import { useAuthUser } from "~/hooks/useAuthUser";
+import { FollowButton } from "~/components/FollowButton";
 
 interface AccountHeaderProps {
   user: User;
@@ -51,7 +52,7 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
           <AccountCounter title="Likes" count={likesCount} />
           <AccountCounter title="Loadouts" count={loadoutsCount} />
         </div>
-
+        <FollowButton authUser={authUser} followUserId={userId} />
         {userId === authUser?.id && (
           <ButtonLink href="/new-loadout" size="lg">
             New Loadout +
