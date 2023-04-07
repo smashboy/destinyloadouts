@@ -20,8 +20,8 @@ model User {
     loadoutsLiked                   LoadoutLike[]
     loadoutsSaved                   LoadoutBookmark[]
     loadouts                        Loadout[]
-    following                       UserFollower[]    @relation("following")
-    followers                       UserFollower[]    @relation("followers")
+    followers                       UserFollower[]    @relation("following")
+    following                       UserFollower[]    @relation("followers")
 }
 
 model UserFollower {
