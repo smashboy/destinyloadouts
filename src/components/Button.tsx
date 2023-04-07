@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "~/utils/tailwind";
+import { Loader } from "./Loader";
 
 export const buttonVariants = cva(
   "active:scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-100 disabled:opacity-50 dark:focus:ring-slate-400 disabled:pointer-events-none dark:focus:ring-offset-slate-900 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800",
@@ -36,6 +37,7 @@ export const buttonVariants = cva(
 
 type ButtonBaseProps = VariantProps<typeof buttonVariants> & {
   iconLeft?: LucideIcon;
+  isLoading?: boolean;
 };
 
 export type ButtonProps = React.ComponentPropsWithoutRef<"button"> &
@@ -43,16 +45,32 @@ export type ButtonProps = React.ComponentPropsWithoutRef<"button"> &
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, children, iconLeft: IconLeft, ...props },
+    {
+      className,
+      variant,
+      size,
+      children,
+      disabled,
+      isLoading,
+      iconLeft: IconLeft,
+      ...props
+    },
     ref
   ) => (
     <button
       className={cn(buttonVariants({ variant, size, className }))}
       ref={ref}
+      disabled={isLoading || disabled}
       {...props}
     >
-      {IconLeft && <IconLeft className="mr-2 h-4 w-4" />}
-      {children}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          {IconLeft && <IconLeft className="mr-2 h-4 w-4" />}
+          {children}
+        </>
+      )}
     </button>
   )
 );

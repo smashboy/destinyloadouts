@@ -217,12 +217,14 @@ const Home: NextPageWithLayout = () => {
         )}
       />
       <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
-        <Tabs value={filter.section} onValueChange={handleSectionFilter}>
-          <TabsList>
-            <TabsTrigger value="ALL">All</TabsTrigger>
-            <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {authUser && (
+          <Tabs value={filter.section} onValueChange={handleSectionFilter}>
+            <TabsList>
+              <TabsTrigger value="ALL">All</TabsTrigger>
+              <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
         <Tabs value={filter.sortBy} onValueChange={handleSortByFilter}>
           <TabsList>
             <TabsTrigger value="LATEST">Latest</TabsTrigger>

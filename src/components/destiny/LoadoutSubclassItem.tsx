@@ -2,6 +2,7 @@ import {
   type LoadoutInventoryItemsList,
   type LoadoutItem,
 } from "~/bungie/types";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ModSocket } from "./ModSocket";
 import { SubclassSocket } from "./SubclassSocket";
 import { TypographyLarge } from "../typography";
@@ -32,13 +33,17 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 
   const sockets = plugItemHashes
     .map((hash) => inventoryItems[hash])
-    .filter(Boolean);
+    .filter(Boolean) as DestinyInventoryItemDefinition[];
 
-  const aspects = sockets.filter((socket) =>
-    socket.plug?.plugCategoryIdentifier.includes("aspects")
+  const aspects = sockets.filter(
+    (socket) =>
+      socket.plug?.plugCategoryIdentifier.includes("aspects") ||
+      socket.plug?.plugCategoryIdentifier.includes("totems")
   );
-  const fragments = sockets.filter((socket) =>
-    socket.plug?.plugCategoryIdentifier.includes("fragments")
+  const fragments = sockets.filter(
+    (socket) =>
+      socket.plug?.plugCategoryIdentifier.includes("fragments") ||
+      socket.plug?.plugCategoryIdentifier.includes("trinkets")
   );
 
   const abilities = sockets.filter(
@@ -51,7 +56,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 
   const subclassSuper = sockets.filter((socket) =>
     socket.plug?.plugCategoryIdentifier.includes("supers")
-  )[0];
+  )[0] as DestinyInventoryItemDefinition;
 
   if (hideSockets) return <SubclassSocket super={subclassSuper} isSm={isSm} />;
 

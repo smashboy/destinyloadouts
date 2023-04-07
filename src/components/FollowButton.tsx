@@ -51,6 +51,7 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       variant={isFollowing ? "subtle" : "default"}
       disabled={isLoading || followMutation.isLoading}
       onClick={handleFollow}
+      isLoading={followMutation.isLoading}
     >
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>

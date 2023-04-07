@@ -19,10 +19,12 @@ export interface LoadoutInfoFormSubmitProps {
 
 interface LoadoutInfoFormProps {
   onSubmit: (args: LoadoutInfoFormSubmitProps) => void;
+  isLoading: boolean;
 }
 
 export const LoadoutInfoForm: React.FC<LoadoutInfoFormProps> = ({
   onSubmit,
+  isLoading,
 }) => {
   const router = useRouter();
 
@@ -54,6 +56,7 @@ export const LoadoutInfoForm: React.FC<LoadoutInfoFormProps> = ({
           size="lg"
           onClick={handleCreateLoadout}
           disabled={!name}
+          isLoading={isLoading}
         >
           Share
         </Button>
