@@ -19,7 +19,7 @@ export const UserProfilePageComponent: React.FC<
 > = ({
   loadouts: { loadouts, inventoryItems },
   user,
-  onlyAuthUserLikedLoadouts = false,
+  // onlyAuthUserLikedLoadouts = false,
 }) => {
   const { id: userId } = user;
 
@@ -38,16 +38,15 @@ export const UserProfilePageComponent: React.FC<
     }
   );
 
-  const loadoutsWithLikes = loadouts
-    .map((loadout) => ({
-      ...loadout,
-      ...likes[loadout.id],
-    }))
-    .filter((loadout) =>
-      onlyAuthUserLikedLoadouts
-        ? loadout.likes?.find((like) => like.likedByUserId === authUser?.id)
-        : true
-    );
+  const loadoutsWithLikes = loadouts.map((loadout) => ({
+    ...loadout,
+    ...likes[loadout.id],
+  }));
+  // .filter((loadout) =>
+  //   onlyAuthUserLikedLoadouts
+  //     ? loadout.likes?.find((like) => like.likedByUserId === authUser?.id)
+  //     : true
+  // );
 
   const likeMutation = trpcNext.loadouts.like.useMutation({
     onMutate: async ({ loadoutId }) => {
