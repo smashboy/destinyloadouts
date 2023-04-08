@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { Avatar } from "~/components/Avatar";
 import { TypographyLarge } from "~/components/typography";
@@ -8,12 +9,10 @@ import { ButtonLink } from "~/components/Button";
 import { TabsList, TabsTrigger } from "~/components/Tabs";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { FollowButton } from "~/components/FollowButton";
+import { trpcNext } from "~/utils/api";
 
 interface AccountHeaderProps {
   user: User;
-  loadoutsCount: number;
-  followersCount: number;
-  likesCount: number;
 }
 
 export const AccountHeader: React.FC<AccountHeaderProps> = ({
@@ -22,16 +21,17 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
     bungieAccountProfilePicturePath,
     id: userId,
   },
-  loadoutsCount,
-  likesCount,
-  followersCount,
 }) => {
   const [authUser] = useAuthUser();
 
+  const { data: stats } = trpcNext.users.getGeneralStats.useQuery({ userId });
+
+  const { loadoutsCount = 0, likesCount = 0, followersCount = 0 } = stats || {};
+
   const baseLink = `/user/${userId}`;
 
-  const personalRoute = `${baseLink}?type=PERSONAL`;
-  const likedRoute = `${baseLink}?type=LIKED`;
+  const personalRoute = `${baseLink}`;
+  const likedRoute = `${baseLink}/liked`;
 
   return (
     <div className="sticky top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700">

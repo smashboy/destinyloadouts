@@ -12,40 +12,13 @@ export const usersRouter = createTRPCRouter({
         userId: z.string(),
       })
     )
-    .query(async ({ input: { userId }, ctx: { prisma } }) => {
-      const [user, loadoutsCount, followersCount, likesCount] =
-        await Promise.all([
-          prisma.user.findFirst({
-            where: {
-              id: userId,
-            },
-          }),
-          prisma.loadout.count({
-            where: {
-              authorId: userId,
-            },
-          }),
-          prisma.userFollower.count({
-            where: {
-              followingUserId: userId,
-            },
-          }),
-          prisma.loadoutLike.count({
-            where: {
-              likedByUserId: userId,
-            },
-          }),
-        ]);
-
-      if (!user) return null;
-
-      return {
-        user,
-        loadoutsCount,
-        followersCount,
-        likesCount,
-      };
-    }),
+    .query(async ({ input: { userId }, ctx: { prisma } }) =>
+      prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      })
+    ),
   getByBungieAccountId: publicProcedure
     .input(
       z.object({
@@ -85,6 +58,35 @@ export const usersRouter = createTRPCRouter({
         followersCount,
         likesCount,
       };
+    }),
+  getGeneralStats: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(async ({ input: { userId }, ctx: { prisma } }) => {
+      const [loadoutsCount, followersCount, likesCount] = await Promise.all([
+        prisma.loadout.count({
+          where: {
+            authorId: userId,
+          },
+        }),
+        prisma.userFollower.count({
+          where: {
+            followingUserId: userId,
+          },
+        }),
+        prisma.loadoutLike.count({
+          where: {
+            loadout: {
+              authorId: userId,
+            },
+          },
+        }),
+      ]);
+
+      return { loadoutsCount, followersCount, likesCount };
     }),
   follow: protectedProcedure
     .input(

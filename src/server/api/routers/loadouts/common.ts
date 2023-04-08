@@ -2,29 +2,32 @@ import { type Prisma } from "@prisma/client";
 
 interface LoadoutPreviewIncludeCommonProps {
   includeAuthor?: boolean;
+  authUserId?: string;
 }
 
-export const LoadoutPreviewIncludeCommon = (
-  userId?: string,
-  { includeAuthor = false }: LoadoutPreviewIncludeCommonProps = {}
-) => {
+export const LoadoutPreviewIncludeCommon = ({
+  includeAuthor = false,
+  authUserId,
+}: LoadoutPreviewIncludeCommonProps = {}) => {
   const include = {
-    bookmarks: {
-      where: {
-        savedByUserId: userId,
+    ...(authUserId && {
+      bookmarks: {
+        where: {
+          savedByUserId: authUserId,
+        },
+        select: {
+          savedByUserId: true,
+        },
       },
-      select: {
-        savedByUserId: true,
+      likes: {
+        where: {
+          likedByUserId: authUserId,
+        },
+        select: {
+          likedByUserId: true,
+        },
       },
-    },
-    likes: {
-      where: {
-        likedByUserId: userId,
-      },
-      select: {
-        likedByUserId: true,
-      },
-    },
+    }),
     author: includeAuthor,
     _count: {
       select: {
@@ -34,4 +37,39 @@ export const LoadoutPreviewIncludeCommon = (
   } satisfies Prisma.LoadoutInclude;
 
   return include;
+};
+
+export const LoadoutLikesSelectCommon = (authBungieAccountId?: string) => {
+  const select = {
+    id: true,
+    _count: {
+      select: {
+        likes: true,
+      },
+    },
+    ...(authBungieAccountId && {
+      likes: {
+        where: {
+          likedBy: {
+            bungieAccountId: authBungieAccountId,
+          },
+        },
+        select: {
+          likedByUserId: true,
+        },
+      },
+      bookmarks: {
+        where: {
+          savedBy: {
+            bungieAccountId: authBungieAccountId,
+          },
+        },
+        select: {
+          savedByUserId: true,
+        },
+      },
+    }),
+  } satisfies Prisma.LoadoutSelect;
+
+  return select;
 };

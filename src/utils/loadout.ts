@@ -1,4 +1,4 @@
-import { type Loadout, type User } from "@prisma/client";
+import { type User } from "@prisma/client";
 import { type LoadoutItem } from "~/bungie/types";
 
 export const getLoadoutItemHashes = (
@@ -18,11 +18,11 @@ export const getLoadoutItemHashes = (
 
 interface HandleAuthUserLoadoutLikeProps {
   loadoutId: string;
-  loadout: Loadout & {
+  loadout: {
+    id: string;
     _count: { likes: number };
-    likes: Array<{ likedByUserId: string }>;
-    bookmarks: Array<{ savedByUserId: string }>;
-    author: User;
+    likes?: Array<{ likedByUserId: string }>;
+    bookmarks?: Array<{ savedByUserId: string }>;
   };
   authUser: User | undefined;
 }
@@ -32,7 +32,7 @@ export const handleAuthUserLoadoutLike = ({
   loadoutId,
   authUser,
 }: HandleAuthUserLoadoutLikeProps) => {
-  const { _count, id, likes, ...loadoutProps } = loadout;
+  const { _count, id, likes = [], ...loadoutProps } = loadout;
 
   const isLikedByAuthUser =
     id === loadoutId &&
@@ -63,7 +63,7 @@ export const handleAuthUserLoadoutBookmark = ({
   loadoutId,
   authUser,
 }: HandleAuthUserLoadoutLikeProps) => {
-  const { id, bookmarks, ...loadoutProps } = loadout;
+  const { id, bookmarks = [], ...loadoutProps } = loadout;
 
   const isSavedByAuthUser =
     id === loadoutId &&

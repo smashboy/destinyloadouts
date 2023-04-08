@@ -19,8 +19,8 @@ import { ButtonLink } from "../Button";
 
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
-    likes: Array<{ likedByUserId: string }>;
-    bookmarks: Array<{ savedByUserId: string }>;
+    likes?: Array<{ likedByUserId: string }>;
+    bookmarks?: Array<{ savedByUserId: string }>;
     _count: { likes: number };
     author: User | undefined;
   };
@@ -37,8 +37,8 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
     tags,
     name,
     items,
-    likes,
-    bookmarks,
+    likes = [],
+    bookmarks = [],
     author,
     _count: { likes: likesCount },
   },

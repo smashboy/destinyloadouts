@@ -3,7 +3,7 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 
-export const trpsSSG = (session: Session | null) =>
+export const trpsSSG = (session: Session | null = null) =>
   createProxySSGHelpers({
     router: appRouter,
     ctx: { session, prisma },

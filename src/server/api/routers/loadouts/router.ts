@@ -18,10 +18,14 @@ import { paginate } from "~/server/utils/paginate";
 import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
 import { type LoadoutItem } from "~/bungie/types";
 import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
-import { LoadoutPreviewIncludeCommon } from "./common";
+import {
+  LoadoutLikesSelectCommon,
+  LoadoutPreviewIncludeCommon,
+} from "./common";
 import { getLoadoutItemHashes } from "~/utils/loadout";
 import { usersRouterCaller } from "../users/router";
 import { TRPCError } from "@trpc/server";
+import { type ArrayElement } from "~/utils/types";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
@@ -29,7 +33,7 @@ const loadoutItemValidation = z
   .optional();
 
 const loadoutValidation = z.object({
-  name: z.string().min(1).max(75),
+  name: z.string().min(1).max(120),
   description: z.unknown().optional(),
   classType: z.nativeEnum(DestinyClassType),
   subclassType: z.nativeEnum(DestinyDamageType),
@@ -63,23 +67,11 @@ export const loadoutsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { loadoutId }, ctx: { prisma, session } }) => {
-      const bungieAccountId = session?.user.id;
-
-      let user: User | null = null;
-
-      if (bungieAccountId) {
-        const res = await usersRouterCaller({
-          prisma,
-          session,
-        }).getByBungieAccountId({ bungieAccountId });
-        if (res) user = res.user;
-      }
-
       const loadout = await prisma.loadout.findFirst({
         where: {
           id: loadoutId,
         },
-        include: LoadoutPreviewIncludeCommon(user?.id, { includeAuthor: true }),
+        include: LoadoutPreviewIncludeCommon({ includeAuthor: true }),
       });
 
       if (!loadout) return null;
@@ -201,9 +193,43 @@ export const loadoutsRouter = createTRPCRouter({
             });
       }
     ),
+  getLoadoutLikes: publicProcedure
+    .input(
+      z.object({
+        loadoutId: z.string(),
+      })
+    )
+    .query(({ ctx: { prisma, session }, input: { loadoutId } }) =>
+      prisma.loadout.findFirst({
+        where: {
+          id: loadoutId,
+        },
+        select: LoadoutLikesSelectCommon(session?.user.id),
+      })
+    ),
+  getLoadoutLikesList: publicProcedure
+    .input(
+      z.object({
+        loadoutIds: z.array(z.string()),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input: { loadoutIds } }) => {
+      const list = await prisma.loadout.findMany({
+        where: {
+          id: {
+            in: loadoutIds,
+          },
+        },
+        select: LoadoutLikesSelectCommon(session?.user.id),
+      });
 
+      return list.reduce(
+        (acc, item) => ({ ...acc, [item.id]: item }),
+        {}
+      ) as Record<string, ArrayElement<typeof list>>;
+    }),
   create: protectedProcedure.input(loadoutValidation).mutation(
-    ({
+    async ({
       input: {
         classType,
         subclassType,
@@ -218,9 +244,10 @@ export const loadoutsRouter = createTRPCRouter({
           user: { id: userId },
         },
         prisma,
+        res,
       },
-    }) =>
-      prisma.loadout.create({
+    }) => {
+      const loadout = await prisma.loadout.create({
         data: {
           name,
           classType,
@@ -235,7 +262,12 @@ export const loadoutsRouter = createTRPCRouter({
             },
           },
         },
-      })
+      });
+
+      await res?.revalidate(`/user/${userId}`);
+
+      return loadout;
+    }
   ),
   delete: protectedProcedure
     .input(
@@ -250,6 +282,7 @@ export const loadoutsRouter = createTRPCRouter({
           session: {
             user: { id: userId },
           },
+          res,
           prisma,
         },
       }) => {
@@ -257,38 +290,45 @@ export const loadoutsRouter = createTRPCRouter({
           where: {
             id: loadoutId,
           },
-          select: {
-            authorId: true,
-          },
         });
 
         if (!loadout) throw new TRPCError({ code: "NOT_FOUND" });
-        if (loadout.authorId !== userId)
-          throw new TRPCError({ code: "UNAUTHORIZED" });
 
-        return prisma.loadout.delete({
+        const { authorId } = loadout;
+
+        if (authorId !== userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        await prisma.loadout.delete({
           where: {
             id: loadoutId,
           },
         });
+
+        await res?.revalidate(`/user/${authorId}`);
+        await res?.revalidate(`/${loadout.id}`);
+
+        return loadout;
       }
     ),
   getAuthBookmarked: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
       const {
-        user: { id: userId },
+        user: { id: authUserId },
       } = session;
 
       const loadouts = await prisma.loadout.findMany({
         where: {
           bookmarks: {
             some: {
-              savedByUserId: userId,
+              savedByUserId: authUserId,
             },
           },
         },
         orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon(userId, { includeAuthor: true }),
+        include: LoadoutPreviewIncludeCommon({
+          includeAuthor: true,
+          authUserId,
+        }),
       });
 
       const manifestCaller = destinyLatestManifestRouterCaller({
@@ -323,67 +363,57 @@ export const loadoutsRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        type: z.enum(["PERSONAL", "LIKED"]).default("PERSONAL"),
+        onlyLiked: z.boolean().optional(),
       })
     )
-    .query(async ({ input: { userId, type }, ctx: { prisma, session } }) => {
-      const bungieAccountId = session?.user.id;
+    .query(
+      async ({ input: { userId, onlyLiked }, ctx: { prisma, session } }) => {
+        const loadouts = await prisma.loadout.findMany({
+          where: {
+            ...(onlyLiked
+              ? {
+                  likes: {
+                    some: {
+                      likedByUserId: userId,
+                    },
+                  },
+                }
+              : { authorId: userId }),
+          },
+          orderBy: { createdAt: "desc" },
+          include: LoadoutPreviewIncludeCommon({
+            includeAuthor: onlyLiked,
+          }),
+        });
 
-      let user: User | null = null;
-
-      if (bungieAccountId) {
-        const res = await usersRouterCaller({
+        const manifestCaller = destinyLatestManifestRouterCaller({
           prisma,
           session,
-        }).getByBungieAccountId({ bungieAccountId });
-        if (res) user = res.user;
-      }
+        });
 
-      const loadouts = await prisma.loadout.findMany({
-        where: {
-          ...(type === "LIKED"
-            ? {
-                likes: {
-                  some: {
-                    likedByUserId: userId,
-                  },
-                },
-              }
-            : { authorId: userId }),
-        },
-        orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon(user?.id, {
-          includeAuthor: type === "LIKED",
-        }),
-      });
-
-      const manifestCaller = destinyLatestManifestRouterCaller({
-        prisma,
-        session,
-      });
-
-      const previewItemHashes = loadouts
-        .map((loadout) =>
-          getLoadoutItemHashes(
-            loadout.items as unknown as Record<string, LoadoutItem>
+        const previewItemHashes = loadouts
+          .map((loadout) =>
+            getLoadoutItemHashes(
+              loadout.items as unknown as Record<string, LoadoutItem>
+            )
           )
-        )
-        .flat();
+          .flat();
 
-      const inventoryItems = await manifestCaller.getTableComponents({
-        tableName: "DestinyInventoryItemDefinition",
-        locale: "en",
-        hashIds: [...new Set(previewItemHashes)],
-      });
+        const inventoryItems = await manifestCaller.getTableComponents({
+          tableName: "DestinyInventoryItemDefinition",
+          locale: "en",
+          hashIds: [...new Set(previewItemHashes)],
+        });
 
-      return {
-        loadouts,
-        inventoryItems:
-          formatPrismaDestinyManifestTableComponents<
-            Record<string, DestinyInventoryItemDefinition>
-          >(inventoryItems),
-      };
-    }),
+        return {
+          loadouts,
+          inventoryItems:
+            formatPrismaDestinyManifestTableComponents<
+              Record<string, DestinyInventoryItemDefinition>
+            >(inventoryItems),
+        };
+      }
+    ),
   feed: publicProcedure
     .input(
       z.object({
@@ -480,8 +510,6 @@ export const loadoutsRouter = createTRPCRouter({
               }
         ) satisfies Prisma.LoadoutFindManyArgs["orderBy"];
 
-        console.log("FEED", { where, orderBy });
-
         const {
           items: loadouts,
           hasMore,
@@ -495,8 +523,9 @@ export const loadoutsRouter = createTRPCRouter({
               ...paginateArgs,
               where,
               orderBy,
-              include: LoadoutPreviewIncludeCommon(authUser?.id, {
+              include: LoadoutPreviewIncludeCommon({
                 includeAuthor: true,
+                authUserId: authUser?.id,
               }),
             }),
         });

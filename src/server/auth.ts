@@ -125,7 +125,7 @@ export const authOptions: NextAuthOptions = {
             refreshToken: tokens.refresh_token ?? token.refreshToken,
           };
 
-          console.log("TOKEN REFRESHED SUCCESSFULLY:", { newToken, tokens });
+          // console.log("TOKEN REFRESHED SUCCESSFULLY:", { newToken, tokens });
 
           return newToken;
         } catch (error) {

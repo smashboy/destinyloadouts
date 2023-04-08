@@ -14,15 +14,25 @@
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
+import { type NextApiRequest, type NextApiResponse } from "next";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 
-type CreateContextOptions = {
+interface CreateContextOptions {
   session: Session | null;
-};
+  req?: NextApiRequest;
+  res?: NextApiResponse;
+}
+
+interface CreateContextReturn {
+  session: Session | null;
+  req?: NextApiRequest;
+  res?: NextApiResponse;
+  prisma: typeof prisma;
+}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -34,12 +44,16 @@ type CreateContextOptions = {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  return {
-    session: opts.session,
-    prisma,
-  };
-};
+const createInnerTRPCContext = ({
+  session,
+  req,
+  res,
+}: CreateContextOptions): CreateContextReturn => ({
+  session,
+  req,
+  res,
+  prisma,
+});
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -55,6 +69,8 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   return createInnerTRPCContext({
     session,
+    req,
+    res,
   });
 };
 
