@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { HoverCard, HoverCardTrigger, ItemHoverCard } from "./ItemHoverCard";
@@ -22,11 +21,11 @@ export const SubclassSocket: React.FC<SubclassSocketProps> = ({
         )}
       >
         <span className="relative flex h-full w-full items-center justify-center overflow-hidden rounded ring-2 ring-slate-300">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={`${bungieNetOrigin}/${subclassSuper.displayProperties.icon}`}
             alt="Subclass super icon"
-            className="-rotate-45"
-            fill
+            className="absolute inset-0 -rotate-45"
           />
         </span>
       </button>

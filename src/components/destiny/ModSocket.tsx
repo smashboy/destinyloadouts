@@ -42,17 +42,19 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
         /> */}
 
             {iconPath && (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={`${bungieNetOrigin}/${iconPath}`}
                 alt="Mod icon"
-                fill
+                className="absolute inset-0"
               />
             )}
             {watermarkIcon && (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={`${bungieNetOrigin}/${watermarkIcon}`}
                 alt="Loadout item icon"
-                fill
+                className="absolute inset-0"
               />
             )}
             {enegryCost !== undefined && (

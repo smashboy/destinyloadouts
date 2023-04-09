@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   DestinyItemSubType,
   DestinyItemType,
@@ -65,18 +64,19 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
   return (
     <div className="relative h-full w-full overflow-hidden rounded">
       {hasIcon && (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={`${bungieNetOrigin}/${icon}`}
           alt="Loadout item icon"
-          fill
+          className="absolute inset-0"
         />
       )}
       {watermarkIcon && (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={`${bungieNetOrigin}/${watermarkIcon}`}
           alt="Loadout item icon watermark"
-          id="gavno"
-          fill
+          className="absolute inset-0"
         />
       )}
     </div>
