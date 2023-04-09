@@ -16,16 +16,16 @@ const config = {
     ignoreBuildErrors: true,
   },
   pageExtensions: ["page.tsx", "page.ts"],
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "www.bungie.net",
-        port: "",
-        pathname: "/**",
-      },
-    ],
-  },
+  // images: {
+  //   remotePatterns: [
+  //     {
+  //       protocol: "https",
+  //       hostname: "www.bungie.net",
+  //       port: "",
+  //       pathname: "/**",
+  //     },
+  //   ],
+  // },
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.
