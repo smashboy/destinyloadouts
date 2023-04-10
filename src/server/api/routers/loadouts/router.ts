@@ -448,7 +448,7 @@ export const loadoutsRouter = createTRPCRouter({
 
         let authUser: User | null = null;
 
-        if (bungieAccountId && section === "FOLLOWING") {
+        if (bungieAccountId) {
           const res = await usersRouterCaller({
             prisma,
             session,
@@ -480,15 +480,16 @@ export const loadoutsRouter = createTRPCRouter({
                 hasSome: tags,
               },
             }),
-          ...(authUser && {
-            author: {
-              followers: {
-                some: {
-                  followerUserId: authUser.id,
+          ...(authUser &&
+            section === "FOLLOWING" && {
+              author: {
+                followers: {
+                  some: {
+                    followerUserId: authUser.id,
+                  },
                 },
               },
-            },
-          }),
+            }),
           createdAt:
             sortBy === "POPULAR" && popularDuringDate
               ? {
