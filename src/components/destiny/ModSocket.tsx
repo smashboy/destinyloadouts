@@ -57,7 +57,7 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
               />
             )}
             {enegryCost !== undefined && (
-              <TypographySubtle className="absolute top-1.5 right-2.5 z-10 text-white">
+              <TypographySubtle className="absolute top-0.5 right-2 z-10 text-white">
                 {enegryCost}
               </TypographySubtle>
             )}

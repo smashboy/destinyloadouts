@@ -22,3 +22,8 @@ declare module "@editorjs/simple-image" {
   import SimpleImage from "@editorjs/simple-image";
   export = SimpleImage;
 }
+
+declare module "@editorjs/embed" {
+  import Embed from "@editorjs/embed";
+  export = Embed;
+}

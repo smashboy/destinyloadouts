@@ -17,7 +17,7 @@ const rootVariants = cva(
   {
     variants: {
       size: {
-        default: "w-20 h-20",
+        default: "w-14 h-14",
         sm: "w-12 h-12",
       },
     },

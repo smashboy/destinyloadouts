@@ -137,7 +137,7 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
   );
 
   return (
-    <div className="sticky top-0 z-10 flex h-fit items-center gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700">
+    <div className="sticky top-0 z-10 flex h-fit items-center gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700">
       <Avatar
         src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}
         fallback={bungieAccountDisplayName}

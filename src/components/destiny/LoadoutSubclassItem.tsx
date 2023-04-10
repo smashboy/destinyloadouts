@@ -6,6 +6,7 @@ import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ModSocket } from "./ModSocket";
 import { SubclassSocket } from "./SubclassSocket";
 import { TypographyLarge } from "../typography";
+import { LoadoutSectionContainer } from "../loadouts/LoadoutSectionContainer";
 
 interface LoadoutSubclassItemProps {
   item: LoadoutItem;
@@ -69,28 +70,28 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
             <TypographyLarge>Abilities</TypographyLarge>
-            <div className="grid w-fit grid-cols-2 gap-4">
+            <LoadoutSectionContainer className="grid w-fit grid-cols-2 gap-4">
               {abilities.map((ability, index) => (
                 <ModSocket key={index} socket={ability} />
               ))}
-            </div>
+            </LoadoutSectionContainer>
           </div>
           <div className="flex flex-col gap-4">
             <TypographyLarge>Aspects</TypographyLarge>
-            <div className="grid w-fit grid-cols-2 gap-4">
+            <LoadoutSectionContainer className="grid w-fit grid-cols-2 gap-4">
               {aspects.map((aspect, index) => (
                 <ModSocket key={index} socket={aspect} />
               ))}
-            </div>
+            </LoadoutSectionContainer>
           </div>
         </div>
       </div>
       <TypographyLarge>Fragments</TypographyLarge>
-      <div className="flex space-x-4">
+      <LoadoutSectionContainer className="flex space-x-4">
         {fragments.map((fragment, index) => (
           <ModSocket key={index} socket={fragment} />
         ))}
-      </div>
+      </LoadoutSectionContainer>
     </div>
   );
 };

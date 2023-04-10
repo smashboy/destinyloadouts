@@ -29,17 +29,23 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
       <CharacterClassIconBackground classType={classType} />
       <LoadoutHeader loadout={loadout} />
       <div
-        className={cn("grid grid-cols-1 gap-10", description && "grid-cols-2")}
+        className={cn("grid grid-cols-1 gap-10", description && "grid-cols-5")}
       >
         {description && (
-          <div className="sticky top-24 h-fit">
+          <div className="sticky top-24 col-span-2 h-fit">
             <Editor
               initialState={description as unknown as EditorState}
               readOnly
             />
           </div>
         )}
-        <div className="flex w-full justify-center">
+        <div
+          className={cn(
+            "flex w-full justify-center",
+            description && "col-span-3",
+            !description && "container md:max-w-6xl"
+          )}
+        >
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
           <CharacterSockets loadout={{ ...items, inventoryItems }} />

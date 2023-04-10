@@ -14,7 +14,7 @@ export const CharacterClassIconBackground: React.FC<
     (classType && characterClassIconPathMap[classType]) || destinyLogoIconPath;
 
   return (
-    <div className="pointer-events-none fixed inset-0 flex items-center justify-center opacity-10 dark:bg-neutral-900">
+    <div className="pointer-events-none fixed inset-0 left-56 flex items-center justify-center opacity-10 dark:bg-neutral-900">
       <Image
         src={iconPath}
         width={256}

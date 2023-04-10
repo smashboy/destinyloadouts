@@ -60,7 +60,7 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
         inventoryItems={inventoryItems}
         isSm={isSm}
       />
-      <div className="grid grid-cols-6 gap-4">
+      <div className="flex flex-wrap gap-4">
         {sockets.map((socket, index) => (
           <ModSocket key={index} socket={socket} />
         ))}

@@ -22,9 +22,23 @@ html, body, #__next {
 .ce-toolbar__settings-btn,
 .cdx-button,
 .ce-popover,
+.ce-conversion-tool__icon,
+.ce-popover__item-icon,
 .ce-toolbar__plus:hover {
-  background: #007991;
+  background: #334155;
   color: inherit;
+}
+
+.ce-popover__item:hover .ce-popover__item-label {
+  color:#334155
+}
+
+.ce-conversion-tool:hover {
+  color:#334155
+}
+
+.ce-conversion-tool:hover .ce-conversion-tool__icon {
+  color: white
 }
 
 .ce-inline-tool,
@@ -48,7 +62,7 @@ html, body, #__next {
 .ce-inline-tool:hover,
 .ce-popover__item:hover,
 .ce-toolbar__settings-btn:hover {
-  background-color: #439a86;
+  background-color: #334155;
   color: inherit;
 }
 

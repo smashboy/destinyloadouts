@@ -5,6 +5,7 @@ import List from "@editorjs/list";
 import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 import SimpleImage from "@editorjs/simple-image";
+import Embed from "@editorjs/embed";
 
 export type EditorState = OutputData;
 
@@ -47,6 +48,7 @@ const Editor: React.FC<EditorProps> = ({
           checklist: Checklist,
           quote: Quote,
           image: SimpleImage,
+          embed: Embed,
         },
       });
     }

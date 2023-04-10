@@ -16,7 +16,7 @@ export const SubclassSocket: React.FC<SubclassSocketProps> = ({
     <HoverCardTrigger>
       <button
         className={cn(
-          "relative h-32 w-32 rotate-45 rounded transition duration-300 ease-out hover:ring-2 hover:ring-slate-300 hover:ring-offset-4 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-4",
+          "relative h-28 w-28 rotate-45 rounded transition duration-300 ease-out hover:ring-2 hover:ring-slate-300 hover:ring-offset-4 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-4",
           isSm && "h-12 w-12"
         )}
       >

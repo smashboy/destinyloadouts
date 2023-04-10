@@ -71,20 +71,20 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
     );
 
   return (
-    <div className="flex space-x-4">
-      <LoadoutItemSocket
-        item={item}
-        inventoryItems={inventoryItems}
-        isSm={isSm}
-      />
-      <div className="flex flex-col space-y-4">
-        <div className="grid grid-cols-6 gap-4">
+    <div className="flex h-full flex-col justify-between space-y-4">
+      <div className="flex space-x-4">
+        <LoadoutItemSocket
+          item={item}
+          inventoryItems={inventoryItems}
+          isSm={isSm}
+        />
+        <div className="flex flex-wrap gap-4">
           {sockets.map((socket, index) => (
             <ModSocket key={index} socket={socket} />
           ))}
         </div>
-        <ArmorEnergy energyUsed={energyUsed} />
       </div>
+      <ArmorEnergy energyUsed={energyUsed} />
     </div>
   );
 };
