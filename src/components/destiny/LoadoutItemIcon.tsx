@@ -1,14 +1,11 @@
-import {
-  DestinyItemSubType,
-  DestinyItemType,
-  type DestinyInventoryItemDefinition,
-} from "bungie-api-ts/destiny2";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import {
   type LoadoutInventoryItemsList,
   type LoadoutItem,
 } from "~/bungie/types";
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
+import { DestinyItemSubType, DestinyItemType } from "~/bungie/__generated";
 
 interface LoadoutItemIconProps {
   item: LoadoutItem;

@@ -12,9 +12,6 @@ import { env } from "./src/env.mjs";
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   pageExtensions: ["page.tsx", "page.ts"],
   // images: {
   //   remotePatterns: [

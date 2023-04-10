@@ -71,7 +71,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   size,
 }) => (
   <AvatarRoot size={size} className={className}>
-    <AvatarImage src={src} />
+    {src && <AvatarImage src={src} />}
     <AvatarFallback>{fallback.split("")[0] || "U"}</AvatarFallback>
   </AvatarRoot>
 );

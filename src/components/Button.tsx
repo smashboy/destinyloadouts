@@ -76,7 +76,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export type ButtonLinkProps = React.ComponentPropsWithoutRef<"a"> &
-  ButtonBaseProps;
+  ButtonBaseProps & {
+    href: string;
+  };
 
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   (

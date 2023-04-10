@@ -11,6 +11,7 @@
     "ts": "tsc --noEmit --incremental",
     "build": "next build",
     "start": "next start",
+    "generate-bungie-constants": "dotenv -- tsx ./scripts/generateBungieApiConstants.ts",
     "db:docker": "docker compose up -d",
     "db:migrate-dev": "dotenv -- npx prisma migrate dev",
     "db:migrate-deploy": "dotenv -- npx prisma migrate deploy",

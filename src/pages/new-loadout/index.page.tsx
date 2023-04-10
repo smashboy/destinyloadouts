@@ -1,7 +1,6 @@
 import { type GetServerSideProps, type NextPage } from "next";
 import { useRouter } from "next/router";
 import {
-  DestinyComponentType,
   type DestinyLoadoutColorDefinition,
   type DestinyLoadoutComponent,
   type DestinyLoadoutIconDefinition,
@@ -20,6 +19,10 @@ import { LoadoutSelector } from "./components/LoadoutSelector";
 import { createDestinyCharacterLoadout } from "~/bungie/createDestinyCharacterLoadout";
 import { NewLoadoutForm } from "./components/NewLoadoutForm";
 import { bungieDestinyClassToDbCharacterClassMap } from "~/constants/loadouts";
+import {
+  DestinyComponentType,
+  type DestinyComponentTypeConst,
+} from "~/bungie/__generated";
 
 interface NewLoadoutPageProps {
   characters: Record<string, DestinyCharacterComponent>;
@@ -48,7 +51,7 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
         classType={
           (selectedCharacter?.classType &&
             bungieDestinyClassToDbCharacterClassMap[
-              selectedCharacter.classType
+              selectedCharacter.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
             ]) ||
           void 0
         }
@@ -91,7 +94,8 @@ export const getServerSideProps: GetServerSideProps<
   const { accessToken } = session;
   const { characterId, loadout: loadoutIndex } = ctx.query;
 
-  const components = [DestinyComponentType.Characters];
+  const components: DestinyComponentTypeConst[keyof DestinyComponentTypeConst][] =
+    [DestinyComponentType.Characters];
 
   if (characterId) components.push(DestinyComponentType.CharacterLoadouts);
 

@@ -2,6 +2,7 @@ import {
   type LoadoutInventoryItemsList,
   type LoadoutItem,
 } from "~/bungie/types";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ItemSocket, type ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
 import { ModSocket } from "./ModSocket";
@@ -41,7 +42,7 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
         !plugCategoryHashesExcludeList.includes(
           item.plug?.plugCategoryHash as number
         )
-    );
+    ) as DestinyInventoryItemDefinition[];
 
   if (sockets.length === 0 || hideSockets)
     return (

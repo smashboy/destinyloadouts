@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { ItemSocket } from "./ItemSocket";
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";

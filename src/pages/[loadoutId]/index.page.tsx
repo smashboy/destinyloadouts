@@ -40,6 +40,8 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
           </div>
         )}
         <div className="flex w-full justify-center">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <CharacterSockets loadout={{ ...items, inventoryItems }} />
         </div>
       </div>

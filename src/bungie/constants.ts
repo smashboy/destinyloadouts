@@ -1,5 +1,3 @@
-// import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
-
 export const bungieNetOrigin = "https://www.bungie.net";
 
 export const characterClassIconPathMap = {

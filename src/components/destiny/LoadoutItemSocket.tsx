@@ -21,7 +21,8 @@ export const LoadoutItemSocket: React.FC<LoadoutItemSocketProps> = ({
   // const isMasterworked =
   //   itemInstance.instance.data?.energy?.energyCapacity === 10;
 
-  const inventoryItem = inventoryItems[itemHash];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const inventoryItem = inventoryItems[itemHash]!;
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>

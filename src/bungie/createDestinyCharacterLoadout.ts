@@ -2,9 +2,6 @@ import {
   type BungieMembershipType,
   type DestinyInventoryItemDefinition,
   type DestinyItemResponse,
-  DestinyItemSubType,
-  DestinyItemType,
-  DestinyComponentType,
   type DestinyLoadoutComponent,
   type DestinyLoadoutItemComponent,
   type DestinyItemSocketState,
@@ -14,13 +11,18 @@ import {
 import { type TrpcSSG } from "~/utils/ssg";
 import { type DestinyCharacterLoadout, type LoadoutItem } from "./types";
 import { DestinyItemCategoryHash } from "./constants";
+import {
+  DestinyComponentType,
+  DestinyItemSubType,
+  DestinyItemType,
+} from "./__generated";
 
 type GetLoadoutItemReturnType = Record<string, LoadoutItem> | null;
 
-const getSocketHash = (
+const getSocketHashes = (
   loadoutItem: DestinyLoadoutItemComponent,
-  sockets: DestinyItemSocketState[],
-  isArmor?: boolean
+  sockets: DestinyItemSocketState[] = [],
+  isArmor = false
 ) => {
   const hashes = [...loadoutItem.plugItemHashes];
 
@@ -48,7 +50,7 @@ const getCharacterArmor = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+          getSocketHashes(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.GauntletsArmor:
@@ -57,7 +59,7 @@ const getCharacterArmor = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+          getSocketHashes(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.ChestArmor:
@@ -66,7 +68,7 @@ const getCharacterArmor = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+          getSocketHashes(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.LegArmor:
@@ -75,7 +77,7 @@ const getCharacterArmor = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+          getSocketHashes(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     case DestinyItemSubType.ClassArmor:
@@ -84,7 +86,7 @@ const getCharacterArmor = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           item.item.data!.itemHash,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getSocketHash(loadoutItem, item.sockets.data!.sockets, true),
+          getSocketHashes(loadoutItem, item.sockets.data!.sockets, true),
         ],
       };
     default:
@@ -105,7 +107,7 @@ const getCharacterWeapons = (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+        getSocketHashes(loadoutItem, item.sockets.data!.sockets),
       ],
     };
 
@@ -115,7 +117,7 @@ const getCharacterWeapons = (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+        getSocketHashes(loadoutItem, item.sockets.data!.sockets),
       ],
     };
 
@@ -125,7 +127,7 @@ const getCharacterWeapons = (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         item.item.data!.itemHash,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        getSocketHash(loadoutItem, item.sockets.data!.sockets),
+        getSocketHashes(loadoutItem, item.sockets.data!.sockets),
       ],
     };
 
@@ -196,13 +198,13 @@ export const createDestinyCharacterLoadout = async (
       hashIds: [...new Set(inventoryItemHashes)],
     });
 
-  let loadout = {
+  let loadout: Partial<DestinyCharacterLoadout> = {
     inventoryItems: inventoryItems.reduce((acc, item) => {
       const inventoryItem =
         item.content as unknown as DestinyInventoryItemDefinition;
 
       return { ...acc, [inventoryItem.hash]: inventoryItem };
-    }, {}),
+    }, {}) as Record<string, DestinyInventoryItemDefinition>,
   };
 
   for (const loadoutItem of loadoutItems) {
@@ -216,6 +218,8 @@ export const createDestinyCharacterLoadout = async (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { itemHash } = itemInstance.item.data!;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const tableItem = loadout.inventoryItems[itemHash];
 
     if (!tableItem) continue;
@@ -238,8 +242,7 @@ export const createDestinyCharacterLoadout = async (
           ...loadout,
           subclass: [
             itemHash,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getSocketHash(loadoutItem, itemInstance.sockets!.data!.sockets),
+            getSocketHashes(loadoutItem, itemInstance.sockets?.data?.sockets),
           ],
         };
       default:

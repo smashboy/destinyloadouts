@@ -10,22 +10,6 @@ import {
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
 
-// interface BookmarksPageProps {
-//   loadouts: Array<
-//     Loadout & {
-//       _count: { likes: number };
-//       likes: {
-//         likedByUserId: string;
-//       }[];
-//       bookmarks: {
-//         savedByUserId: string;
-//       }[];
-//       author: User;
-//     }
-//   >;
-//   inventoryItems: Record<string, DestinyInventoryItemDefinition>;
-// }
-
 export const BookmarksPage: NextPage = () => {
   const [authUser] = useAuthUser();
 

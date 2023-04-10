@@ -253,7 +253,7 @@ export const loadoutsRouter = createTRPCRouter({
           classType,
           subclassType,
           status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
-          description,
+          description: description as Prisma.InputJsonValue,
           tags,
           items,
           author: {

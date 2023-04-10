@@ -4,7 +4,6 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import { type TokenSet } from "@auth/core/types";
 import { BungieAuthProvider } from "./BungieProvider";
 import { prisma } from "./db";
 import { bungieNetOrigin } from "~/bungie/constants";
@@ -68,7 +67,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, token }) {
       if (session.user && token) {
         // console.log("SESSION", { session, token });
-        session.user.id = token.userId;
+        session.user.id = token.userId as string;
         session.accessToken = token.accessToken as string;
         // session.user.role = user.role; <-- put other properties on the session here
       }
@@ -83,11 +82,15 @@ export const authOptions: NextAuthOptions = {
           refreshToken: account.refresh_token,
         };
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (user) newToken.userId = user.id;
 
         // console.log("NEW AUTH TOKEN:", newToken);
 
         return newToken;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
       } else if (Date.now() < token.expiresAt * 1000) {
         // console.log("TOKEN NOT EXPIRED:", token);
         // If the access token has not expired yet, return it
@@ -112,7 +115,7 @@ export const authOptions: NextAuthOptions = {
             }
           );
 
-          const tokens: TokenSet = await response.json();
+          const tokens = await response.json();
 
           if (!response.ok) throw tokens;
 

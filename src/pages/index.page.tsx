@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 import { useDebounce } from "use-debounce";
 import { Virtuoso, type Components } from "react-virtuoso";
-import { trpcNext } from "~/utils/api";
+import { type RouterOutputs, trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
@@ -29,7 +29,7 @@ import {
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
 
-const components: Components = {
+const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> = {
   List: forwardRef(({ children, style }, ref) => (
     <div
       ref={ref}
@@ -169,20 +169,29 @@ const Home: NextPageWithLayout = () => {
     {}
   );
 
-  const handleSectionFilter = (section: FeedFilter["section"]) =>
-    setFilter((prev) => ({ ...prev, section }));
+  const handleSectionFilter = (section: string) =>
+    setFilter((prev) => ({
+      ...prev,
+      section: section as FeedFilter["section"],
+    }));
 
-  const handleSortByFilter = (sortBy: FeedFilter["sortBy"]) =>
-    setFilter((prev) => ({ ...prev, sortBy }));
+  const handleSortByFilter = (sortBy: string) =>
+    setFilter((prev) => ({ ...prev, sortBy: sortBy as FeedFilter["sortBy"] }));
 
-  const handleClassFilter = (classTypes: FeedFilter["classTypes"]) =>
-    setFilter((prev) => ({ ...prev, classTypes }));
+  const handleClassFilter = (classTypes: string[]) =>
+    setFilter((prev) => ({
+      ...prev,
+      classTypes: classTypes as FeedFilter["classTypes"],
+    }));
 
-  const handleSubClassFilter = (subclassTypes: FeedFilter["subclassTypes"]) =>
-    setFilter((prev) => ({ ...prev, subclassTypes }));
+  const handleSubClassFilter = (subclassTypes: string[]) =>
+    setFilter((prev) => ({
+      ...prev,
+      subclassTypes: subclassTypes as FeedFilter["subclassTypes"],
+    }));
 
-  const handleTagsFilter = (tags: FeedFilter["tags"]) =>
-    setFilter((prev) => ({ ...prev, tags }));
+  const handleTagsFilter = (tags: string[]) =>
+    setFilter((prev) => ({ ...prev, tags: tags as FeedFilter["tags"] }));
 
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
@@ -204,6 +213,8 @@ const Home: NextPageWithLayout = () => {
         className="col-span-3 mt-3"
         endReached={handleLoadMoreLoadouts}
         style={{ height: "calc(100vh - 15px)" }}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         components={components}
         itemContent={(_, loadout) => (
           <LoadoutPreviewCard

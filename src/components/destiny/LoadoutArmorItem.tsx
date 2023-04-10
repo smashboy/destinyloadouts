@@ -1,8 +1,4 @@
-import {
-  type DestinyInventoryItemDefinition,
-  DestinyItemSubType,
-  DestinyItemType,
-} from "bungie-api-ts/destiny2";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import {
   type LoadoutInventoryItemsList,
   type LoadoutItem,
@@ -11,6 +7,7 @@ import { ArmorEnergy } from "./ArmorEnergy";
 import { ItemSocket, type ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
 import { ModSocket } from "./ModSocket";
+import { DestinyItemSubType, DestinyItemType } from "~/bungie/__generated";
 
 interface LoadoutArmorItemProps {
   item: LoadoutItem;

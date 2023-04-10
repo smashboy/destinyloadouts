@@ -37,8 +37,10 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
             <LoadoutSocket
               key={index}
               href={`/new-loadout?${searchParams.toString()}`}
-              iconImagePath={loadoutIcons[loadout.iconHash].iconImagePath}
-              colorImagePath={loadoutColors[loadout.colorHash].colorImagePath}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              iconImagePath={loadoutIcons[loadout.iconHash]!.iconImagePath}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              colorImagePath={loadoutColors[loadout.colorHash]!.colorImagePath}
               isSelected={selectedLoadout === index.toString()}
             />
           );

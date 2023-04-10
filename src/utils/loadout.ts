@@ -16,22 +16,24 @@ export const getLoadoutItemHashes = (
   return hashes;
 };
 
-interface HandleAuthUserLoadoutLikeProps {
+interface Loadout {
+  id: string;
+  _count: { likes: number };
+  likes?: Array<{ likedByUserId: string }>;
+  bookmarks?: Array<{ savedByUserId: string }>;
+}
+
+interface HandleAuthUserLoadoutLikeProps<L extends Loadout> {
   loadoutId: string;
-  loadout: {
-    id: string;
-    _count: { likes: number };
-    likes?: Array<{ likedByUserId: string }>;
-    bookmarks?: Array<{ savedByUserId: string }>;
-  };
+  loadout: L;
   authUser: User | undefined;
 }
 
-export const handleAuthUserLoadoutLike = ({
+export const handleAuthUserLoadoutLike = <L extends Loadout>({
   loadout,
   loadoutId,
   authUser,
-}: HandleAuthUserLoadoutLikeProps) => {
+}: HandleAuthUserLoadoutLikeProps<L>) => {
   const { _count, id, likes = [], ...loadoutProps } = loadout;
 
   const isLikedByAuthUser =
@@ -58,11 +60,11 @@ export const handleAuthUserLoadoutLike = ({
   };
 };
 
-export const handleAuthUserLoadoutBookmark = ({
+export const handleAuthUserLoadoutBookmark = <L extends Loadout>({
   loadout,
   loadoutId,
   authUser,
-}: HandleAuthUserLoadoutLikeProps) => {
+}: HandleAuthUserLoadoutLikeProps<L>) => {
   const { id, bookmarks = [], ...loadoutProps } = loadout;
 
   const isSavedByAuthUser =

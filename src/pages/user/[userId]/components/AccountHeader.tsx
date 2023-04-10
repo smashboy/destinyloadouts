@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { Avatar } from "~/components/Avatar";
 import { TypographyLarge } from "~/components/typography";

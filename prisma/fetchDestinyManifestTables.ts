@@ -96,7 +96,7 @@ const run = async () => {
       const query = {
         data: {
           hashId,
-          content: item,
+          content: item as unknown as Prisma.InputJsonValue,
           table: {
             connect: {
               name_localeName_manifestVersion: {
@@ -142,7 +142,7 @@ const run = async () => {
     completedBatchQueriesCount += queries.length;
 
     console.log(
-      `[${completedBatchQueriesCount}/${totalBatchQueriesCount}]: Components transaction finished successfully!`
+      `[${completedBatchQueriesCount}/${totalBatchQueriesCount}]: Components transaction completed successfully!`
     );
   }
 };

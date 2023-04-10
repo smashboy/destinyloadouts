@@ -3,7 +3,7 @@ import {
   DestinyDamageType,
   LoadoutTag,
 } from "@prisma/client";
-import { DestinyClass, DamageType } from "bungie-api-ts/destiny2";
+import { DamageType, DestinyClass } from "~/bungie/__generated";
 
 export const loadoutTagsList = [
   LoadoutTag.PVE,
