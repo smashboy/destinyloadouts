@@ -27,7 +27,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     <TypographyLarge>Subclass</TypographyLarge>
     <LoadoutSubclassItem item={subclass} inventoryItems={inventoryItems} />
     <TypographyLarge>Weapons</TypographyLarge>
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       <LoadoutSectionContainer>
         <LoadoutWeaponItem
           item={kinetic}
@@ -58,7 +58,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     </div>
     <div className="flex flex-col space-y-4">
       <TypographyLarge>Armor</TypographyLarge>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <LoadoutSectionContainer>
           <LoadoutArmorItem
             item={helmet}

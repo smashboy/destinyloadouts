@@ -18,10 +18,7 @@ import { paginate } from "~/server/utils/paginate";
 import { destinyLatestManifestRouterCaller } from "../destiny/manifest/latest";
 import { type LoadoutItem } from "~/bungie/types";
 import { formatPrismaDestinyManifestTableComponents } from "~/server/utils/manifest";
-import {
-  LoadoutLikesSelectCommon,
-  LoadoutPreviewIncludeCommon,
-} from "./common";
+import { LoadoutLikesSelectCommon, LoadoutIncludeCommon } from "./common";
 import { getLoadoutItemHashes } from "~/utils/loadout";
 import { usersRouterCaller } from "../users/router";
 import { TRPCError } from "@trpc/server";
@@ -71,7 +68,7 @@ export const loadoutsRouter = createTRPCRouter({
         where: {
           id: loadoutId,
         },
-        include: LoadoutPreviewIncludeCommon({ includeAuthor: true }),
+        include: LoadoutIncludeCommon({ includeAuthor: true }),
       });
 
       if (!loadout) return null;
@@ -254,7 +251,11 @@ export const loadoutsRouter = createTRPCRouter({
           subclassType,
           status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
           description: description as Prisma.InputJsonValue,
-          tags,
+          tags: {
+            createMany: {
+              data: tags.map((tag) => ({ tag })),
+            },
+          },
           items,
           author: {
             connect: {
@@ -325,7 +326,7 @@ export const loadoutsRouter = createTRPCRouter({
           },
         },
         orderBy: { createdAt: "desc" },
-        include: LoadoutPreviewIncludeCommon({
+        include: LoadoutIncludeCommon({
           includeAuthor: true,
           authUserId,
         }),
@@ -381,7 +382,7 @@ export const loadoutsRouter = createTRPCRouter({
               : { authorId: userId }),
           },
           orderBy: { createdAt: "desc" },
-          include: LoadoutPreviewIncludeCommon({
+          include: LoadoutIncludeCommon({
             includeAuthor: onlyLiked,
           }),
         });
@@ -477,7 +478,11 @@ export const loadoutsRouter = createTRPCRouter({
           ...(tags &&
             tags.length > 0 && {
               tags: {
-                hasSome: tags,
+                some: {
+                  tag: {
+                    in: tags,
+                  },
+                },
               },
             }),
           ...(authUser &&
@@ -524,7 +529,7 @@ export const loadoutsRouter = createTRPCRouter({
               ...paginateArgs,
               where,
               orderBy,
-              include: LoadoutPreviewIncludeCommon({
+              include: LoadoutIncludeCommon({
                 includeAuthor: true,
                 authUserId: authUser?.id,
               }),

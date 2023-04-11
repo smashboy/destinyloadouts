@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { type Loadout, type User } from "@prisma/client";
+import { type Loadout, type User, type LoadoutTagLink } from "@prisma/client";
 import { IconHeart, IconHeartFilled, IconBookmark } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { characterClassIconPathMap } from "~/constants/loadouts";
@@ -19,6 +19,7 @@ import { ButtonLink } from "../Button";
 
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
+    tags: LoadoutTagLink[];
     likes?: Array<{ likedByUserId: string }>;
     bookmarks?: Array<{ savedByUserId: string }>;
     _count: { likes: number };
@@ -113,7 +114,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
 
         <span className="flex flex-1 flex-col gap-2">
           <TypographyLarge>{name}</TypographyLarge>
-          <LoadoutTagsList tags={tags} />
+          <LoadoutTagsList tags={tags.map(({ tag }) => tag)} />
           <div className="flex gap-4 py-3 pl-2">
             <div className="pr-1">
               <LoadoutSubclassItem

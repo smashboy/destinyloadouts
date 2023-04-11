@@ -10,7 +10,6 @@ import { prisma, type Prisma } from "./client";
 
 const BATCH_SIZE = 100;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 dotenv.config();
 
 const language: DestinyManifestLanguage = "en";

@@ -1,14 +1,14 @@
 import { type Prisma } from "@prisma/client";
 
-interface LoadoutPreviewIncludeCommonProps {
+interface LoadoutIncludeCommonProps {
   includeAuthor?: boolean;
   authUserId?: string;
 }
 
-export const LoadoutPreviewIncludeCommon = ({
+export const LoadoutIncludeCommon = ({
   includeAuthor = false,
   authUserId,
-}: LoadoutPreviewIncludeCommonProps = {}) => {
+}: LoadoutIncludeCommonProps = {}) => {
   const include = {
     ...(authUserId && {
       bookmarks: {
@@ -29,6 +29,7 @@ export const LoadoutPreviewIncludeCommon = ({
       },
     }),
     author: includeAuthor,
+    tags: true,
     _count: {
       select: {
         likes: true,

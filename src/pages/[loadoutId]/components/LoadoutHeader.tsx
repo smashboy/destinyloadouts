@@ -157,7 +157,9 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
       <FollowButton authUser={authUser} followUserId={authorId} />
       <div className="flex flex-1 flex-col justify-center gap-2">
         <TypographyLarge>{loadoutName}</TypographyLarge>
-        {tags.length > 0 && <LoadoutTagsList tags={tags} />}
+        {tags.length > 0 && (
+          <LoadoutTagsList tags={tags.map(({ tag }) => tag)} />
+        )}
       </div>
       <TypographySmall>{likesCount}</TypographySmall>
       <IconButton

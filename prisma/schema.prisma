@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-    provider          = "postgresql"
-    url               = env("DATABASE_URL")
-    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model User {
@@ -33,6 +33,8 @@ model UserFollower {
     followerUserId  String
 
     @@unique([followingUserId, followerUserId])
+    @@index([followerUserId])
+    @@index([followingUserId])
 }
 
 model Loadout {
@@ -43,13 +45,24 @@ model Loadout {
     name         String
     classType    DestinyClassType
     subclassType DestinyDamageType
-    tags         LoadoutTag[]
+    tags         LoadoutTagLink[]
     description  Json?
     items        Json
     likes        LoadoutLike[]
     bookmarks    LoadoutBookmark[]
     author       User              @relation(fields: [authorId], references: [id])
     authorId     String
+
+    @@index([authorId])
+}
+
+model LoadoutTagLink {
+    tag       LoadoutTag
+    loadout   Loadout    @relation(fields: [loadoutId], references: [id])
+    loadoutId String
+
+    @@unique([loadoutId, tag])
+    @@index([loadoutId, tag])
 }
 
 model LoadoutLike {
@@ -60,6 +73,7 @@ model LoadoutLike {
     loadoutId     String
 
     @@unique([likedByUserId, loadoutId])
+    @@index([loadoutId])
 }
 
 model LoadoutBookmark {
@@ -70,6 +84,7 @@ model LoadoutBookmark {
     loadoutId     String
 
     @@unique([savedByUserId, loadoutId])
+    @@index([loadoutId])
 }
 
 enum LoadoutStatus {
@@ -115,6 +130,7 @@ model DestinyManifestTablesByLocale {
     manifestVersion String
 
     @@unique([locale, manifestVersion])
+    @@index([manifestVersion])
 }
 
 model DestinyManifestTable {
@@ -125,6 +141,7 @@ model DestinyManifestTable {
     manifestVersion String
 
     @@unique([name, localeName, manifestVersion])
+    @@index([localeName, manifestVersion])
 }
 
 model DestinyManifestTableComponent {
@@ -136,4 +153,5 @@ model DestinyManifestTableComponent {
     manifestVersion String
 
     @@unique([hashId, tableName, localeName, manifestVersion])
+    @@index([tableName, localeName, manifestVersion])
 }

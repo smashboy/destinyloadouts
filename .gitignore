@@ -21,6 +21,8 @@ next-env.d.ts
 
 analyze
 
+.data
+
 # production
 /build
 

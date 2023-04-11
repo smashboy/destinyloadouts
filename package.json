@@ -13,9 +13,10 @@
     "start": "next start",
     "generate-bungie-constants": "dotenv -- tsx ./scripts/generateBungieApiConstants.ts",
     "db:docker": "docker compose up -d",
-    "db:migrate-dev": "dotenv -- npx prisma migrate dev",
-    "db:migrate-deploy": "dotenv -- npx prisma migrate deploy",
+    "db:push": "dotenv -- npx npx prisma db push",
     "db:manifest": "dotenv -- tsx ./prisma/fetchDestinyManifestTables.ts",
+    "db:fetch": "dotenv -- tsx ./prisma/fetchDB.ts",
+    "db:migrate": "dotenv -- tsx ./prisma/migrate.ts",
     "db:reset": "dotenv -- npx prisma migrate reset --force --preview-feature",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "dotenv -- npx prisma studio"

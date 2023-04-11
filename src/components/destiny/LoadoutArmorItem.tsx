@@ -78,7 +78,7 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
           inventoryItems={inventoryItems}
           isSm={isSm}
         />
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-3">
           {sockets.map((socket, index) => (
             <ModSocket key={index} socket={socket} />
           ))}
