@@ -107,6 +107,8 @@ export const migrate = async () => {
         prisma.loadout.create({
           data: {
             ...data,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             description: description ?? void 0,
             tags: {
               createMany: {

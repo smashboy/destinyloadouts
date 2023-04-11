@@ -30,6 +30,8 @@ export const fetchDB = async () => {
   await Promise.all(
     list.map((data, index) =>
       fs.writeFile(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         path.join(__dirname, ".data", fileNameMap[index]),
         JSON.stringify(data)
       )
