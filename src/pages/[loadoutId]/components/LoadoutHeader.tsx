@@ -168,7 +168,6 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
         icon={isLikedByAuthUser ? IconHeartSolid : IconHeartRegular}
       />
       <IconButton
-        className={isSavedByAuthUser ? "invert" : void 0}
         onClick={handleSaveLoadout}
         icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
       />
