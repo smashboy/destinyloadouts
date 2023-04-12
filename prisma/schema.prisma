@@ -58,7 +58,7 @@ model Loadout {
 
 model LoadoutTagLink {
     tag       LoadoutTag
-    loadout   Loadout    @relation(fields: [loadoutId], references: [id])
+    loadout   Loadout    @relation(fields: [loadoutId], references: [id], onDelete: Cascade)
     loadoutId String
 
     @@unique([loadoutId, tag])
