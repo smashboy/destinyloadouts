@@ -7,6 +7,7 @@ export {
   faTrash as IconTrashSolid,
   faChevronLeft as IconChevronLeftSolid,
   faXmark as IconXMarkSolid,
+  faSackDollar as IconSackDollarSolid,
 } from "@fortawesome/free-solid-svg-icons";
 export {
   faBookmark as IconBookmarkRegular,

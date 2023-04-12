@@ -13,7 +13,12 @@ import {
 import { bungieNetOrigin } from "~/bungie/constants";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { SidebarNavLink } from "./SidebarNavLink";
-import { IconBookmarkSolid, IconHomeSolid, IconUserSolid } from "~/icons";
+import {
+  IconBookmarkSolid,
+  IconHomeSolid,
+  IconSackDollarSolid,
+  IconUserSolid,
+} from "~/icons";
 import { APP_NAME } from "~/constants/app";
 
 export const AppSidebar = () => {
@@ -50,6 +55,13 @@ export const AppSidebar = () => {
               />
             </>
           )}
+          <SidebarNavLink
+            href="https://www.buymeacoffee.com/smashboy"
+            label="Support project"
+            target="_blank"
+            rel="noopener noreferrer"
+            icon={IconSackDollarSolid}
+          />
         </div>
         {authUser ? (
           <DropdownMenu>

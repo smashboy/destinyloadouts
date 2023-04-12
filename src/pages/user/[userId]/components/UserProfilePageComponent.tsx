@@ -9,6 +9,7 @@ import {
 } from "~/utils/loadout";
 import { type UserProfilePageProps } from "../index.page";
 import { AccountHeader } from "./AccountHeader";
+import { MessageContainer } from "~/components/MessageContainer";
 
 interface UserProfilePageComponentProps extends UserProfilePageProps {
   onlyAuthUserLikedLoadouts?: boolean;
@@ -138,16 +139,23 @@ export const UserProfilePageComponent: React.FC<
     >
       <AccountHeader user={user} />
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-        {loadoutsWithLikes.map((loadout) => (
-          <LoadoutPreviewCard
-            key={loadout.id}
-            loadout={loadout}
-            inventoryItems={inventoryItems}
-            onLike={handleLikeLoadout}
-            onSave={handleSaveLoadout}
-            authUser={authUser}
+        {loadoutsWithLikes.length === 0 ? (
+          <MessageContainer
+            title="Loadouts not found"
+            description="This user has no loadouts, please come back later."
           />
-        ))}
+        ) : (
+          loadoutsWithLikes.map((loadout) => (
+            <LoadoutPreviewCard
+              key={loadout.id}
+              loadout={loadout}
+              inventoryItems={inventoryItems}
+              onLike={handleLikeLoadout}
+              onSave={handleSaveLoadout}
+              authUser={authUser}
+            />
+          ))
+        )}
       </div>
     </Tabs>
   );

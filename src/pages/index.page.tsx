@@ -30,6 +30,8 @@ import {
 } from "~/utils/loadout";
 import { APP_NAME } from "~/constants/app";
 import { Seo } from "~/components/Seo";
+import { GhostLoader } from "~/components/GhostLoader";
+import { DataContainer } from "~/components/DataContainer";
 
 const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> = {
   List: forwardRef(({ children, style }, ref) => (
@@ -93,7 +95,7 @@ const Home: NextPageWithLayout = () => {
 
   const trpcCtx = trpcNext.useContext();
 
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+  const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
     trpcNext.loadouts.feed.useInfiniteQuery(
       {
         ...debouncedFilter,
@@ -215,26 +217,34 @@ const Home: NextPageWithLayout = () => {
         canonical={getBaseUrl()}
       />
       <div className="grid grid-cols-4 gap-2">
-        <Virtuoso
-          data={loadouts}
-          overscan={15}
-          className="col-span-3 mt-3"
-          endReached={handleLoadMoreLoadouts}
-          style={{ height: "calc(100vh - 15px)" }}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          components={components}
-          itemContent={(_, loadout) => (
-            <LoadoutPreviewCard
-              key={loadout.id}
-              loadout={loadout}
-              inventoryItems={inventoryItems}
-              authUser={authUser}
-              onLike={handleLikeLoadout}
-              onSave={handleSaveLoadout}
+        <div className="col-span-3 mt-3">
+          <DataContainer
+            title="Loadouts not found"
+            description="Try changing filters to get new results."
+            isLoading={isLoading}
+            showMessage={loadouts.length === 0}
+          >
+            <Virtuoso
+              data={loadouts}
+              overscan={15}
+              endReached={handleLoadMoreLoadouts}
+              style={{ height: "calc(100vh - 15px)" }}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              components={components}
+              itemContent={(_, loadout) => (
+                <LoadoutPreviewCard
+                  key={loadout.id}
+                  loadout={loadout}
+                  inventoryItems={inventoryItems}
+                  authUser={authUser}
+                  onLike={handleLikeLoadout}
+                  onSave={handleSaveLoadout}
+                />
+              )}
             />
-          )}
-        />
+          </DataContainer>
+        </div>
         <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
           {authUser && (
             <Tabs value={filter.section} onValueChange={handleSectionFilter}>

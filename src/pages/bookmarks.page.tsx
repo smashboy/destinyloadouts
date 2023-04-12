@@ -11,6 +11,7 @@ import {
 } from "~/utils/loadout";
 import { Seo } from "~/components/Seo";
 import { APP_NAME } from "~/constants/app";
+import { MessageContainer } from "~/components/MessageContainer";
 
 export const BookmarksPage: NextPage = () => {
   const [authUser] = useAuthUser();
@@ -89,8 +90,7 @@ export const BookmarksPage: NextPage = () => {
       />
       <div className="grid grid-cols-1 gap-2">
         <TypographyLarge>Saved loadouts</TypographyLarge>
-        {loadouts &&
-          inventoryItems &&
+        {loadouts && loadouts.length > 0 && inventoryItems ? (
           loadouts.map((loadout) => (
             <LoadoutPreviewCard
               key={loadout.id}
@@ -100,7 +100,13 @@ export const BookmarksPage: NextPage = () => {
               onSave={handleSaveLoadout}
               authUser={authUser}
             />
-          ))}
+          ))
+        ) : (
+          <MessageContainer
+            title="You don't have saved loadouts."
+            description="Checkout available loadouts and bookmark some of them."
+          />
+        )}
       </div>
     </>
   );
