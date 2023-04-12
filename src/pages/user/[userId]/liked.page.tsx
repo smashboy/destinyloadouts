@@ -2,10 +2,27 @@ import { type NextPage, type GetServerSideProps } from "next";
 import { type UserProfilePageProps } from "./index.page";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { trpsSSG } from "~/utils/ssg";
+import { Seo } from "~/components/Seo";
+import { getBaseUrl } from "~/utils/api";
+import { APP_NAME } from "~/constants/app";
 
 const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
   props
-) => <UserProfilePageComponent {...props} onlyAuthUserLikedLoadouts />;
+) => {
+  const {
+    user: { bungieAccountDisplayName, id: userId },
+  } = props;
+
+  return (
+    <>
+      <Seo
+        title={`${bungieAccountDisplayName}'s liked loadouts | ${APP_NAME}`}
+        canonical={`${getBaseUrl()}/user/${userId}/liked`}
+      />
+      <UserProfilePageComponent {...props} />
+    </>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps<
   UserProfilePageProps

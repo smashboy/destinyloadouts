@@ -14,6 +14,7 @@ import { bungieNetOrigin } from "~/bungie/constants";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { SidebarNavLink } from "./SidebarNavLink";
 import { IconBookmarkSolid, IconHomeSolid, IconUserSolid } from "~/icons";
+import { APP_NAME } from "~/constants/app";
 
 export const AppSidebar = () => {
   const [authUser] = useAuthUser();
@@ -31,7 +32,7 @@ export const AppSidebar = () => {
             alt="App logo"
             className="mr-2 dark:invert"
           />
-          <TypographyLarge>Black Armory</TypographyLarge>
+          <TypographyLarge>{APP_NAME}</TypographyLarge>
         </Link>
         <div className="mt-10 flex h-full w-full flex-col gap-4">
           <SidebarNavLink href="/" label="Home" icon={IconHomeSolid} />

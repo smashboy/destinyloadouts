@@ -1,7 +1,9 @@
 import { type NextPage, type GetStaticPaths, type GetStaticProps } from "next";
 import { trpsSSG } from "~/utils/ssg";
-import { type RouterOutputs } from "~/utils/api";
+import { getBaseUrl, type RouterOutputs } from "~/utils/api";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
+import { Seo } from "~/components/Seo";
+import { APP_NAME } from "~/constants/app";
 
 const REVALIDATE_TIME = 60 * 20;
 
@@ -10,9 +12,21 @@ export interface UserProfilePageProps {
   loadouts: RouterOutputs["loadouts"]["getByUserId"];
 }
 
-const UserProfilePage: NextPage<UserProfilePageProps> = (props) => (
-  <UserProfilePageComponent {...props} />
-);
+const UserProfilePage: NextPage<UserProfilePageProps> = (props) => {
+  const {
+    user: { bungieAccountDisplayName, id: userId },
+  } = props;
+
+  return (
+    <>
+      <Seo
+        title={`${bungieAccountDisplayName} | ${APP_NAME}`}
+        canonical={`${getBaseUrl()}/user/${userId}`}
+      />
+      <UserProfilePageComponent {...props} />
+    </>
+  );
+};
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],

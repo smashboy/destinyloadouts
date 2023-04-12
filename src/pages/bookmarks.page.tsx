@@ -9,6 +9,8 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
+import { Seo } from "~/components/Seo";
+import { APP_NAME } from "~/constants/app";
 
 export const BookmarksPage: NextPage = () => {
   const [authUser] = useAuthUser();
@@ -78,21 +80,29 @@ export const BookmarksPage: NextPage = () => {
     saveMutation.mutate({ loadoutId });
 
   return (
-    <div className="grid grid-cols-1 gap-2">
-      <TypographyLarge>Saved loadouts</TypographyLarge>
-      {loadouts &&
-        inventoryItems &&
-        loadouts.map((loadout) => (
-          <LoadoutPreviewCard
-            key={loadout.id}
-            loadout={loadout}
-            inventoryItems={inventoryItems}
-            onLike={handleLikeLoadout}
-            onSave={handleSaveLoadout}
-            authUser={authUser}
-          />
-        ))}
-    </div>
+    <>
+      <Seo
+        title={`Bookmarks | ${APP_NAME}`}
+        description="Saved loadouts page."
+        noindex
+        nofollow
+      />
+      <div className="grid grid-cols-1 gap-2">
+        <TypographyLarge>Saved loadouts</TypographyLarge>
+        {loadouts &&
+          inventoryItems &&
+          loadouts.map((loadout) => (
+            <LoadoutPreviewCard
+              key={loadout.id}
+              loadout={loadout}
+              inventoryItems={inventoryItems}
+              onLike={handleLikeLoadout}
+              onSave={handleSaveLoadout}
+              authUser={authUser}
+            />
+          ))}
+      </div>
+    </>
   );
 };
 

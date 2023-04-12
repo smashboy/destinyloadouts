@@ -23,6 +23,9 @@ import {
   DestinyComponentType,
   type DestinyComponentTypeConst,
 } from "~/bungie/__generated";
+import { Seo } from "~/components/Seo";
+import { getBaseUrl } from "~/utils/api";
+import { APP_NAME } from "~/constants/app";
 
 interface NewLoadoutPageProps {
   characters: Record<string, DestinyCharacterComponent>;
@@ -46,35 +49,41 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
   const selectedCharacter = characters[characterId as string];
 
   return (
-    <div className="flex flex-col space-y-4">
-      <CharacterClassIconBackground
-        classType={
-          (selectedCharacter?.classType &&
-            bungieDestinyClassToDbCharacterClassMap[
-              selectedCharacter.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
-            ]) ||
-          void 0
-        }
+    <>
+      <Seo
+        title={`New loadout | ${APP_NAME}`}
+        canonical={`${getBaseUrl()}/new-loadout`}
       />
-      <CharacterSelector characters={characters} />
-      {loadouts.length > 0 && characterId && (
-        <LoadoutSelector
-          characterId={characterId as string}
-          loadouts={loadouts}
-          loadoutIcons={loadoutIcons}
-          loadoutColors={loadoutColors}
+      <div className="flex flex-col space-y-4">
+        <CharacterClassIconBackground
+          classType={
+            (selectedCharacter?.classType &&
+              bungieDestinyClassToDbCharacterClassMap[
+                selectedCharacter.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
+              ]) ||
+            void 0
+          }
         />
-      )}
-      {selectedLoadout && (
-        <div className="flex flex-col space-y-2">
-          <NewLoadoutForm
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            character={selectedCharacter!}
-            loadout={selectedLoadout}
+        <CharacterSelector characters={characters} />
+        {loadouts.length > 0 && characterId && (
+          <LoadoutSelector
+            characterId={characterId as string}
+            loadouts={loadouts}
+            loadoutIcons={loadoutIcons}
+            loadoutColors={loadoutColors}
           />
-        </div>
-      )}
-    </div>
+        )}
+        {selectedLoadout && (
+          <div className="flex flex-col space-y-2">
+            <NewLoadoutForm
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              character={selectedCharacter!}
+              loadout={selectedLoadout}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

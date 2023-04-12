@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 import { useDebounce } from "use-debounce";
 import { Virtuoso, type Components } from "react-virtuoso";
-import { type RouterOutputs, trpcNext } from "~/utils/api";
+import { type RouterOutputs, trpcNext, getBaseUrl } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
@@ -28,6 +28,8 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
+import { APP_NAME } from "~/constants/app";
+import { Seo } from "~/components/Seo";
 
 const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> = {
   List: forwardRef(({ children, style }, ref) => (
@@ -206,64 +208,71 @@ const Home: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-2">
-      <Virtuoso
-        data={loadouts}
-        overscan={15}
-        className="col-span-3 mt-3"
-        endReached={handleLoadMoreLoadouts}
-        style={{ height: "calc(100vh - 15px)" }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        components={components}
-        itemContent={(_, loadout) => (
-          <LoadoutPreviewCard
-            key={loadout.id}
-            loadout={loadout}
-            inventoryItems={inventoryItems}
-            authUser={authUser}
-            onLike={handleLikeLoadout}
-            onSave={handleSaveLoadout}
-          />
-        )}
+    <>
+      <Seo
+        title={`Home | ${APP_NAME}`}
+        description="Loadouts feed page."
+        canonical={getBaseUrl()}
       />
-      <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
-        {authUser && (
-          <Tabs value={filter.section} onValueChange={handleSectionFilter}>
+      <div className="grid grid-cols-4 gap-2">
+        <Virtuoso
+          data={loadouts}
+          overscan={15}
+          className="col-span-3 mt-3"
+          endReached={handleLoadMoreLoadouts}
+          style={{ height: "calc(100vh - 15px)" }}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          components={components}
+          itemContent={(_, loadout) => (
+            <LoadoutPreviewCard
+              key={loadout.id}
+              loadout={loadout}
+              inventoryItems={inventoryItems}
+              authUser={authUser}
+              onLike={handleLikeLoadout}
+              onSave={handleSaveLoadout}
+            />
+          )}
+        />
+        <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
+          {authUser && (
+            <Tabs value={filter.section} onValueChange={handleSectionFilter}>
+              <TabsList>
+                <TabsTrigger value="ALL">All</TabsTrigger>
+                <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
+          <Tabs value={filter.sortBy} onValueChange={handleSortByFilter}>
             <TabsList>
-              <TabsTrigger value="ALL">All</TabsTrigger>
-              <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
+              <TabsTrigger value="LATEST">Latest</TabsTrigger>
+              <TabsTrigger value="POPULAR">Popular</TabsTrigger>
             </TabsList>
           </Tabs>
-        )}
-        <Tabs value={filter.sortBy} onValueChange={handleSortByFilter}>
-          <TabsList>
-            <TabsTrigger value="LATEST">Latest</TabsTrigger>
-            <TabsTrigger value="POPULAR">Popular</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <TypographySmall>Classes:</TypographySmall>
-        <ToggleGroup
-          selected={filter.classTypes}
-          onChange={handleClassFilter}
-          options={classTypeFilerOptions}
-        />
-        <TypographySmall>Subclasses:</TypographySmall>
-        <ToggleGroup
-          selected={filter.subclassTypes}
-          onChange={handleSubClassFilter}
-          options={subclassTypeFilerOptions}
-          disableSolid
-        />
-        <TypographySmall>Tags:</TypographySmall>
-        <ToggleGroup
-          selected={filter.tags}
-          onChange={handleTagsFilter}
-          options={loadoutTagFilterOptions}
-          disableSolid
-        />
+          <TypographySmall>Classes:</TypographySmall>
+          <ToggleGroup
+            selected={filter.classTypes}
+            onChange={handleClassFilter}
+            options={classTypeFilerOptions}
+          />
+          <TypographySmall>Subclasses:</TypographySmall>
+          <ToggleGroup
+            selected={filter.subclassTypes}
+            onChange={handleSubClassFilter}
+            options={subclassTypeFilerOptions}
+            disableSolid
+          />
+          <TypographySmall>Tags:</TypographySmall>
+          <ToggleGroup
+            selected={filter.tags}
+            onChange={handleTagsFilter}
+            options={loadoutTagFilterOptions}
+            disableSolid
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
