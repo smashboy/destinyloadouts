@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { type Loadout, type User, type LoadoutTagLink } from "@prisma/client";
-import { IconHeart, IconHeartFilled, IconBookmark } from "@tabler/icons-react";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { characterClassIconPathMap } from "~/constants/loadouts";
 import { TypographyLarge, TypographySmall } from "../typography";
@@ -16,6 +15,12 @@ import { LoadoutTagsList } from "./LoadoutTagsList";
 import { Avatar } from "../Avatar";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { ButtonLink } from "../Button";
+import {
+  IconBookmarkRegular,
+  IconBookmarkSolid,
+  IconHeartRegular,
+  IconHeartSolid,
+} from "~/icons";
 
 interface LoadoutPreviewCardProps {
   loadout: Loadout & {
@@ -207,12 +212,11 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
           <TypographySmall>{likesCount}</TypographySmall>
           <IconButton
             onClick={handleLikeLoadout}
-            icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
+            icon={isLikedByAuthUser ? IconHeartSolid : IconHeartRegular}
           />
           <IconButton
-            className={isSavedByAuthUser ? "invert" : void 0}
             onClick={handleSaveLoadout}
-            icon={IconBookmark}
+            icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
           />
         </div>
       </div>

@@ -1,10 +1,4 @@
 import { useRouter } from "next/router";
-import {
-  IconHeart,
-  IconHeartFilled,
-  IconBookmark,
-  IconTrash,
-} from "@tabler/icons-react";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { Avatar } from "~/components/Avatar";
 import { TypographyLarge, TypographySmall } from "~/components/typography";
@@ -19,6 +13,13 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
+import {
+  IconBookmarkRegular,
+  IconBookmarkSolid,
+  IconHeartRegular,
+  IconHeartSolid,
+  IconTrashSolid,
+} from "~/icons";
 
 interface LoadoutHeaderProps {
   loadout: NonNullable<RouterOutputs["loadouts"]["getById"]>["loadout"];
@@ -164,15 +165,15 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
       <TypographySmall>{likesCount}</TypographySmall>
       <IconButton
         onClick={handleLikeLoadout}
-        icon={isLikedByAuthUser ? IconHeartFilled : IconHeart}
+        icon={isLikedByAuthUser ? IconHeartSolid : IconHeartRegular}
       />
       <IconButton
         className={isSavedByAuthUser ? "invert" : void 0}
         onClick={handleSaveLoadout}
-        icon={IconBookmark}
+        icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
       />
       {authUser && authUser.id === authorId && (
-        <IconButton onClick={handleDeleteLoadout} icon={IconTrash} />
+        <IconButton onClick={handleDeleteLoadout} icon={IconTrashSolid} />
       )}
     </div>
   );

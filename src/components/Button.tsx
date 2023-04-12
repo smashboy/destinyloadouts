@@ -1,9 +1,10 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
+import { type IconProp } from "@fortawesome/fontawesome-svg-core";
 import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "~/utils/tailwind";
 import { Loader } from "./Loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const buttonVariants = cva(
   "active:scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-100 disabled:opacity-50 dark:focus:ring-slate-400 disabled:pointer-events-none dark:focus:ring-offset-slate-900 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800",
@@ -36,7 +37,7 @@ export const buttonVariants = cva(
 );
 
 type ButtonBaseProps = VariantProps<typeof buttonVariants> & {
-  iconLeft?: LucideIcon;
+  iconLeft?: IconProp;
   isLoading?: boolean;
 };
 
@@ -52,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       disabled,
       isLoading,
-      iconLeft: IconLeft,
+      iconLeft,
       ...props
     },
     ref
@@ -67,7 +68,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <Loader />
       ) : (
         <>
-          {IconLeft && <IconLeft className="mr-2 h-4 w-4" />}
+          {iconLeft && (
+            <FontAwesomeIcon icon={iconLeft} className="mr-2 h-4 w-4" />
+          )}
           {children}
         </>
       )}
@@ -81,16 +84,13 @@ export type ButtonLinkProps = React.ComponentPropsWithoutRef<"a"> &
   };
 
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  (
-    { className, variant, size, children, iconLeft: IconLeft, ...props },
-    ref
-  ) => (
+  ({ className, variant, size, children, iconLeft, ...props }, ref) => (
     <Link
       className={cn(buttonVariants({ variant, size, className }))}
       ref={ref}
       {...props}
     >
-      {IconLeft && <IconLeft className="mr-2 h-4 w-4" />}
+      {iconLeft && <FontAwesomeIcon icon={iconLeft} className="mr-2 h-4 w-4" />}
       {children}
     </Link>
   )

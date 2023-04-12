@@ -13,7 +13,7 @@ import {
 import { bungieNetOrigin } from "~/bungie/constants";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { SidebarNavLink } from "./SidebarNavLink";
-import { IconBookmark, IconHome, IconUser } from "@tabler/icons-react";
+import { IconBookmarkSolid, IconHomeSolid, IconUserSolid } from "~/icons";
 
 export const AppSidebar = () => {
   const [authUser] = useAuthUser();
@@ -34,18 +34,18 @@ export const AppSidebar = () => {
           <TypographyLarge>Black Armory</TypographyLarge>
         </Link>
         <div className="mt-10 flex h-full w-full flex-col gap-4">
-          <SidebarNavLink href="/" label="Home" icon={IconHome} />
+          <SidebarNavLink href="/" label="Home" icon={IconHomeSolid} />
           {authUser && (
             <>
               <SidebarNavLink
                 href={`/user/${authUser.id}`}
                 label="Profile"
-                icon={IconUser}
+                icon={IconUserSolid}
               />
               <SidebarNavLink
                 href={`/bookmarks`}
                 label="Bookmarks"
-                icon={IconBookmark}
+                icon={IconBookmarkSolid}
               />
             </>
           )}

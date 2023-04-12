@@ -1,18 +1,18 @@
 import { type GetServerSideProps } from "next";
 import Image from "next/image";
-import { ChevronLeft } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { type NextPageWithLayout } from "./_app.page";
 import { Button, ButtonLink } from "~/components/Button";
 import { TypographyLarge } from "~/components/typography";
 import { getServerAuthSession } from "~/server/auth";
+import { IconChevronLeftSolid } from "~/icons";
 
 const LoginPage: NextPageWithLayout = () => {
   const handleLogin = () => signIn("bungie");
 
   return (
     <div className="h-full w-full px-12 py-6">
-      <ButtonLink href="/" variant="ghost" iconLeft={ChevronLeft}>
+      <ButtonLink href="/" variant="ghost" iconLeft={IconChevronLeftSolid}>
         Back
       </ButtonLink>
       <div className="flex h-full w-full items-center justify-center">

@@ -1,17 +1,17 @@
-import { IconLoader2 } from "@tabler/icons-react";
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconProps,
+} from "@fortawesome/react-fontawesome";
+import { IconLoaderSolid } from "~/icons";
 
-type LoaderSize = "sm" | "md" | "lg";
-
-interface LoaderProps {
-  size?: LoaderSize;
-}
-
-const sizMap: Record<LoaderSize, number> = {
-  sm: 14,
-  md: 24,
-  lg: 32,
-};
-
-export const Loader: React.FC<LoaderProps> = ({ size = "md" }) => (
-  <IconLoader2 className="animate-spin" size={sizMap[size]} />
+export const Loader: React.FC<Omit<FontAwesomeIconProps, "icon">> = ({
+  size = "lg",
+  ...props
+}) => (
+  <FontAwesomeIcon
+    icon={IconLoaderSolid}
+    className="animate-spin"
+    size={size}
+    {...props}
+  />
 );

@@ -10,6 +10,10 @@ import { trpcNext } from "~/utils/api";
 
 import "~/styles/globals.css";
 
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",

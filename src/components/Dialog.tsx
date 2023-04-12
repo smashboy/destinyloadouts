@@ -1,7 +1,8 @@
 import { forwardRef } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import { cn } from "~/utils/tailwind";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconXMarkSolid } from "~/icons";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -53,7 +54,10 @@ const DialogContent = forwardRef<
     >
       {children}
       <DialogClose className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800">
-        <X className="h-4 w-4" />
+        <FontAwesomeIcon
+          icon={IconXMarkSolid}
+          className="h-4 w-4 text-slate-100"
+        />
         <span className="sr-only">Close</span>
       </DialogClose>
     </DialogPrimitive.Content>
