@@ -2,13 +2,13 @@ import { type NextPage, type GetStaticPaths, type GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import { type EditorState } from "~/components/Editor";
 import { CharacterSockets } from "~/components/loadouts/CharacterSockets";
-import { getBaseUrl, type RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
 import { trpsSSG } from "~/utils/ssg";
 import { cn } from "~/utils/tailwind";
 import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
 import { LoadoutHeader } from "./components/LoadoutHeader";
 import { Seo } from "~/components/Seo";
-import { APP_NAME } from "~/constants/app";
+import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 
 interface LoadoutPageProps {
   loadoutId: string;
@@ -37,7 +37,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
     <>
       <Seo
         title={`${bungieAccountDisplayName}'s loadout: ${name} | ${APP_NAME}`}
-        canonical={`${getBaseUrl()}/${loadoutId}`}
+        canonical={`${PUBLIC_URL}/${loadoutId}`}
       />
       <div className="flex flex-col gap-6">
         <CharacterClassIconBackground classType={classType} />

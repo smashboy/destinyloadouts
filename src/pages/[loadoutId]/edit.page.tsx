@@ -31,6 +31,8 @@ import {
   bungieDamageTypeToDbDamageTypeMap,
   bungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
+import { Seo } from "~/components/Seo";
+import { APP_NAME } from "~/constants/app";
 
 type EditLoadoutPageProps = NonNullable<
   RouterOutputs["loadouts"]["getById"]
@@ -123,55 +125,63 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      {Object.keys(characters).length > 0 && (
-        <CharacterSelector characters={characters} basePath={basePath} />
-      )}
-      {loadouts.length > 0 && characterId && (
-        <LoadoutSelector
-          characterId={characterId as string}
-          loadouts={loadouts}
-          loadoutIcons={loadoutIcons}
-          loadoutColors={loadoutColors}
-          basePath={basePath}
-        />
-      )}
-      <div className="grid grid-cols-5 gap-10">
-        <div className="col-span-2">
-          <LoadoutInfoForm
-            onSubmit={handleUpdateLoadout}
-            isLoading={updateLoadoutMutation.isLoading}
-            initialValues={{
-              name,
-              tags: tags.map(({ tag }) => tag),
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              description,
-            }}
+    <>
+      <Seo
+        title={`Edit loadout | ${APP_NAME}`}
+        description="Edit selected loadout."
+        noindex
+        nofollow
+      />
+      <div className="flex flex-col space-y-4">
+        {Object.keys(characters).length > 0 && (
+          <CharacterSelector characters={characters} basePath={basePath} />
+        )}
+        {loadouts.length > 0 && characterId && (
+          <LoadoutSelector
+            characterId={characterId as string}
+            loadouts={loadouts}
+            loadoutIcons={loadoutIcons}
+            loadoutColors={loadoutColors}
+            basePath={basePath}
           />
-        </div>
-        <div className="col-span-3 flex flex-col items-end space-y-2">
-          {newLoadout ? (
-            <ButtonLink
-              href={`/${loadoutId}/edit`}
-              variant="subtle"
-              className="w-fit"
-            >
-              Cancel
-            </ButtonLink>
-          ) : (
-            <ButtonLink
-              href={`/${loadoutId}/edit?newLoadout=true`}
-              variant="subtle"
-              className="w-fit"
-            >
-              Replace loadout
-            </ButtonLink>
-          )}
-          <CharacterSockets loadout={updatedLoadout} />
+        )}
+        <div className="grid grid-cols-5 gap-10">
+          <div className="col-span-2">
+            <LoadoutInfoForm
+              onSubmit={handleUpdateLoadout}
+              isLoading={updateLoadoutMutation.isLoading}
+              initialValues={{
+                name,
+                tags: tags.map(({ tag }) => tag),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                description,
+              }}
+            />
+          </div>
+          <div className="col-span-3 flex flex-col items-end space-y-2">
+            {newLoadout ? (
+              <ButtonLink
+                href={`/${loadoutId}/edit`}
+                variant="subtle"
+                className="w-fit"
+              >
+                Cancel
+              </ButtonLink>
+            ) : (
+              <ButtonLink
+                href={`/${loadoutId}/edit?newLoadout=true`}
+                variant="subtle"
+                className="w-fit"
+              >
+                Replace loadout
+              </ButtonLink>
+            )}
+            <CharacterSockets loadout={updatedLoadout} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

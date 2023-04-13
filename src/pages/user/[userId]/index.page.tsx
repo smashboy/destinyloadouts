@@ -1,9 +1,9 @@
 import { type NextPage, type GetStaticPaths, type GetStaticProps } from "next";
 import { trpsSSG } from "~/utils/ssg";
-import { getBaseUrl, type RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { Seo } from "~/components/Seo";
-import { APP_NAME } from "~/constants/app";
+import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 
 const REVALIDATE_TIME = 60 * 20;
 
@@ -21,7 +21,7 @@ const UserProfilePage: NextPage<UserProfilePageProps> = (props) => {
     <>
       <Seo
         title={`${bungieAccountDisplayName} | ${APP_NAME}`}
-        canonical={`${getBaseUrl()}/user/${userId}`}
+        canonical={`${PUBLIC_URL}/user/${userId}`}
       />
       <UserProfilePageComponent {...props} />
     </>

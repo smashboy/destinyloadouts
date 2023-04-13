@@ -6,16 +6,15 @@ import { Button, ButtonLink } from "~/components/Button";
 import { TypographyLarge } from "~/components/typography";
 import { getServerAuthSession } from "~/server/auth";
 import { IconChevronLeftSolid } from "~/icons";
-import { APP_NAME } from "~/constants/app";
+import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 import { Seo } from "~/components/Seo";
-import { getBaseUrl } from "~/utils/api";
 
 const LoginPage: NextPageWithLayout = () => {
   const handleLogin = () => signIn("bungie");
 
   return (
     <>
-      <Seo title={`Login | ${APP_NAME}`} canonical={`${getBaseUrl()}/login`} />
+      <Seo title={`Login | ${APP_NAME}`} canonical={`${PUBLIC_URL}/login`} />
       <div className="h-full w-full px-12 py-6">
         <ButtonLink href="/" variant="ghost" iconLeft={IconChevronLeftSolid}>
           Back

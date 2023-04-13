@@ -3,8 +3,7 @@ import { type UserProfilePageProps } from "./index.page";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { trpsSSG } from "~/utils/ssg";
 import { Seo } from "~/components/Seo";
-import { getBaseUrl } from "~/utils/api";
-import { APP_NAME } from "~/constants/app";
+import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 
 const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
   props
@@ -17,7 +16,7 @@ const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
     <>
       <Seo
         title={`${bungieAccountDisplayName}'s liked loadouts | ${APP_NAME}`}
-        canonical={`${getBaseUrl()}/user/${userId}/liked`}
+        canonical={`${PUBLIC_URL}/user/${userId}/liked`}
       />
       <UserProfilePageComponent {...props} />
     </>

@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 import { useDebounce } from "use-debounce";
 import { Virtuoso, type Components } from "react-virtuoso";
-import { type RouterOutputs, trpcNext, getBaseUrl } from "~/utils/api";
+import { type RouterOutputs, trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
@@ -28,7 +28,7 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
-import { APP_NAME } from "~/constants/app";
+import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 import { Seo } from "~/components/Seo";
 import { DataContainer } from "~/components/DataContainer";
 
@@ -212,8 +212,8 @@ const Home: NextPageWithLayout = () => {
     <>
       <Seo
         title={`Home | ${APP_NAME}`}
-        description="Loadouts feed page."
-        canonical={getBaseUrl()}
+        description="Share your destiny 2 in game loadouts with other players."
+        canonical={PUBLIC_URL}
       />
       <div className="grid grid-cols-4 gap-2">
         <div className="col-span-3 mt-3">
