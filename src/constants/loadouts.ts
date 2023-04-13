@@ -64,7 +64,7 @@ export const characterClassIconPathMap = {
 export const characterClassTitleMap = {
   [DestinyClassType.TITAN]: "Titan",
   [DestinyClassType.HUNTER]: "Hunter",
-  [DestinyClassType.WARLOCK]: "Warlcock",
+  [DestinyClassType.WARLOCK]: "Warlock",
 };
 
 export const bungieDestinyClassToDbCharacterClassMap = {
