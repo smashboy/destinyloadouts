@@ -4,10 +4,12 @@ import { DestinyCharacterBanner } from "./DestinyCharacterBanner";
 
 interface CharacterSelectorProps {
   characters: Record<string, DestinyCharacterComponent>;
+  basePath?: string;
 }
 
 export const CharacterSelector: React.FC<CharacterSelectorProps> = ({
   characters,
+  basePath = "/new-loadout",
 }) => (
   <div className="flex flex-col space-y-2">
     <TypographyLarge>Select character</TypographyLarge>
@@ -16,6 +18,7 @@ export const CharacterSelector: React.FC<CharacterSelectorProps> = ({
         <DestinyCharacterBanner
           key={character.characterId}
           character={character}
+          basePath={basePath}
         />
       ))}
     </div>

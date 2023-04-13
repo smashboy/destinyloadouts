@@ -30,7 +30,6 @@ import {
 } from "~/utils/loadout";
 import { APP_NAME } from "~/constants/app";
 import { Seo } from "~/components/Seo";
-import { GhostLoader } from "~/components/GhostLoader";
 import { DataContainer } from "~/components/DataContainer";
 
 const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> = {

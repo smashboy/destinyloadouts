@@ -23,6 +23,7 @@ import { getLoadoutItemHashes } from "~/utils/loadout";
 import { usersRouterCaller } from "../users/router";
 import { TRPCError } from "@trpc/server";
 import { type ArrayElement } from "~/utils/types";
+import { hasAnHourPassed } from "./utils";
 
 const loadoutItemValidation = z
   .tuple([z.number().int(), z.array(z.number().int())])
@@ -96,6 +97,42 @@ export const loadoutsRouter = createTRPCRouter({
           >(inventoryItems),
       };
     }),
+  canEdit: protectedProcedure
+    .input(
+      z.object({
+        loadoutId: z.string(),
+      })
+    )
+    .query(
+      async ({
+        input: { loadoutId },
+        ctx: {
+          session: {
+            user: { id: authUserId },
+          },
+          prisma,
+        },
+      }) => {
+        const loadout = await prisma.loadout.findFirst({
+          where: {
+            id: loadoutId,
+          },
+          select: {
+            createdAt: true,
+            authorId: true,
+          },
+        });
+
+        if (!loadout) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const { createdAt, authorId } = loadout;
+
+        if (authorId !== authUserId)
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        return !hasAnHourPassed(createdAt);
+      }
+    ),
   bookmark: protectedProcedure
     .input(
       z.object({
@@ -270,6 +307,84 @@ export const loadoutsRouter = createTRPCRouter({
       return loadout;
     }
   ),
+  update: protectedProcedure
+    .input(
+      z.object({
+        loadoutId: z.string(),
+        loadout: loadoutValidation,
+      })
+    )
+    .mutation(
+      async ({
+        input: {
+          loadoutId,
+          loadout: {
+            classType,
+            subclassType,
+            tags,
+            // status,
+            items,
+            name,
+            description,
+          },
+        },
+        ctx: {
+          session: {
+            user: { id: authUserId },
+          },
+          res,
+          prisma,
+        },
+      }) => {
+        const loadout = await prisma.loadout.findFirst({
+          where: {
+            id: loadoutId,
+          },
+          select: {
+            createdAt: true,
+            authorId: true,
+          },
+        });
+
+        if (!loadout) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const { createdAt, authorId } = loadout;
+
+        if (authorId !== authUserId)
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        if (hasAnHourPassed(createdAt))
+          throw new TRPCError({ code: "FORBIDDEN" });
+
+        await prisma.loadoutTagLink.deleteMany({
+          where: {
+            loadoutId,
+          },
+        });
+
+        await prisma.loadout.update({
+          where: {
+            id: loadoutId,
+          },
+          data: {
+            name,
+            classType,
+            subclassType,
+            status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
+            description: description as Prisma.InputJsonValue,
+            tags: {
+              createMany: {
+                data: tags.map((tag) => ({ tag })),
+              },
+            },
+            items,
+          },
+        });
+
+        await res?.revalidate(`/user/${authorId}`);
+        await res?.revalidate(`/${loadoutId}`);
+      }
+    ),
   delete: protectedProcedure
     .input(
       z.object({
@@ -306,7 +421,7 @@ export const loadoutsRouter = createTRPCRouter({
         });
 
         await res?.revalidate(`/user/${authorId}`);
-        await res?.revalidate(`/${loadout.id}`);
+        await res?.revalidate(`/${loadoutId}`);
 
         return loadout;
       }

@@ -17,8 +17,6 @@ export const fileNameMap = {
 export const fetchDB = async () => {
   !process.env.SKIP_ENV_VALIDATION && (await import("../src/env.mjs"));
 
-  console.log(env.DATABASE_URL);
-
   const list = await prisma.$transaction([
     prisma.user.findMany(),
     prisma.userFollower.findMany(),

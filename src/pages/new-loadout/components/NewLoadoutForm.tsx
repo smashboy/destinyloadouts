@@ -6,10 +6,7 @@ import {
   bungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { trpcNext } from "~/utils/api";
-import {
-  LoadoutInfoForm,
-  type LoadoutInfoFormSubmitProps,
-} from "./LoadoutInfoForm";
+import { LoadoutInfoForm, type LoadoutInfoFormValues } from "./LoadoutInfoForm";
 import { CharacterSockets } from "~/components/loadouts/CharacterSockets";
 
 interface NewLoadoutForm {
@@ -33,7 +30,7 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
       }),
   });
 
-  const handleCreateNewLoadout = (formArgs: LoadoutInfoFormSubmitProps) => {
+  const handleCreateNewLoadout = (formArgs: LoadoutInfoFormValues) => {
     const { inventoryItems, subclass, ...loadoutProps } = loadout;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

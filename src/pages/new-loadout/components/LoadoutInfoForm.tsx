@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { type LoadoutTag } from "@prisma/client";
 import { Button } from "~/components/Button";
 import { type EditorState } from "~/components/Editor";
@@ -11,30 +10,32 @@ const Editor = dynamic(() => import("~/components/Editor"), {
   ssr: false,
 });
 
-export interface LoadoutInfoFormSubmitProps {
+export interface LoadoutInfoFormValues {
   name: string;
   tags: LoadoutTag[];
   description: EditorState | undefined;
 }
 
 interface LoadoutInfoFormProps {
-  onSubmit: (args: LoadoutInfoFormSubmitProps) => void;
+  onSubmit: (args: LoadoutInfoFormValues) => void;
   isLoading: boolean;
+  initialValues?: LoadoutInfoFormValues;
 }
 
 export const LoadoutInfoForm: React.FC<LoadoutInfoFormProps> = ({
   onSubmit,
   isLoading,
+  initialValues,
 }) => {
-  const router = useRouter();
+  const {
+    name: initialName = "",
+    tags: initialTags = [],
+    description: initialDescription,
+  } = initialValues || {};
 
-  const [name, setName] = useState("");
-  const [tags, setTags] = useState<LoadoutTag[]>([]);
+  const [name, setName] = useState(initialName);
+  const [tags, setTags] = useState<LoadoutTag[]>(initialTags);
   const [description, setDescription] = useState<EditorState>();
-
-  useEffect(() => {
-    setTags([]);
-  }, [router.query]);
 
   const handleNameInput = (event: React.ChangeEvent<HTMLInputElement>) =>
     setName(event.target.value);
@@ -63,6 +64,8 @@ export const LoadoutInfoForm: React.FC<LoadoutInfoFormProps> = ({
       </div>
       <Editor
         onChange={setDescription}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        initialState={initialDescription!}
         placeholder="You can leave description for your loadout here..."
       />
     </div>

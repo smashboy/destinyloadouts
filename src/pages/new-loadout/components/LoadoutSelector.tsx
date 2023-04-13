@@ -12,6 +12,7 @@ interface LoadoutSelectorProps {
   loadouts: DestinyLoadoutComponent[];
   loadoutIcons: Record<string, DestinyLoadoutIconDefinition>;
   loadoutColors: Record<string, DestinyLoadoutColorDefinition>;
+  basePath?: string;
 }
 
 export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
@@ -19,6 +20,7 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
   loadouts,
   loadoutIcons,
   loadoutColors,
+  basePath = "/new-loadout",
 }) => {
   const router = useRouter();
 
@@ -30,13 +32,16 @@ export const LoadoutSelector: React.FC<LoadoutSelectorProps> = ({
       <div className="flex space-x-4">
         {loadouts.map((loadout, index) => {
           const searchParams = new URLSearchParams();
+          Object.entries(router.query).forEach(([key, prop]) =>
+            searchParams.set(key, prop as string)
+          );
           searchParams.set("characterId", characterId);
           searchParams.set("loadout", index.toString());
 
           return (
             <LoadoutSocket
               key={index}
-              href={`/new-loadout?${searchParams.toString()}`}
+              href={`${basePath}?${searchParams.toString()}`}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               iconImagePath={loadoutIcons[loadout.iconHash]!.iconImagePath}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

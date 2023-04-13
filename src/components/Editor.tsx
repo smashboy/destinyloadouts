@@ -59,7 +59,7 @@ const Editor: React.FC<EditorProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div id={editorElementId} />;
+  return <div className="w-full" id={editorElementId} />;
 };
 
 export default Editor;

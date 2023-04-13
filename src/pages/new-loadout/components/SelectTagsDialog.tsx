@@ -71,38 +71,36 @@ const SelectTagItem: React.FC<SelectTagItemProps> = ({
 export const SelectTagsDialog: React.FC<SelectTagsDialogProps> = ({
   onSave,
   selected,
-}) => {
-  return (
-    <Dialog>
-      <DialogTrigger>
-        <Button variant="subtle" size="lg" className="w-full">
-          Add tags +
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Select loadout tags</DialogTitle>
-          <DialogDescription>
-            Loadout tags make it easier for users to find the specific loadouts
-            they are looking for.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid grid-cols-3 gap-2">
-          {loadoutTagsList.map((tag) => (
-            <SelectTagItem
-              key={tag}
-              value={tag}
-              selected={selected}
-              onSelect={onSave}
-            />
-          ))}
-        </div>
-        <DialogFooter>
-          <DialogClose>
-            <Button>Close</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
+}) => (
+  <Dialog>
+    <DialogTrigger>
+      <Button variant="subtle" size="lg" className="w-full">
+        Add tags +
+      </Button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Select loadout tags</DialogTitle>
+        <DialogDescription>
+          Loadout tags make it easier for users to find the specific loadouts
+          they are looking for.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid grid-cols-3 gap-2">
+        {loadoutTagsList.map((tag) => (
+          <SelectTagItem
+            key={tag}
+            value={tag}
+            selected={selected}
+            onSelect={onSave}
+          />
+        ))}
+      </div>
+      <DialogFooter>
+        <DialogClose>
+          <Button>Close</Button>
+        </DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);

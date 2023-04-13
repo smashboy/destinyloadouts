@@ -12,14 +12,16 @@ import { TypographyLarge, TypographySmall } from "~/components/typography";
 
 interface DestinyCharacterBannerProps {
   character: DestinyCharacterComponent;
+  basePath: string;
 }
 
 export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
   character: { emblemBackgroundPath, classType, raceType, characterId, light },
+  basePath,
 }) => {
   const router = useRouter();
 
-  const { characterId: selectedCharacterId } = router.query;
+  const { characterId: selectedCharacterId, ...queryProps } = router.query;
 
   const characterRaceTypeTitle =
     characterRaceTypeTitleMap[
@@ -34,11 +36,14 @@ export const DestinyCharacterBanner: React.FC<DestinyCharacterBannerProps> = ({
   const isSelected = selectedCharacterId === characterId;
 
   const searchParams = new URLSearchParams();
+  Object.entries(queryProps).forEach(([key, prop]) =>
+    searchParams.set(key, prop as string)
+  );
   searchParams.set("characterId", characterId);
 
   return (
     <Link
-      href={`/new-loadout?${searchParams.toString()}`}
+      href={`${basePath}?${searchParams.toString()}`}
       className={cn(
         "h-[124px] w-full rounded p-0.5 transition duration-300 ease-out hover:ring-2 hover:ring-slate-300 hover:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2",
         isSelected &&

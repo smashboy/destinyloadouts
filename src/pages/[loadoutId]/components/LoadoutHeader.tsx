@@ -18,6 +18,7 @@ import {
   IconBookmarkSolid,
   IconHeartRegular,
   IconHeartSolid,
+  IconPenToSqueareSolid,
   IconTrashSolid,
 } from "~/icons";
 
@@ -45,6 +46,13 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
 
   const { data: likesData } = trpcNext.loadouts.getLoadoutLikes.useQuery(
     loadoutLikesQueryParams
+  );
+
+  const { data: canEdit = false } = trpcNext.loadouts.canEdit.useQuery(
+    { loadoutId },
+    {
+      enabled: authUser?.id === authorId,
+    }
   );
 
   const deleteLoadoutMutation = trpcNext.loadouts.delete.useMutation({
@@ -171,6 +179,9 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
         onClick={handleSaveLoadout}
         icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
       />
+      {canEdit && (
+        <IconButton href={`${loadoutId}/edit`} icon={IconPenToSqueareSolid} />
+      )}
       {authUser && authUser.id === authorId && (
         <IconButton onClick={handleDeleteLoadout} icon={IconTrashSolid} />
       )}
