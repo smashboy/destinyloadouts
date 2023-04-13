@@ -64,29 +64,34 @@ export const AppSidebar = () => {
           />
         </div>
         {authUser ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="w-full">
-              <Button className="w-full" variant="ghost">
-                <Avatar
-                  src={`${bungieNetOrigin}/${authUser.bungieAccountProfilePicturePath}`}
-                  fallback={authUser.bungieAccountDisplayName}
-                  className="mr-3"
-                  size="xxs"
-                />
-                <span>{authUser.bungieAccountDisplayName}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <Link href={`/user/${authUser.id}`}>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-              </Link>
-              {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
-              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-              <DropdownMenuItem onClick={handleSignout}>
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex w-full flex-col space-y-4">
+            <ButtonLink href="/new-loadout" size="lg">
+              New Loadout +
+            </ButtonLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-full">
+                <Button className="w-full" variant="ghost">
+                  <Avatar
+                    src={`${bungieNetOrigin}/${authUser.bungieAccountProfilePicturePath}`}
+                    fallback={authUser.bungieAccountDisplayName}
+                    className="mr-3"
+                    size="xxs"
+                  />
+                  <span>{authUser.bungieAccountDisplayName}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <Link href={`/user/${authUser.id}`}>
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                </Link>
+                {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
+                {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+                <DropdownMenuItem onClick={handleSignout}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ) : (
           <ButtonLink href="/login" className="w-full">
             Login
