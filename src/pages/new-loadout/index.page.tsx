@@ -73,7 +73,7 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
           />
         )}
         {selectedLoadout && (
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col gap-2">
             <NewLoadoutForm
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               character={selectedCharacter!}

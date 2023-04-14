@@ -9,6 +9,8 @@ import { CharacterClassIconBackground } from "~/components/destiny/CharacterClas
 import { LoadoutHeader } from "./components/LoadoutHeader";
 import { Seo } from "~/components/Seo";
 import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 interface LoadoutPageProps {
   loadoutId: string;
@@ -42,9 +44,33 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
       <div className="flex flex-col gap-6">
         <CharacterClassIconBackground classType={classType} />
         <LoadoutHeader loadout={loadout} />
+        {/* MOBILE VIEW */}
+        <Tabs
+          defaultValue="loadout"
+          className="grid grid-cols-1 gap-4 md:hidden"
+        >
+          {description && (
+            <TabsList>
+              <TabsTrigger value="loadout">Loadout</TabsTrigger>
+              <TabsTrigger value="description">Description</TabsTrigger>
+            </TabsList>
+          )}
+          <TabsContent value="loadout">
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            <CharacterSockets loadout={{ ...items, inventoryItems }} />
+          </TabsContent>
+          <TabsContent value="description">
+            <Editor
+              initialState={description as unknown as EditorState}
+              readOnly
+            />
+          </TabsContent>
+        </Tabs>
+        {/* DESKTOP VIEW */}
         <div
           className={cn(
-            "grid grid-cols-1 gap-10",
+            "hidden grid-cols-1 gap-10 md:grid",
             description && "grid-cols-5"
           )}
         >

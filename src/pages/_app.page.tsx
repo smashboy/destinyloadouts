@@ -12,6 +12,9 @@ import "~/styles/globals.css";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { AppMobileHeader } from "~/components/AppMobileHeader";
+import { AppMobileNavigation } from "~/components/AppMobileNavigation";
+import { DiscordBanner } from "~/components/DiscordBanner";
 config.autoAddCss = false;
 
 const fontSans = FontSans({
@@ -35,15 +38,19 @@ const CommonRoot: React.FC<{
   children: React.ReactNode;
   session: Session | null;
 }> = ({ children, session }) => (
-  <div
-    className={cn(
-      "flex h-screen overflow-hidden bg-white font-sans text-slate-900 antialiased dark:bg-neutral-900 dark:text-slate-50",
-      fontSans.variable
-    )}
-  >
-    <SessionProvider session={session}>{children}</SessionProvider>
-    <Analytics />
-  </div>
+  <>
+    <DiscordBanner />
+    <div
+      className={cn(
+        "flex h-screen flex-col overflow-hidden bg-white font-sans text-slate-900 antialiased dark:bg-neutral-900 dark:text-slate-50 md:flex-row",
+        fontSans.variable
+      )}
+      style={{ height: "calc(100vh - 32px)" }}
+    >
+      <SessionProvider session={session}>{children}</SessionProvider>
+      <Analytics />
+    </div>
+  </>
 );
 
 const MyApp = ({
@@ -67,9 +74,15 @@ const MyApp = ({
     <CommonRoot session={session}>
       <AppSidebar />
       <div className="flex-1 overflow-auto">
-        <div className={cn(!disableContainer && "container px-3 pt-4")}>
+        <AppMobileHeader />
+        <div
+          className={cn(
+            !disableContainer && "container px-3 pt-4 pb-48 md:pb-0"
+          )}
+        >
           <Component {...pageProps} />
         </div>
+        <AppMobileNavigation />
       </div>
     </CommonRoot>
   );

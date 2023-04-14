@@ -120,7 +120,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
         <span className="flex flex-1 flex-col gap-2">
           <TypographyLarge>{name}</TypographyLarge>
           <LoadoutTagsList tags={tags.map(({ tag }) => tag)} />
-          <div className="flex gap-4 py-3 pl-2">
+          <div className="flex flex-wrap gap-4 py-3 pl-2">
             <div className="pr-1">
               <LoadoutSubclassItem
                 item={subclass}
@@ -129,7 +129,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
                 isSm
               />
             </div>
-            <Separator orientation="vertical" />
+            <Separator className="hidden 2xl:block" orientation="vertical" />
             <LoadoutWeaponItem
               item={kinetic}
               inventoryItems={inventoryItems}
@@ -157,7 +157,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
               hideSockets
               isSm
             />
-            <Separator orientation="vertical" />
+            <Separator className="hidden 2xl:block" orientation="vertical" />
             <LoadoutArmorItem
               item={helmet}
               inventoryItems={inventoryItems}

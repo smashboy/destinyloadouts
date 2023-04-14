@@ -146,45 +146,48 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
   );
 
   return (
-    <div className="sticky top-0 z-10 flex h-fit items-center gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700">
-      <Avatar
-        src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}
-        fallback={bungieAccountDisplayName}
-        size="xs"
-      />
-      <ButtonLink
-        href={`/user/${authorId}`}
-        variant="link"
-        className={cn(
-          "text-lg",
-          authUser?.id === authorId &&
-            "rounded-none border-r-2 border-neutral-700 pr-4"
-        )}
-      >
-        {bungieAccountDisplayName}
-      </ButtonLink>
+    <div className="static top-0 z-10 flex h-fit flex-wrap items-center gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:sticky">
+      <div className="flex flex-1 gap-2 md:flex-none md:gap-4">
+        <Avatar
+          src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}
+          fallback={bungieAccountDisplayName}
+          size="xs"
+        />
+        <ButtonLink
+          href={`/user/${authorId}`}
+          variant="link"
+          className={cn(
+            authUser?.id === authorId &&
+              "rounded-none border-r-2 border-neutral-700 pr-4"
+          )}
+        >
+          {bungieAccountDisplayName}
+        </ButtonLink>
+      </div>
       <FollowButton authUser={authUser} followUserId={authorId} />
-      <div className="flex flex-1 flex-col justify-center gap-2">
+      <div className="flex w-full flex-col justify-center gap-2 md:flex-1">
         <TypographyLarge>{loadoutName}</TypographyLarge>
         {tags.length > 0 && (
           <LoadoutTagsList tags={tags.map(({ tag }) => tag)} />
         )}
       </div>
-      <TypographySmall>{likesCount}</TypographySmall>
-      <IconButton
-        onClick={handleLikeLoadout}
-        icon={isLikedByAuthUser ? IconHeartSolid : IconHeartRegular}
-      />
-      <IconButton
-        onClick={handleSaveLoadout}
-        icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
-      />
-      {canEdit && (
-        <IconButton href={`${loadoutId}/edit`} icon={IconPenToSqueareSolid} />
-      )}
-      {authUser && authUser.id === authorId && (
-        <IconButton onClick={handleDeleteLoadout} icon={IconTrashSolid} />
-      )}
+      <div className="flex flex-1 items-center justify-end gap-4 md:flex-none">
+        <TypographySmall>{likesCount}</TypographySmall>
+        <IconButton
+          onClick={handleLikeLoadout}
+          icon={isLikedByAuthUser ? IconHeartSolid : IconHeartRegular}
+        />
+        <IconButton
+          onClick={handleSaveLoadout}
+          icon={isSavedByAuthUser ? IconBookmarkSolid : IconBookmarkRegular}
+        />
+        {canEdit && (
+          <IconButton href={`${loadoutId}/edit`} icon={IconPenToSqueareSolid} />
+        )}
+        {authUser && authUser.id === authorId && (
+          <IconButton onClick={handleDeleteLoadout} icon={IconTrashSolid} />
+        )}
+      </div>
     </div>
   );
 };

@@ -56,14 +56,14 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
   };
 
   return (
-    <div className="grid grid-cols-5 gap-10">
-      <div className="col-span-2">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-5 md:gap-10">
+      <div className="md:col-span-2">
         <LoadoutInfoForm
           onSubmit={handleCreateNewLoadout}
           isLoading={createLoadoutMutation.isLoading}
         />
       </div>
-      <div className="col-span-3">
+      <div className="md:col-span-3">
         <CharacterSockets loadout={loadout} />
       </div>
     </div>

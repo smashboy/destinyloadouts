@@ -24,6 +24,7 @@ html, body, #__next {
 .ce-popover,
 .ce-conversion-tool__icon,
 .ce-popover__item-icon,
+.ce-toolbar__plus,
 .ce-toolbar__plus:hover {
   background: #334155;
   color: inherit;
@@ -73,4 +74,13 @@ html, body, #__next {
 .cdx-notify__cross::after,
 .cdx-notify__cross::before {
   background: white;
+}
+
+@media (max-width: 650px) {
+  .ce-popover {
+    --offset: 100px;
+    left: 15px;
+    right: 0;
+    width: calc(100vw - 30px)
+  }
 }

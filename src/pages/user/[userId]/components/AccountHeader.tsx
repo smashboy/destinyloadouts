@@ -33,16 +33,19 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
   const likedRoute = `${baseLink}/liked`;
 
   return (
-    <div className="sticky top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700">
-      <div className="flex items-center gap-6">
-        <Avatar
-          src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}
-          fallback={bungieAccountDisplayName}
-          size="sm"
-        />
-        <TypographyLarge className="border-r-2 border-neutral-700 pr-4">
-          {bungieAccountDisplayName}
-        </TypographyLarge>
+    <div className="static top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700 md:sticky">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center">
+          <Avatar
+            src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}
+            fallback={bungieAccountDisplayName}
+            size="sm"
+            className="mr-6"
+          />
+          <TypographyLarge className="md:border-r-2 md:border-neutral-700 md:pr-4">
+            {bungieAccountDisplayName}
+          </TypographyLarge>
+        </div>
         {/* <div className="h-full py-2">
     <Separator orientation="vertical" />
   </div> */}
@@ -51,9 +54,13 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
           <AccountCounter title="Likes" count={likesCount} />
           <AccountCounter title="Loadouts" count={loadoutsCount} />
         </div>
-        <FollowButton authUser={authUser} followUserId={userId} />
+        <FollowButton
+          className="w-full md:w-fit"
+          authUser={authUser}
+          followUserId={userId}
+        />
         {userId === authUser?.id && (
-          <ButtonLink href="/new-loadout" size="lg">
+          <ButtonLink href="/new-loadout" className="hidden md:flex" size="lg">
             New Loadout +
           </ButtonLink>
         )}

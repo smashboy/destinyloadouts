@@ -5,11 +5,13 @@ import { trpcNext } from "~/utils/api";
 interface FollowButtonProps {
   authUser: User | undefined;
   followUserId: string;
+  className?: string;
 }
 
 export const FollowButton: React.FC<FollowButtonProps> = ({
   authUser,
   followUserId,
+  className,
 }) => {
   const queryParams = { followingUserId: followUserId };
 
@@ -42,12 +44,18 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
   const handleFollow = () =>
     followMutation.mutate({ followingUserId: followUserId });
 
-  if (!authUser) return <ButtonLink href="/login">Follow</ButtonLink>;
+  if (!authUser)
+    return (
+      <ButtonLink className={className} href="/login">
+        Follow
+      </ButtonLink>
+    );
 
   if (authUser && authUser.id === followUserId) return null;
 
   return (
     <Button
+      className={className}
       variant={isFollowing ? "subtle" : "default"}
       disabled={isLoading || followMutation.isLoading}
       onClick={handleFollow}

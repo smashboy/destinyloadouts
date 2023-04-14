@@ -1,28 +1,15 @@
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useMemo } from "react";
 import {
   type DestinyClassType,
   type DestinyDamageType,
   type LoadoutTag,
 } from "@prisma/client";
 import { useDebounce } from "use-debounce";
+import { useMediaQuery } from "react-responsive";
 import { Virtuoso, type Components } from "react-virtuoso";
 import { type RouterOutputs, trpcNext } from "~/utils/api";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
-import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
-import { ToggleGroup, type ToggleGroupOption } from "~/components/ToggleGroup";
-import { TypographySmall } from "~/components/typography";
-import {
-  characterClassIconPathMap,
-  characterClassTitleMap,
-  damageTypeIconPathMap,
-  damageTypeTitleMap,
-  damageTypesList,
-  destinyCharacterClassTypesList,
-  loadoutTagIconsMap,
-  loadoutTagTitlesMap,
-  loadoutTagsList,
-} from "~/constants/loadouts";
 import { type NextPageWithLayout } from "./_app.page";
 import {
   handleAuthUserLoadoutBookmark,
@@ -31,25 +18,21 @@ import {
 import { APP_NAME, PUBLIC_URL } from "~/constants/app";
 import { Seo } from "~/components/Seo";
 import { DataContainer } from "~/components/DataContainer";
+import {
+  type FeedSectionFilter,
+  FeedTabFilters,
+  type FeedSortByFilter,
+} from "./components/FeedTabFilters";
+import { FeedToggleFilters } from "./components/FeedToggleFilters";
+import { FeedMobileFiltersDialog } from "./components/FeedMobileFiltersDialog";
+import { Loader } from "~/components/Loader";
 
-const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> = {
-  List: forwardRef(({ children, style }, ref) => (
-    <div
-      ref={ref}
-      className="grid grid-cols-1 gap-2 py-4 pl-4 pr-2"
-      style={style}
-    >
-      {children}
-    </div>
-  )),
-};
-
-interface FeedFilter {
+export interface FeedFilter {
   classTypes: DestinyClassType[];
   subclassTypes: DestinyDamageType[];
   tags: LoadoutTag[];
-  section: "ALL" | "FOLLOWING";
-  sortBy: "LATEST" | "POPULAR";
+  section: FeedSectionFilter;
+  sortBy: FeedSortByFilter;
   popularDuring: "TODAY" | "WEEK" | "MONTH" | "ALL_TIME";
 }
 
@@ -62,31 +45,12 @@ const initialFeedFilter: FeedFilter = {
   popularDuring: "WEEK",
 };
 
-const classTypeFilerOptions: ToggleGroupOption[] =
-  destinyCharacterClassTypesList.map((type) => ({
-    value: type,
-    iconPath: characterClassIconPathMap[type],
-    title: characterClassTitleMap[type],
-  }));
-
-const subclassTypeFilerOptions: ToggleGroupOption[] = damageTypesList.map(
-  (type) => ({
-    value: type,
-    iconPath: damageTypeIconPathMap[type],
-    title: damageTypeTitleMap[type],
-  })
-);
-
-const loadoutTagFilterOptions: ToggleGroupOption[] = loadoutTagsList.map(
-  (tag) => ({
-    value: tag,
-    iconPath: loadoutTagIconsMap[tag],
-    title: loadoutTagTitlesMap[tag],
-  })
-);
-
 const Home: NextPageWithLayout = () => {
   const [authUser] = useAuthUser();
+
+  const isMD = useMediaQuery({
+    query: "(min-width: 768px)",
+  });
 
   const [filter, setFilter] = useState(initialFeedFilter);
 
@@ -172,29 +136,29 @@ const Home: NextPageWithLayout = () => {
     {}
   );
 
-  const handleSectionFilter = (section: string) =>
+  const handleSectionFilter = (section: FeedFilter["section"]) =>
     setFilter((prev) => ({
       ...prev,
-      section: section as FeedFilter["section"],
+      section,
     }));
 
-  const handleSortByFilter = (sortBy: string) =>
-    setFilter((prev) => ({ ...prev, sortBy: sortBy as FeedFilter["sortBy"] }));
+  const handleSortByFilter = (sortBy: FeedFilter["sortBy"]) =>
+    setFilter((prev) => ({ ...prev, sortBy }));
 
-  const handleClassFilter = (classTypes: string[]) =>
+  const handleClassFilter = (classTypes: FeedFilter["classTypes"]) =>
     setFilter((prev) => ({
       ...prev,
-      classTypes: classTypes as FeedFilter["classTypes"],
+      classTypes,
     }));
 
-  const handleSubClassFilter = (subclassTypes: string[]) =>
+  const handleSubClassFilter = (subclassTypes: FeedFilter["subclassTypes"]) =>
     setFilter((prev) => ({
       ...prev,
-      subclassTypes: subclassTypes as FeedFilter["subclassTypes"],
+      subclassTypes,
     }));
 
-  const handleTagsFilter = (tags: string[]) =>
-    setFilter((prev) => ({ ...prev, tags: tags as FeedFilter["tags"] }));
+  const handleTagsFilter = (tags: FeedFilter["tags"]) =>
+    setFilter((prev) => ({ ...prev, tags }));
 
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
@@ -208,6 +172,32 @@ const Home: NextPageWithLayout = () => {
     }
   };
 
+  const components: Components<RouterOutputs["loadouts"]["feed"]["loadouts"]> =
+    useMemo(
+      () => ({
+        List: forwardRef(({ children, style }, ref) => (
+          <div
+            ref={ref}
+            className="grid grid-cols-1 gap-2 py-4 pl-2 pr-3 md:pr-2 md:pl-4"
+            style={style}
+          >
+            {children}
+          </div>
+        )),
+        Footer: () => {
+          if (isFetchingNextPage)
+            return (
+              <div className="flex w-full items-center justify-center p-4 pb-12">
+                <Loader />
+              </div>
+            );
+
+          return null;
+        },
+      }),
+      [isFetchingNextPage]
+    );
+
   return (
     <>
       <Seo
@@ -215,8 +205,22 @@ const Home: NextPageWithLayout = () => {
         description="Share your destiny 2 in game loadouts with other players."
         canonical={PUBLIC_URL}
       />
-      <div className="grid grid-cols-4 gap-2">
-        <div className="col-span-3 mt-3">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
+        <div className="flex gap-2 px-2 pt-2 md:hidden">
+          <FeedMobileFiltersDialog
+            classTypes={filter.classTypes}
+            subclassTypes={filter.subclassTypes}
+            tags={filter.tags}
+            section={filter.section}
+            sortBy={filter.sortBy}
+            onSectionChange={handleSectionFilter}
+            onSortByChange={handleSortByFilter}
+            onClassFilterChange={handleClassFilter}
+            onSubClassFilterChange={handleSubClassFilter}
+            onTagsFilterChange={handleTagsFilter}
+          />
+        </div>
+        <div className="md:col-span-3 md:mt-3">
           <DataContainer
             title="Loadouts not found"
             description="Try changing filters to get new results."
@@ -225,9 +229,8 @@ const Home: NextPageWithLayout = () => {
           >
             <Virtuoso
               data={loadouts}
-              overscan={15}
               endReached={handleLoadMoreLoadouts}
-              style={{ height: "calc(100vh - 15px)" }}
+              style={{ height: `calc(100vh - ${isMD ? 45 : 195}px)` }}
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               components={components}
@@ -244,40 +247,23 @@ const Home: NextPageWithLayout = () => {
             />
           </DataContainer>
         </div>
-        <div className="sticky top-0 flex h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4">
-          {authUser && (
-            <Tabs value={filter.section} onValueChange={handleSectionFilter}>
-              <TabsList>
-                <TabsTrigger value="ALL">All</TabsTrigger>
-                <TabsTrigger value="FOLLOWING">Following</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          )}
-          <Tabs value={filter.sortBy} onValueChange={handleSortByFilter}>
-            <TabsList>
-              <TabsTrigger value="LATEST">Latest</TabsTrigger>
-              <TabsTrigger value="POPULAR">Popular</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <TypographySmall>Classes:</TypographySmall>
-          <ToggleGroup
-            selected={filter.classTypes}
-            onChange={handleClassFilter}
-            options={classTypeFilerOptions}
+        <div
+          className="sticky top-0 hidden h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4 md:flex"
+          style={{ height: "calc(100vh - 32px)" }}
+        >
+          <FeedTabFilters
+            section={filter.section}
+            sortBy={filter.sortBy}
+            onSectionChange={handleSectionFilter}
+            onSortByChange={handleSortByFilter}
           />
-          <TypographySmall>Subclasses:</TypographySmall>
-          <ToggleGroup
-            selected={filter.subclassTypes}
-            onChange={handleSubClassFilter}
-            options={subclassTypeFilerOptions}
-            disableSolid
-          />
-          <TypographySmall>Tags:</TypographySmall>
-          <ToggleGroup
-            selected={filter.tags}
-            onChange={handleTagsFilter}
-            options={loadoutTagFilterOptions}
-            disableSolid
+          <FeedToggleFilters
+            classTypes={filter.classTypes}
+            subclassTypes={filter.subclassTypes}
+            tags={filter.tags}
+            onClassFilterChange={handleClassFilter}
+            onSubClassFilterChange={handleSubClassFilter}
+            onTagsFilterChange={handleTagsFilter}
           />
         </div>
       </div>

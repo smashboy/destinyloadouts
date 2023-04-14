@@ -1,16 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { TypographyLarge } from "~/components/typography";
-import { Button, ButtonLink } from "~/components/Button";
-import { signOut } from "next-auth/react";
-import { Avatar } from "./Avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./Menu";
-import { bungieNetOrigin } from "~/bungie/constants";
+import { ButtonLink } from "~/components/Button";
+
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { SidebarNavLink } from "./SidebarNavLink";
 import {
@@ -20,14 +12,16 @@ import {
   IconUserSolid,
 } from "~/icons";
 import { APP_NAME } from "~/constants/app";
+import { AuthUserMenu } from "./AuthUserMenu";
 
 export const AppSidebar = () => {
   const [authUser] = useAuthUser();
 
-  const handleSignout = () => signOut();
-
   return (
-    <div className="sticky top-0 z-10 h-screen w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900">
+    <div
+      className="sticky top-0 z-10 hidden h-screen w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900 md:block"
+      style={{ height: "calc(100vh - 32px)" }}
+    >
       <div className="container flex h-full flex-col items-start px-6">
         <Link href="/" className="flex items-center">
           <Image
@@ -49,7 +43,7 @@ export const AppSidebar = () => {
                 icon={IconUserSolid}
               />
               <SidebarNavLink
-                href={`/bookmarks`}
+                href="/bookmarks"
                 label="Bookmarks"
                 icon={IconBookmarkSolid}
               />
@@ -68,29 +62,7 @@ export const AppSidebar = () => {
             <ButtonLink href="/new-loadout" size="lg">
               New Loadout +
             </ButtonLink>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="w-full">
-                <Button className="w-full" variant="ghost">
-                  <Avatar
-                    src={`${bungieNetOrigin}/${authUser.bungieAccountProfilePicturePath}`}
-                    fallback={authUser.bungieAccountDisplayName}
-                    className="mr-3"
-                    size="xxs"
-                  />
-                  <span>{authUser.bungieAccountDisplayName}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <Link href={`/user/${authUser.id}`}>
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                </Link>
-                {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
-                {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-                <DropdownMenuItem onClick={handleSignout}>
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AuthUserMenu />
           </div>
         ) : (
           <ButtonLink href="/login" className="w-full">

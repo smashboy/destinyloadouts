@@ -9,6 +9,8 @@ export {
   faXmark as IconXMarkSolid,
   faSackDollar as IconSackDollarSolid,
   faPenToSquare as IconPenToSqueareSolid,
+  faPlus as IconPlusSolid,
+  faFilter as IconFilterSolid,
 } from "@fortawesome/free-solid-svg-icons";
 export {
   faBookmark as IconBookmarkRegular,

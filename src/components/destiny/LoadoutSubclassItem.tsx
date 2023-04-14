@@ -63,11 +63,11 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      <div className="grid w-fit grid-cols-2 gap-4">
+      <div className="grid w-full grid-cols-1 gap-4 2xl:w-fit 2xl:grid-cols-2">
         <div className="flex items-center justify-center">
           <SubclassSocket super={subclassSuper} isSm={isSm} />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-2 gap-4 md:mt-0">
           <div className="flex flex-col gap-4">
             <TypographyLarge>Abilities</TypographyLarge>
             <LoadoutSectionContainer className="grid w-fit grid-cols-2 gap-4">
@@ -87,7 +87,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
         </div>
       </div>
       <TypographyLarge>Fragments</TypographyLarge>
-      <LoadoutSectionContainer className="flex space-x-4">
+      <LoadoutSectionContainer className="flex flex-wrap gap-4">
         {fragments.map((fragment, index) => (
           <ModSocket key={index} socket={fragment} />
         ))}
