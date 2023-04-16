@@ -42,7 +42,7 @@ const initialFeedFilter: FeedFilter = {
   tags: [],
   section: "ALL",
   sortBy: "LATEST",
-  popularDuring: "WEEK",
+  popularDuring: "MONTH",
 };
 
 const Home: NextPageWithLayout = () => {
