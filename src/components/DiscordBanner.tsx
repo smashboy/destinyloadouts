@@ -6,7 +6,7 @@ export const DiscordBanner = () => (
     href="https://discord.gg/RB52SnqztN"
     target="_blank"
     rel="noopener noreferrer"
-    className="z-50 flex h-8 w-full items-center justify-center bg-[#5865F2] p-2"
+    className="sticky top-0 z-50 flex h-8 w-full items-center justify-center bg-[#5865F2] p-2"
   >
     <Image
       src="/discord-icon.png"

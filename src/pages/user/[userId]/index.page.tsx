@@ -9,7 +9,7 @@ const REVALIDATE_TIME = 60 * 20;
 
 export interface UserProfilePageProps {
   user: NonNullable<RouterOutputs["users"]["getById"]>;
-  loadouts: RouterOutputs["loadouts"]["getByUserId"];
+  stats: RouterOutputs["users"]["getGeneralStats"];
 }
 
 const UserProfilePage: NextPage<UserProfilePageProps> = (props) => {
@@ -50,14 +50,12 @@ export const getStaticProps: GetStaticProps<UserProfilePageProps> = async (
       revalidate: REVALIDATE_TIME,
     };
 
-  const loadouts = await trpc.loadouts.getByUserId.fetch({
-    userId,
-  });
+  const stats = await trpc.users.getGeneralStats.fetch({ userId });
 
   return {
     props: {
       user,
-      loadouts,
+      stats,
     },
     revalidate: REVALIDATE_TIME,
   };

@@ -25,7 +25,7 @@ import {
 } from "./components/FeedTabFilters";
 import { FeedToggleFilters } from "./components/FeedToggleFilters";
 import { FeedMobileFiltersDialog } from "./components/FeedMobileFiltersDialog";
-import { Loader } from "~/components/Loader";
+import { FooterLoader } from "~/components/FooterLoader";
 
 export interface FeedFilter {
   classTypes: DestinyClassType[];
@@ -160,6 +160,9 @@ const Home: NextPageWithLayout = () => {
   const handleTagsFilter = (tags: FeedFilter["tags"]) =>
     setFilter((prev) => ({ ...prev, tags }));
 
+  const handlePopularDuring = (popularDuring: FeedFilter["popularDuring"]) =>
+    setFilter((prev) => ({ ...prev, popularDuring }));
+
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
 
@@ -184,18 +187,9 @@ const Home: NextPageWithLayout = () => {
             {children}
           </div>
         )),
-        Footer: () => {
-          if (isFetchingNextPage)
-            return (
-              <div className="flex w-full items-center justify-center p-4 pb-12">
-                <Loader />
-              </div>
-            );
-
-          return null;
-        },
+        Footer: () => <FooterLoader hasNextPage={hasNextPage} />,
       }),
-      [isFetchingNextPage]
+      [hasNextPage]
     );
 
   return (
@@ -213,6 +207,8 @@ const Home: NextPageWithLayout = () => {
             tags={filter.tags}
             section={filter.section}
             sortBy={filter.sortBy}
+            popularDuring={filter.popularDuring}
+            onPopularDuringChange={handlePopularDuring}
             onSectionChange={handleSectionFilter}
             onSortByChange={handleSortByFilter}
             onClassFilterChange={handleClassFilter}
@@ -248,12 +244,14 @@ const Home: NextPageWithLayout = () => {
           </DataContainer>
         </div>
         <div
-          className="sticky top-0 hidden h-screen flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4 md:flex"
+          className="sticky top-0 hidden flex-col gap-2 border-l border-neutral-700 bg-neutral-900 p-4 md:flex"
           style={{ height: "calc(100vh - 32px)" }}
         >
           <FeedTabFilters
             section={filter.section}
             sortBy={filter.sortBy}
+            popularDuring={filter.popularDuring}
+            onPopularDuringChange={handlePopularDuring}
             onSectionChange={handleSectionFilter}
             onSortByChange={handleSortByFilter}
           />

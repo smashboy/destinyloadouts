@@ -1,9 +1,11 @@
-import { type NextPage, type GetServerSideProps } from "next";
+import { type NextPage, type GetStaticPaths, type GetStaticProps } from "next";
 import { type UserProfilePageProps } from "./index.page";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { trpsSSG } from "~/utils/ssg";
 import { Seo } from "~/components/Seo";
 import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+
+const REVALIDATE_TIME = 60 * 20;
 
 const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
   props
@@ -18,15 +20,20 @@ const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
         title={`${bungieAccountDisplayName}'s liked loadouts | ${APP_NAME}`}
         canonical={`${PUBLIC_URL}/user/${userId}/liked`}
       />
-      <UserProfilePageComponent {...props} />
+      <UserProfilePageComponent {...props} onlyLiked />
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<
-  UserProfilePageProps
-> = async (ctx) => {
-  const userId = ctx.query.userId as string;
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: "blocking",
+});
+
+export const getStaticProps: GetStaticProps<UserProfilePageProps> = async (
+  ctx
+) => {
+  const userId = ctx.params?.userId as string;
 
   const trpc = trpsSSG();
 
@@ -37,18 +44,17 @@ export const getServerSideProps: GetServerSideProps<
   if (!user)
     return {
       notFound: true,
+      revalidate: REVALIDATE_TIME,
     };
 
-  const loadouts = await trpc.loadouts.getByUserId.fetch({
-    userId,
-    onlyLiked: true,
-  });
+  const stats = await trpc.users.getGeneralStats.fetch({ userId });
 
   return {
     props: {
       user,
-      loadouts,
+      stats,
     },
+    revalidate: REVALIDATE_TIME,
   };
 };
 

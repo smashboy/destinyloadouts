@@ -15,7 +15,10 @@ const LoginPage: NextPageWithLayout = () => {
   return (
     <>
       <Seo title={`Login | ${APP_NAME}`} canonical={`${PUBLIC_URL}/login`} />
-      <div className="h-full w-full py-6 px-2 md:px-12">
+      <div
+        className="w-full py-6 px-2 md:px-12"
+        style={{ height: "calc(100vh - 48px)" }}
+      >
         <ButtonLink href="/" variant="ghost" iconLeft={IconChevronLeftSolid}>
           Back
         </ButtonLink>

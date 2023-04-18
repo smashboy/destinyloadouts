@@ -10,7 +10,7 @@ export const AppMobileHeader = () => {
   const [authUser] = useAuthUser();
 
   return (
-    <div className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:hidden">
+    <div className="sticky top-8 z-30 flex h-16 w-full items-center justify-between border-b bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:hidden">
       <Link href="/" className="flex items-center">
         <Image
           src="/destiny-icons/black-armory.svg"

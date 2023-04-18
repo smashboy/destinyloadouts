@@ -3,29 +3,23 @@ import { bungieNetOrigin } from "~/bungie/constants";
 import { Avatar } from "~/components/Avatar";
 import { TypographyLarge } from "~/components/typography";
 import { AccountCounter } from "./AccountCounter";
-import { type User } from "@prisma/client";
 import { ButtonLink } from "~/components/Button";
 import { TabsList, TabsTrigger } from "~/components/Tabs";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { FollowButton } from "~/components/FollowButton";
-import { trpcNext } from "~/utils/api";
+import { type UserProfilePageProps } from "../index.page";
 
-interface AccountHeaderProps {
-  user: User;
-}
-
-export const AccountHeader: React.FC<AccountHeaderProps> = ({
+export const AccountHeader: React.FC<UserProfilePageProps> = ({
   user: {
     bungieAccountDisplayName,
     bungieAccountProfilePicturePath,
     id: userId,
   },
+  stats,
 }) => {
   const [authUser] = useAuthUser();
 
-  const { data: stats } = trpcNext.users.getGeneralStats.useQuery({ userId });
-
-  const { loadoutsCount = 0, likesCount = 0, followersCount = 0 } = stats || {};
+  const { loadoutsCount = 0, likesCount = 0, followersCount = 0 } = stats;
 
   const baseLink = `/user/${userId}`;
 
@@ -33,7 +27,7 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({
   const likedRoute = `${baseLink}/liked`;
 
   return (
-    <div className="static top-0 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900 p-4 dark:border-b-neutral-700 md:sticky">
+    <div className="static top-8 z-10 flex h-fit flex-col gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:sticky">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center">
           <Avatar

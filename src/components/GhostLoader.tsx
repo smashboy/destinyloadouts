@@ -3,7 +3,7 @@ import Image from "next/image";
 import { IconLoaderSolid } from "~/icons";
 
 export const GhostLoader = () => (
-  <div className="mt-24 flex h-full w-full items-center justify-center md:mt-0">
+  <div className="flex h-full w-full items-center justify-center pt-24 md:pt-8">
     <div className="relative">
       <Image
         src="/destiny-icons/ghost.svg"

@@ -19,7 +19,7 @@ export const AppSidebar = () => {
 
   return (
     <div
-      className="sticky top-0 z-10 hidden h-screen w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900 md:block"
+      className="sticky top-8 z-10 hidden w-60 border-r border-b-slate-200 bg-white py-4 dark:border-r-neutral-700 dark:bg-neutral-900 md:block"
       style={{ height: "calc(100vh - 32px)" }}
     >
       <div className="container flex h-full flex-col items-start px-6">

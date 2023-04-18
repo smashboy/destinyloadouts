@@ -480,26 +480,60 @@ export const loadoutsRouter = createTRPCRouter({
       z.object({
         userId: z.string(),
         onlyLiked: z.boolean().optional(),
+        cursor: cursorValidation,
       })
     )
     .query(
-      async ({ input: { userId, onlyLiked }, ctx: { prisma, session } }) => {
-        const loadouts = await prisma.loadout.findMany({
-          where: {
-            ...(onlyLiked
-              ? {
-                  likes: {
-                    some: {
-                      likedByUserId: userId,
-                    },
+      async ({
+        input: { userId, onlyLiked, cursor = { take: 10, skip: 0 } },
+        ctx: { prisma, session },
+      }) => {
+        const bungieAccountId = session?.user.id;
+
+        let authUser: User | null = null;
+
+        if (bungieAccountId) {
+          const res = await usersRouterCaller({
+            prisma,
+            session,
+          }).getByBungieAccountId({ bungieAccountId });
+          if (res) authUser = res.user;
+        }
+
+        const where = {
+          ...(onlyLiked
+            ? {
+                likes: {
+                  some: {
+                    likedByUserId: userId,
                   },
-                }
-              : { authorId: userId }),
-          },
-          orderBy: { createdAt: "desc" },
-          include: LoadoutIncludeCommon({
-            includeAuthor: onlyLiked,
-          }),
+                },
+              }
+            : { authorId: userId }),
+        } satisfies Prisma.LoadoutFindManyArgs["where"];
+
+        const orderBy = {
+          createdAt: "desc",
+        } satisfies Prisma.LoadoutFindManyArgs["orderBy"];
+
+        const {
+          items: loadouts,
+          hasMore,
+          nextPage,
+        } = await paginate({
+          take: cursor.take,
+          skip: cursor.skip,
+          count: () => prisma.loadout.count({ where, orderBy }),
+          query: (paginateArgs) =>
+            prisma.loadout.findMany({
+              ...paginateArgs,
+              where,
+              orderBy,
+              include: LoadoutIncludeCommon({
+                includeAuthor: onlyLiked,
+                authUserId: authUser?.id,
+              }),
+            }),
         });
 
         const manifestCaller = destinyLatestManifestRouterCaller({
@@ -522,6 +556,8 @@ export const loadoutsRouter = createTRPCRouter({
         });
 
         return {
+          hasMore,
+          nextPage,
           loadouts,
           inventoryItems:
             formatPrismaDestinyManifestTableComponents<
@@ -541,7 +577,7 @@ export const loadoutsRouter = createTRPCRouter({
         sortBy: z.enum(["LATEST", "POPULAR"]).default("POPULAR"),
         popularDuring: z
           .enum(["TODAY", "WEEK", "MONTH", "ALL_TIME"])
-          .default("ALL_TIME"),
+          .default("MONTH"),
       })
     )
     .query(
