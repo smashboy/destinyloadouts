@@ -12,6 +12,8 @@ import {
   DestinyClass,
   DamageType,
   DestinyRace,
+  DestinyAmmunitionType,
+  ItemPerkVisibility,
 } from "bungie-api-ts/destiny2";
 
 const constants = [
@@ -21,6 +23,8 @@ const constants = [
   ["DestinyClass", DestinyClass],
   ["DamageType", DamageType],
   ["DestinyRace", DestinyRace],
+  ["DestinyAmmunitionType", DestinyAmmunitionType],
+  ["ItemPerkVisibility", ItemPerkVisibility],
 ];
 
 const generate = () => {

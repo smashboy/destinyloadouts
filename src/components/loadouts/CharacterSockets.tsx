@@ -21,11 +21,16 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
     class: classItem,
     subclass,
     inventoryItems,
+    perkItems = {},
   },
 }) => (
   <div className="grid grid-cols-1 gap-4">
     <TypographyLarge>Subclass</TypographyLarge>
-    <LoadoutSubclassItem item={subclass} inventoryItems={inventoryItems} />
+    <LoadoutSubclassItem
+      item={subclass}
+      inventoryItems={inventoryItems}
+      perkItems={perkItems}
+    />
     <TypographyLarge>Weapons</TypographyLarge>
     <div className="grid grid-cols-1 gap-4">
       <LoadoutSectionContainer>
@@ -63,6 +68,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
           <LoadoutArmorItem
             item={helmet}
             inventoryItems={inventoryItems}
+            perkItems={perkItems}
             socketProps={{
               bgIconPath: "/destiny-icons/armor/helmet.svg",
             }}
@@ -72,6 +78,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
           <LoadoutArmorItem
             item={gauntlets}
             inventoryItems={inventoryItems}
+            perkItems={perkItems}
             socketProps={{
               bgIconPath: "/destiny-icons/armor/gloves.svg",
             }}
@@ -81,6 +88,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
           <LoadoutArmorItem
             item={chest}
             inventoryItems={inventoryItems}
+            perkItems={perkItems}
             socketProps={{
               bgIconPath: "/destiny-icons/armor/chest.svg",
             }}
@@ -90,6 +98,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
           <LoadoutArmorItem
             item={legs}
             inventoryItems={inventoryItems}
+            perkItems={perkItems}
             socketProps={{
               bgIconPath: "/destiny-icons/armor/boots.svg",
             }}
@@ -99,6 +108,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
           <LoadoutArmorItem
             item={classItem}
             inventoryItems={inventoryItems}
+            perkItems={perkItems}
             socketProps={{
               bgIconPath: "/destiny-icons/armor/class.svg",
             }}

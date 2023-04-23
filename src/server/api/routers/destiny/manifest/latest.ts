@@ -10,7 +10,11 @@ import { destinyManifestTableNames } from "~/bungie/constants";
 
 const latestDestinyManifestProcedure = publicProcedure.use(
   createTRPCMiddleware(async ({ next, ctx: { prisma } }) => {
-    const latestManifest = await prisma.destinyManifest.findFirst({});
+    const latestManifest = await prisma.destinyManifest.findFirst({
+      where: {
+        latest: true,
+      },
+    });
 
     if (!latestManifest) {
       throw new TRPCError({ code: "NOT_FOUND" });

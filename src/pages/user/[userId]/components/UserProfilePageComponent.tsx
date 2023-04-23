@@ -66,30 +66,26 @@ export const UserProfilePageComponent: React.FC<
         queryParams
       );
 
-      trpcCtx.loadouts.getByUserId.setInfiniteData(
-        queryParams,
+      trpcCtx.loadouts.getByUserId.setInfiniteData(queryParams, (prev) => {
+        if (!prev) return prev;
 
-        (old) => ({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          ...old!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          pages: old!.pages.map(({ loadouts, ...page }) => ({
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
             ...page,
             loadouts: loadouts.map((loadout) =>
               handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
             ),
           })),
-        })
-      );
+        };
+      });
 
       return { prevData };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getByUserId.setInfiniteData(
-        queryParams,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevData
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getByUserId.setInfiniteData(queryParams, ctx.prevData);
+    },
   });
 
   const saveMutation = trpcNext.loadouts.bookmark.useMutation({
@@ -100,26 +96,26 @@ export const UserProfilePageComponent: React.FC<
         queryParams
       );
 
-      trpcCtx.loadouts.getByUserId.setInfiniteData(queryParams, (old) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ...old!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        pages: old!.pages.map(({ loadouts, ...page }) => ({
-          ...page,
-          loadouts: loadouts.map((loadout) =>
-            handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
-          ),
-        })),
-      }));
+      trpcCtx.loadouts.getByUserId.setInfiniteData(queryParams, (prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
+            ...page,
+            loadouts: loadouts.map((loadout) =>
+              handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
+            ),
+          })),
+        };
+      });
 
       return { prevData };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getByUserId.setInfiniteData(
-        queryParams,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevData
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getByUserId.setInfiniteData(queryParams, ctx.prevData);
+    },
   });
 
   const VirtualGridComponents: GridComponents = useMemo(

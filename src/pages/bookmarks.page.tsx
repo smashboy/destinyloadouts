@@ -1,7 +1,7 @@
-import { type NextPage, type GetServerSideProps } from "next";
+import { useMemo, forwardRef } from "react";
+import { type NextPage } from "next";
+import { Virtuoso, type Components } from "react-virtuoso";
 import { TypographyLarge } from "~/components/typography";
-import { getServerAuthSession } from "~/server/auth";
-import { trpsSSG } from "~/utils/ssg";
 import { LoadoutPreviewCard } from "~/components/loadouts/LoadoutPreviewCard";
 import { useAuthUser } from "~/hooks/useAuthUser";
 import { trpcNext } from "~/utils/api";
@@ -10,13 +10,19 @@ import {
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
 import { Seo } from "~/components/Seo";
-import { APP_NAME } from "~/constants/app";
-import { MessageContainer } from "~/components/MessageContainer";
+import { DataContainer } from "~/components/DataContainer";
+import { FooterLoader } from "~/components/FooterLoader";
 
-export const BookmarksPage: NextPage = () => {
+const BookmarksPage: NextPage = () => {
   const [authUser] = useAuthUser();
 
-  const { data } = trpcNext.loadouts.getAuthBookmarked.useQuery();
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    trpcNext.loadouts.getAuthBookmarked.useInfiniteQuery(
+      {},
+      {
+        getNextPageParam: (page) => page.nextPage,
+      }
+    );
 
   const trpcCtx = trpcNext.useContext();
 
@@ -24,55 +30,73 @@ export const BookmarksPage: NextPage = () => {
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.getAuthBookmarked.cancel();
 
-      const prevLoadouts = await trpcCtx.loadouts.getAuthBookmarked.getData();
+      const prevLoadouts =
+        await trpcCtx.loadouts.getAuthBookmarked.getInfiniteData();
 
-      trpcCtx.loadouts.getAuthBookmarked.setData(void 0, (old) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        inventoryItems: old!.inventoryItems,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        loadouts: old!.loadouts.map((loadout) =>
-          handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
-        ),
-      }));
+      trpcCtx.loadouts.getAuthBookmarked.setInfiniteData({}, (prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
+            ...page,
+            loadouts: loadouts.map((loadout) =>
+              handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
+            ),
+          })),
+        };
+      });
 
       return { prevLoadouts };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getAuthBookmarked.setData(
-        void 0,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevLoadouts
-      ),
-    onSettled: () => trpcCtx.loadouts.getAuthBookmarked.invalidate(),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getAuthBookmarked.setInfiniteData(
+          {},
+          ctx.prevLoadouts
+        );
+    },
   });
 
   const saveMutation = trpcNext.loadouts.bookmark.useMutation({
     onMutate: async ({ loadoutId }) => {
       await trpcCtx.loadouts.getAuthBookmarked.cancel();
 
-      const prevLoadouts = await trpcCtx.loadouts.getAuthBookmarked.getData();
+      const prevLoadouts =
+        await trpcCtx.loadouts.getAuthBookmarked.getInfiniteData();
 
-      trpcCtx.loadouts.getAuthBookmarked.setData(void 9, (old) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        inventoryItems: old!.inventoryItems,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        loadouts: old!.loadouts.map((loadout) =>
-          handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
-        ),
-      }));
+      trpcCtx.loadouts.getAuthBookmarked.setInfiniteData({}, (prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
+            ...page,
+            loadouts: loadouts.map((loadout) =>
+              handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
+            ),
+          })),
+        };
+      });
 
       return { prevLoadouts };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getAuthBookmarked.setData(
-        void 0,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevLoadouts
-      ),
-    onSettled: () => trpcCtx.loadouts.getAuthBookmarked.invalidate(),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getAuthBookmarked.setInfiniteData(
+          {},
+          ctx.prevLoadouts
+        );
+    },
   });
 
-  const { loadouts, inventoryItems } = data || {};
+  const { pages = [] } = data || {};
+
+  const loadouts = pages.map((page) => page.loadouts).flat();
+  const inventoryItems = pages.reduce(
+    (acc, page) => ({ ...acc, ...page.inventoryItems }),
+    {}
+  );
 
   const handleLikeLoadout = (loadoutId: string) =>
     likeMutation.mutate({ loadoutId });
@@ -80,56 +104,66 @@ export const BookmarksPage: NextPage = () => {
   const handleSaveLoadout = (loadoutId: string) =>
     saveMutation.mutate({ loadoutId });
 
+  const handleLoadMoreLoadouts = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const components: Components<typeof loadouts> = useMemo(
+    () => ({
+      List: forwardRef(({ children, style }, ref) => (
+        <div
+          ref={ref}
+          className="grid grid-cols-1 gap-2 py-4 pl-2 pr-3 md:pr-2 md:pl-4"
+          style={style}
+        >
+          {children}
+        </div>
+      )),
+      Footer: () => <FooterLoader hasNextPage={hasNextPage} />,
+    }),
+    [hasNextPage]
+  );
+
   return (
     <>
       <Seo
-        title={`Bookmarks | ${APP_NAME}`}
+        title="Bookmarks"
         description="Saved loadouts page."
         noindex
         nofollow
       />
       <div className="grid grid-cols-1 gap-2">
         <TypographyLarge>Saved loadouts</TypographyLarge>
-        {loadouts && loadouts.length > 0 && inventoryItems ? (
-          loadouts.map((loadout) => (
-            <LoadoutPreviewCard
-              key={loadout.id}
-              loadout={loadout}
-              inventoryItems={inventoryItems}
-              onLike={handleLikeLoadout}
-              onSave={handleSaveLoadout}
-              authUser={authUser}
-            />
-          ))
-        ) : (
-          <MessageContainer
-            title="You don't have saved loadouts."
-            description="Checkout available loadouts and bookmark some of them."
+        <DataContainer
+          isLoading={isLoading}
+          showMessage={loadouts.length === 0}
+          title="You don't have saved loadouts."
+          description="Checkout available loadouts and bookmark some of them."
+        >
+          <Virtuoso
+            data={loadouts}
+            endReached={handleLoadMoreLoadouts}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            components={components}
+            itemContent={(_, loadout) => (
+              <LoadoutPreviewCard
+                key={loadout.id}
+                loadout={loadout}
+                inventoryItems={inventoryItems}
+                authUser={authUser}
+                onLike={handleLikeLoadout}
+                onSave={handleSaveLoadout}
+              />
+            )}
+            useWindowScroll
           />
-        )}
+        </DataContainer>
       </div>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-
-  if (!session)
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-
-  const trpc = trpsSSG(session);
-
-  await trpc.loadouts.getAuthBookmarked.prefetch();
-
-  return {
-    props: {},
-  };
 };
 
 export default BookmarksPage;

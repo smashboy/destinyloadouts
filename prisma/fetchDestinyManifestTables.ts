@@ -24,6 +24,20 @@ const run = async () => {
 
   const { version } = manifestData;
 
+  const latestManifest = await prisma.destinyManifest.findFirst({
+    where: {
+      version,
+    },
+  });
+
+  if (latestManifest) {
+    console.log(
+      "This manifest has already been fetched, process cancellation!"
+    );
+    return;
+  }
+
+  console.log("New manifest found!");
   console.log("Fetching manifest slices...");
 
   const slices = await getDestinyManifestSlice(fetchHelper, {
@@ -40,6 +54,7 @@ const run = async () => {
   await prisma.destinyManifest.create({
     data: {
       version,
+      latest: false,
     },
   });
 
@@ -144,6 +159,67 @@ const run = async () => {
       `[${completedBatchQueriesCount}/${totalBatchQueriesCount}]: Components transaction completed successfully!`
     );
   }
+
+  console.log("New manifest saved successfully!");
+
+  console.log("Switching to the latest manifest...");
+
+  await prisma.$transaction([
+    prisma.destinyManifest.update({
+      where: {
+        version,
+      },
+      data: {
+        latest: true,
+      },
+    }),
+    prisma.destinyManifest.updateMany({
+      where: {
+        version: {
+          not: version,
+        },
+      },
+      data: {
+        latest: false,
+      },
+    }),
+  ]);
+
+  console.log("Switched to the latest manifest successfully!");
+  console.log("Removing old manifests...");
+
+  await prisma.$transaction([
+    prisma.destinyManifestTableComponent.deleteMany({
+      where: {
+        manifestVersion: {
+          not: version,
+        },
+      },
+    }),
+    prisma.destinyManifestTable.deleteMany({
+      where: {
+        manifestVersion: {
+          not: version,
+        },
+      },
+    }),
+    prisma.destinyManifestTablesByLocale.deleteMany({
+      where: {
+        manifestVersion: {
+          not: version,
+        },
+      },
+    }),
+    prisma.destinyManifest.deleteMany({
+      where: {
+        version: {
+          not: version,
+        },
+      },
+    }),
+  ]);
+
+  console.log("Removed old manifests successfully!");
 };
 
 run();

@@ -3,7 +3,11 @@ import {
   DestinyDamageType,
   LoadoutTag,
 } from "@prisma/client";
-import { DamageType, DestinyClass } from "~/bungie/__generated";
+import {
+  DamageType,
+  DestinyAmmunitionType,
+  DestinyClass,
+} from "~/bungie/__generated";
 
 export const loadoutTagsList = [
   LoadoutTag.PVE,
@@ -103,4 +107,12 @@ export const damageTypeColorMap = {
   [DestinyDamageType.SOLAR]: "#f0631e",
   [DestinyDamageType.STATIS]: "#4d88ff",
   [DestinyDamageType.STRAND]: "#35e366",
+};
+
+export const ammunitionIconMap = {
+  [DestinyAmmunitionType.Primary]: "/destiny-icons/ammo/primary.svg",
+  [DestinyAmmunitionType.Special]: "/destiny-icons/ammo/special.svg",
+  [DestinyAmmunitionType.Heavy]: "/destiny-icons/ammo/heavy.svg",
+  [DestinyAmmunitionType.None]: null,
+  [DestinyAmmunitionType.Unknown]: null,
 };

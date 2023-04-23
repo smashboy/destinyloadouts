@@ -120,13 +120,14 @@ enum LoadoutTag {
 
 model DestinyManifest {
     version                        String                          @unique
+    latest                         Boolean                         @default(true)
     jsonWorldComponentContentPaths DestinyManifestTablesByLocale[]
 }
 
 model DestinyManifestTablesByLocale {
     locale          String
     tables          DestinyManifestTable[]
-    manifest        DestinyManifest        @relation(fields: [manifestVersion], references: [version])
+    manifest        DestinyManifest        @relation(fields: [manifestVersion], references: [version], onDelete: Cascade)
     manifestVersion String
 
     @@unique([locale, manifestVersion])
@@ -136,7 +137,7 @@ model DestinyManifestTablesByLocale {
 model DestinyManifestTable {
     name            String
     components      DestinyManifestTableComponent[]
-    locale          DestinyManifestTablesByLocale   @relation(fields: [localeName, manifestVersion], references: [locale, manifestVersion])
+    locale          DestinyManifestTablesByLocale   @relation(fields: [localeName, manifestVersion], references: [locale, manifestVersion], onDelete: Cascade)
     localeName      String
     manifestVersion String
 
@@ -147,7 +148,7 @@ model DestinyManifestTable {
 model DestinyManifestTableComponent {
     hashId          String
     content         Json
-    table           DestinyManifestTable @relation(fields: [tableName, localeName, manifestVersion], references: [name, localeName, manifestVersion])
+    table           DestinyManifestTable @relation(fields: [tableName, localeName, manifestVersion], references: [name, localeName, manifestVersion], onDelete: Cascade)
     tableName       String
     localeName      String
     manifestVersion String

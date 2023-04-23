@@ -70,22 +70,24 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
       trpcCtx.loadouts.getLoadoutLikes.setData(
         loadoutLikesQueryParams,
         (loadout) =>
-          handleAuthUserLoadoutLike({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            loadout: loadout!,
-            loadoutId,
-            authUser,
-          })
+          loadout
+            ? handleAuthUserLoadoutLike({
+                loadout,
+                loadoutId,
+                authUser,
+              })
+            : loadout
       );
 
       return { prevData };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getLoadoutLikes.setData(
-        loadoutLikesQueryParams,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevData
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getLoadoutLikes.setData(
+          loadoutLikesQueryParams,
+          ctx.prevData
+        );
+    },
     onSettled: () =>
       trpcCtx.loadouts.getLoadoutLikes.invalidate(loadoutLikesQueryParams),
   });
@@ -101,22 +103,24 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
       trpcCtx.loadouts.getLoadoutLikes.setData(
         loadoutLikesQueryParams,
         (loadout) =>
-          handleAuthUserLoadoutBookmark({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            loadout: loadout!,
-            loadoutId,
-            authUser,
-          })
+          loadout
+            ? handleAuthUserLoadoutBookmark({
+                loadout,
+                loadoutId,
+                authUser,
+              })
+            : loadout
       );
 
       return { prevData };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.getLoadoutLikes.setData(
-        loadoutLikesQueryParams,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevData
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.getLoadoutLikes.setData(
+          loadoutLikesQueryParams,
+          ctx.prevData
+        );
+    },
     onSettled: () =>
       trpcCtx.loadouts.getLoadoutLikes.invalidate(loadoutLikesQueryParams),
   });
@@ -146,7 +150,7 @@ export const LoadoutHeader: React.FC<LoadoutHeaderProps> = ({
   );
 
   return (
-    <div className="static top-0 z-10 flex h-fit flex-wrap items-center gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:sticky">
+    <div className="static top-8 z-10 flex h-fit flex-wrap items-center gap-4 border-b-2 bg-neutral-900/50 p-4 backdrop-blur dark:border-b-neutral-700 md:sticky">
       <div className="flex flex-1 gap-2 md:flex-none md:gap-4">
         <Avatar
           src={`${bungieNetOrigin}/${bungieAccountProfilePicturePath}`}

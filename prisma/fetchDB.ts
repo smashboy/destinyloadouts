@@ -2,7 +2,6 @@ import fs from "fs/promises";
 import path from "path";
 import * as dotenv from "dotenv";
 import { prisma } from "./client.js";
-import { env } from "../src/env.mjs";
 
 dotenv.config();
 
@@ -28,9 +27,11 @@ export const fetchDB = async () => {
   await Promise.all(
     list.map((data, index) =>
       fs.writeFile(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        path.join(__dirname, ".data", fileNameMap[index]),
+        path.join(
+          __dirname,
+          ".data",
+          fileNameMap[index as keyof typeof fileNameMap]
+        ),
         JSON.stringify(data)
       )
     )

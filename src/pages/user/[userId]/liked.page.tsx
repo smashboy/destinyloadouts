@@ -3,7 +3,7 @@ import { type UserProfilePageProps } from "./index.page";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { trpsSSG } from "~/utils/ssg";
 import { Seo } from "~/components/Seo";
-import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { PUBLIC_URL } from "~/constants/app";
 
 const REVALIDATE_TIME = 60 * 20;
 
@@ -17,7 +17,7 @@ const UserProfileLikesLoadoutsPage: NextPage<UserProfilePageProps> = (
   return (
     <>
       <Seo
-        title={`${bungieAccountDisplayName}'s liked loadouts | ${APP_NAME}`}
+        title={`${bungieAccountDisplayName}'s liked loadouts`}
         canonical={`${PUBLIC_URL}/user/${userId}/liked`}
       />
       <UserProfilePageComponent {...props} onlyLiked />

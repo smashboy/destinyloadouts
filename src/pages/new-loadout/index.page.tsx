@@ -24,7 +24,7 @@ import {
   type DestinyComponentTypeConst,
 } from "~/bungie/__generated";
 import { Seo } from "~/components/Seo";
-import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { PUBLIC_URL } from "~/constants/app";
 
 interface NewLoadoutPageProps {
   characters: Record<string, DestinyCharacterComponent>;
@@ -49,10 +49,7 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
 
   return (
     <>
-      <Seo
-        title={`New loadout | ${APP_NAME}`}
-        canonical={`${PUBLIC_URL}/new-loadout`}
-      />
+      <Seo title="New loadout" canonical={`${PUBLIC_URL}/new-loadout`} />
       <div className="flex flex-col space-y-4">
         <CharacterClassIconBackground
           classType={

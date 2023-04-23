@@ -20,6 +20,7 @@ export const destinyManifestTableNames = [
   "DestinyLoadoutIconDefinition",
   "DestinyInventoryItemDefinition",
   "DestinyItemCategoryDefinition",
+  "DestinySandboxPerkDefinition",
 ] as const; // satisfies DestinyManifestComponentName[]
 
 export const DestinyItemCategoryHash = {

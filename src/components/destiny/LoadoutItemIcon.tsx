@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import {
   type LoadoutInventoryItemsList,
@@ -6,6 +7,7 @@ import {
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { DestinyItemSubType, DestinyItemType } from "~/bungie/__generated";
+import { ammunitionIconMap } from "~/constants/loadouts";
 
 interface LoadoutItemIconProps {
   item: LoadoutItem;
@@ -58,6 +60,10 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
 
   const watermarkIcon = getDestinyItemActiveWatermarkIcon(inventoryItem);
 
+  const ammoTypeIcon = inventoryItem.equippingBlock?.ammoType
+    ? ammunitionIconMap[inventoryItem.equippingBlock.ammoType]
+    : null;
+
   return (
     <div className="relative h-full w-full overflow-hidden rounded">
       {hasIcon && (
@@ -74,6 +80,15 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
           src={`${bungieNetOrigin}/${watermarkIcon}`}
           alt="Loadout item icon watermark"
           className="absolute inset-0"
+        />
+      )}
+      {ammoTypeIcon && (
+        <Image
+          src={ammoTypeIcon}
+          width={14}
+          height={14}
+          alt="Ammo type icon"
+          className="absolute bottom-0.5 right-0.5"
         />
       )}
     </div>

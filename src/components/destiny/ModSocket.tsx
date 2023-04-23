@@ -1,4 +1,7 @@
-import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import {
+  type DestinyInventoryItemDefinition,
+  type DestinySandboxPerkDefinition,
+} from "bungie-api-ts/destiny2";
 import { ItemSocket } from "./ItemSocket";
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
@@ -7,16 +10,20 @@ import { TypographySubtle } from "../typography";
 
 interface ModSocketProps {
   // modTypeIcon: string; local icon path
-  socket: DestinyInventoryItemDefinition;
+  invenotryItem: DestinyInventoryItemDefinition;
+  perkItems?: DestinySandboxPerkDefinition[];
 }
 
-export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
+export const ModSocket: React.FC<ModSocketProps> = ({
+  invenotryItem,
+  perkItems = [],
+}) => {
   const {
     displayProperties: { icon: iconPath },
     plug,
-  } = socket;
+  } = invenotryItem;
 
-  const watermarkIcon = getDestinyItemActiveWatermarkIcon(socket);
+  const watermarkIcon = getDestinyItemActiveWatermarkIcon(invenotryItem);
 
   const enegryCost =
     !plug?.plugCategoryIdentifier.includes("fragments") &&
@@ -64,7 +71,7 @@ export const ModSocket: React.FC<ModSocketProps> = ({ socket }) => {
           </div>
         </ItemSocket>
       </HoverCardTrigger>
-      <ItemHoverCard item={socket} />
+      <ItemHoverCard item={invenotryItem} perkItems={perkItems} />
     </HoverCard>
   );
 };

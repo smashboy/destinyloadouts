@@ -15,7 +15,7 @@ import {
   handleAuthUserLoadoutBookmark,
   handleAuthUserLoadoutLike,
 } from "~/utils/loadout";
-import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { PUBLIC_URL } from "~/constants/app";
 import { Seo } from "~/components/Seo";
 import { DataContainer } from "~/components/DataContainer";
 import {
@@ -76,26 +76,26 @@ const Home: NextPageWithLayout = () => {
         debouncedFilter
       );
 
-      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (old) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ...old!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        pages: old!.pages.map(({ loadouts, ...page }) => ({
-          ...page,
-          loadouts: loadouts.map((loadout) =>
-            handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
-          ),
-        })),
-      }));
+      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
+            ...page,
+            loadouts: loadouts.map((loadout) =>
+              handleAuthUserLoadoutLike({ loadout, loadoutId, authUser })
+            ),
+          })),
+        };
+      });
 
       return { prevFeed };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.feed.setInfiniteData(
-        debouncedFilter,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevFeed
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, ctx.prevFeed);
+    },
   });
 
   const saveMutation = trpcNext.loadouts.bookmark.useMutation({
@@ -106,26 +106,26 @@ const Home: NextPageWithLayout = () => {
         debouncedFilter
       );
 
-      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (old) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ...old!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        pages: old!.pages.map(({ loadouts, ...page }) => ({
-          ...page,
-          loadouts: loadouts.map((loadout) =>
-            handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
-          ),
-        })),
-      }));
+      trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, (prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          pages: prev.pages.map(({ loadouts, ...page }) => ({
+            ...page,
+            loadouts: loadouts.map((loadout) =>
+              handleAuthUserLoadoutBookmark({ loadout, loadoutId, authUser })
+            ),
+          })),
+        };
+      });
 
       return { prevFeed };
     },
-    onError: (_, __, ctx) =>
-      trpcCtx.loadouts.feed.setInfiniteData(
-        debouncedFilter,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ctx!.prevFeed
-      ),
+    onError: (_, __, ctx) => {
+      if (ctx)
+        trpcCtx.loadouts.feed.setInfiniteData(debouncedFilter, ctx.prevFeed);
+    },
   });
 
   const { pages = [] } = data || {};
@@ -195,7 +195,7 @@ const Home: NextPageWithLayout = () => {
   return (
     <>
       <Seo
-        title={`Home | ${APP_NAME}`}
+        title="Home"
         description="Share your destiny 2 in game loadouts with other players."
         canonical={PUBLIC_URL}
       />

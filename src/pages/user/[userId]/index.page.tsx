@@ -3,7 +3,7 @@ import { trpsSSG } from "~/utils/ssg";
 import { type RouterOutputs } from "~/utils/api";
 import { UserProfilePageComponent } from "./components/UserProfilePageComponent";
 import { Seo } from "~/components/Seo";
-import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { PUBLIC_URL } from "~/constants/app";
 
 const REVALIDATE_TIME = 60 * 20;
 
@@ -20,7 +20,7 @@ const UserProfilePage: NextPage<UserProfilePageProps> = (props) => {
   return (
     <>
       <Seo
-        title={`${bungieAccountDisplayName} | ${APP_NAME}`}
+        title={`${bungieAccountDisplayName}`}
         canonical={`${PUBLIC_URL}/user/${userId}`}
       />
       <UserProfilePageComponent {...props} />

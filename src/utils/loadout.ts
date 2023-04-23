@@ -1,5 +1,9 @@
 import { type User } from "@prisma/client";
-import { type LoadoutItem } from "~/bungie/types";
+import {
+  type DestinyInventoryItemDefinition,
+  type DestinySandboxPerkDefinition,
+} from "bungie-api-ts/destiny2";
+import { type LoadoutItem, type LoadoutPerkItemsList } from "~/bungie/types";
 
 export const getLoadoutItemHashes = (
   loadout: Record<string, LoadoutItem>
@@ -82,3 +86,14 @@ export const handleAuthUserLoadoutBookmark = <L extends Loadout>({
       : [...bookmarks],
   };
 };
+
+export const getInventoryItemPerks = (
+  items: DestinyInventoryItemDefinition[],
+  perks: LoadoutPerkItemsList
+) =>
+  items.map((item) =>
+    item.perks
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .map((perk) => perks[perk.perkHash]!)
+      .filter((perk) => perk && perk.isDisplayable)
+  );

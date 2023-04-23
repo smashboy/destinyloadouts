@@ -62,7 +62,7 @@ export const LoadoutWeaponItem: React.FC<LoadoutWeaponItemProps> = ({
       />
       <div className="flex flex-wrap gap-3">
         {sockets.map((socket, index) => (
-          <ModSocket key={index} socket={socket} />
+          <ModSocket key={index} invenotryItem={socket} />
         ))}
       </div>
     </div>

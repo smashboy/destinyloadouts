@@ -8,7 +8,7 @@ import { cn } from "~/utils/tailwind";
 import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
 import { LoadoutHeader } from "./components/LoadoutHeader";
 import { Seo } from "~/components/Seo";
-import { APP_NAME, PUBLIC_URL } from "~/constants/app";
+import { PUBLIC_URL } from "~/constants/app";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 
@@ -24,7 +24,7 @@ const Editor = dynamic(() => import("~/components/Editor"), {
 });
 
 const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
-  const { loadout, inventoryItems } = pageProps;
+  const { loadout, inventoryItems, perkItems } = pageProps;
 
   const {
     id: loadoutId,
@@ -38,7 +38,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
   return (
     <>
       <Seo
-        title={`${bungieAccountDisplayName}'s loadout: ${name} | ${APP_NAME}`}
+        title={`${bungieAccountDisplayName}'s loadout: ${name}`}
         canonical={`${PUBLIC_URL}/${loadoutId}`}
       />
       <div className="flex flex-col gap-6">
@@ -56,9 +56,11 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
             </TabsList>
           )}
           <TabsContent value="loadout">
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore */}
-            <CharacterSockets loadout={{ ...items, inventoryItems }} />
+            <CharacterSockets
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              loadout={{ ...items, inventoryItems, perkItems }}
+            />
           </TabsContent>
           <TabsContent value="description">
             <Editor
@@ -75,7 +77,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
           )}
         >
           {description && (
-            <div className="sticky top-24 col-span-2 h-fit">
+            <div className="sticky top-32 col-span-2 h-fit">
               <Editor
                 initialState={description as unknown as EditorState}
                 readOnly
@@ -89,9 +91,11 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
               !description && "container md:max-w-6xl"
             )}
           >
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore */}
-            <CharacterSockets loadout={{ ...items, inventoryItems }} />
+            <CharacterSockets
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              loadout={{ ...items, inventoryItems, perkItems }}
+            />
           </div>
         </div>
       </div>

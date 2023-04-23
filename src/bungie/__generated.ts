@@ -140,3 +140,21 @@ export const DestinyRace = {
 } as const;
 
 export type DestinyRaceConst = typeof DestinyRace;
+
+export const DestinyAmmunitionType = {
+  None: 0,
+  Primary: 1,
+  Special: 2,
+  Heavy: 3,
+  Unknown: 4,
+} as const;
+
+export type DestinyAmmunitionTypeConst = typeof DestinyAmmunitionType;
+
+export const ItemPerkVisibility = {
+  Visible: 0,
+  Disabled: 1,
+  Hidden: 2,
+} as const;
+
+export type ItemPerkVisibilityConst = typeof ItemPerkVisibility;

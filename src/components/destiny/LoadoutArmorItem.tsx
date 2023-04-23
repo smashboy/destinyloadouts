@@ -2,17 +2,20 @@ import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import {
   type LoadoutInventoryItemsList,
   type LoadoutItem,
+  type LoadoutPerkItemsList,
 } from "~/bungie/types";
 import { ArmorEnergy } from "./ArmorEnergy";
 import { ItemSocket, type ItemSocketProps } from "./ItemSocket";
 import { LoadoutItemSocket } from "./LoadoutItemSocket";
 import { ModSocket } from "./ModSocket";
 import { DestinyItemSubType, DestinyItemType } from "~/bungie/__generated";
+import { getInventoryItemPerks } from "~/utils/loadout";
 
 interface LoadoutArmorItemProps {
   item: LoadoutItem;
   inventoryItems: LoadoutInventoryItemsList;
   socketProps: ItemSocketProps;
+  perkItems?: LoadoutPerkItemsList;
   isSm?: boolean;
   hideSockets?: boolean;
 }
@@ -48,6 +51,7 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
   socketProps,
   isSm,
   hideSockets,
+  perkItems = {},
 }) => {
   if (!item) return <ItemSocket {...socketProps} isSm={isSm} />;
 
@@ -60,6 +64,8 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
     (acc, socket) => (acc += socket.plug?.energyCost?.energyCost || 0),
     0
   );
+
+  const modPerks = getInventoryItemPerks(modsSockets, perkItems);
 
   if (sockets.length === 0 || hideSockets)
     return (
@@ -80,7 +86,11 @@ export const LoadoutArmorItem: React.FC<LoadoutArmorItemProps> = ({
         />
         <div className="flex flex-wrap gap-3">
           {sockets.map((socket, index) => (
-            <ModSocket key={index} socket={socket} />
+            <ModSocket
+              key={index}
+              invenotryItem={socket}
+              perkItems={modPerks[index]}
+            />
           ))}
         </div>
       </div>

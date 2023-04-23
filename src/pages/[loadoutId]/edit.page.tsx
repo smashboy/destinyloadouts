@@ -32,7 +32,6 @@ import {
   bungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { Seo } from "~/components/Seo";
-import { APP_NAME } from "~/constants/app";
 
 type EditLoadoutPageProps = NonNullable<
   RouterOutputs["loadouts"]["getById"]
@@ -127,7 +126,7 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
   return (
     <>
       <Seo
-        title={`Edit loadout | ${APP_NAME}`}
+        title="Edit loadout"
         description="Edit selected loadout."
         noindex
         nofollow

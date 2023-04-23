@@ -14,7 +14,7 @@ const LoginPage: NextPageWithLayout = () => {
 
   return (
     <>
-      <Seo title={`Login | ${APP_NAME}`} canonical={`${PUBLIC_URL}/login`} />
+      <Seo title="Login" canonical={`${PUBLIC_URL}/login`} />
       <div
         className="w-full py-6 px-2 md:px-12"
         style={{ height: "calc(100vh - 48px)" }}
@@ -33,7 +33,7 @@ const LoginPage: NextPageWithLayout = () => {
             />
             <TypographyLarge>Welcome to {APP_NAME}</TypographyLarge>
             {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-            <Button onClick={handleLogin}>Login with bungie account</Button>
+            <Button onClick={handleLogin}>Login with Bungie account</Button>
           </div>
         </div>
       </div>
