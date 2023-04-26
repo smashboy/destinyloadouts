@@ -1,8 +1,5 @@
 import { type User } from "@prisma/client";
-import {
-  type DestinyInventoryItemDefinition,
-  type DestinySandboxPerkDefinition,
-} from "bungie-api-ts/destiny2";
+import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { type LoadoutItem, type LoadoutPerkItemsList } from "~/bungie/types";
 
 export const getLoadoutItemHashes = (

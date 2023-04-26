@@ -3,7 +3,7 @@ import {
   type DestinySandboxPerkDefinition,
 } from "bungie-api-ts/destiny2";
 
-export type LoadoutItem = [number, number[]] | null;
+export type LoadoutItem = [number, number[]] | null | undefined;
 
 export type LoadoutInventoryItemsList = Record<
   number,

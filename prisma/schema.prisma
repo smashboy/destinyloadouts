@@ -1,6 +1,11 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     // output   = "./.prisma"
+    previewFeatures = ["jsonProtocol"]
+}
+
+generator json {
+    provider = "prisma-json-types-generator"
 }
 
 datasource db {
@@ -47,6 +52,7 @@ model Loadout {
     subclassType DestinyDamageType
     tags         LoadoutTagLink[]
     description  Json?
+    /// [LoadoutDBItems]
     items        Json
     likes        LoadoutLike[]
     bookmarks    LoadoutBookmark[]

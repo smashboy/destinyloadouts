@@ -78,9 +78,7 @@ export const loadoutsRouter = createTRPCRouter({
 
       if (!loadout) return null;
 
-      const itemHashes = getLoadoutItemHashes(
-        loadout.items as unknown as Record<string, LoadoutItem>
-      );
+      const itemHashes = getLoadoutItemHashes(loadout.items);
 
       const items = await fetchInventoryItems(prisma, [...new Set(itemHashes)]);
 
@@ -270,7 +268,6 @@ export const loadoutsRouter = createTRPCRouter({
           user: { id: userId },
         },
         prisma,
-        res,
       },
     }) => {
       const loadout = await prisma.loadout.create({
@@ -293,8 +290,6 @@ export const loadoutsRouter = createTRPCRouter({
           },
         },
       });
-
-      await res?.revalidate(`/user/${userId}`);
 
       return loadout;
     }
@@ -373,7 +368,6 @@ export const loadoutsRouter = createTRPCRouter({
           },
         });
 
-        await res?.revalidate(`/user/${authorId}`);
         await res?.revalidate(`/${loadoutId}`);
       }
     ),
@@ -412,7 +406,6 @@ export const loadoutsRouter = createTRPCRouter({
           },
         });
 
-        await res?.revalidate(`/user/${authorId}`);
         await res?.revalidate(`/${loadoutId}`);
 
         return loadout;

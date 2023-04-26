@@ -1,3 +1,5 @@
+import { type DestinyCharacterLoadout } from "./bungie/types";
+
 declare module "@editorjs/header" {
   import Header from "@editorjs/header";
   export = Header;
@@ -26,4 +28,13 @@ declare module "@editorjs/simple-image" {
 declare module "@editorjs/embed" {
   import Embed from "@editorjs/embed";
   export = Embed;
+}
+
+declare global {
+  namespace PrismaJson {
+    type LoadoutDBItems = Omit<
+      DestinyCharacterLoadout,
+      "inventoryItems" | "perkItems"
+    >;
+  }
 }

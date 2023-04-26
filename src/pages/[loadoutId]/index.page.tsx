@@ -57,8 +57,6 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
           )}
           <TabsContent value="loadout">
             <CharacterSockets
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               loadout={{ ...items, inventoryItems, perkItems }}
             />
           </TabsContent>
@@ -92,8 +90,6 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
             )}
           >
             <CharacterSockets
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               loadout={{ ...items, inventoryItems, perkItems }}
             />
           </div>
