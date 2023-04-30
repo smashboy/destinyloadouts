@@ -28,8 +28,8 @@ import { LoadoutSelector } from "../new-loadout/components/LoadoutSelector";
 import { ButtonLink } from "~/components/Button";
 import { createDestinyCharacterLoadout } from "~/bungie/createDestinyCharacterLoadout";
 import {
-  bungieDamageTypeToDbDamageTypeMap,
-  bungieDestinyClassToDbCharacterClassMap,
+  BungieDamageTypeToDbDamageTypeMap,
+  BungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { Seo } from "~/components/Seo";
 
@@ -100,15 +100,15 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
 
     if (selectedCharacter) {
       updatedClassType =
-        bungieDestinyClassToDbCharacterClassMap[
-          selectedCharacter.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
+        BungieDestinyClassToDbCharacterClassMap[
+          selectedCharacter.classType as keyof typeof BungieDestinyClassToDbCharacterClassMap
         ];
 
       updatedSubClassType =
-        bungieDamageTypeToDbDamageTypeMap[
+        BungieDamageTypeToDbDamageTypeMap[
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           subclassItem.talentGrid!
-            .hudDamageType as keyof typeof bungieDamageTypeToDbDamageTypeMap
+            .hudDamageType as keyof typeof BungieDamageTypeToDbDamageTypeMap
         ];
     }
 

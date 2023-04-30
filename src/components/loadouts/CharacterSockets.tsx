@@ -4,6 +4,8 @@ import { LoadoutSubclassItem } from "~/components/destiny/LoadoutSubclassItem";
 import { LoadoutWeaponItem } from "~/components/destiny/LoadoutWeaponItem";
 import { LoadoutArmorItem } from "~/components/destiny/LoadoutArmorItem";
 import { LoadoutSectionContainer } from "./LoadoutSectionContainer";
+import { LoadoutStatsPriorityList } from "./LoadoutStatsPriorityList";
+import { LoadoutStatsList } from "~/constants/loadouts";
 
 interface CharacterSocketsProps {
   loadout: DestinyCharacterLoadout;
@@ -25,7 +27,7 @@ export const CharacterSockets: React.FC<CharacterSocketsProps> = ({
   },
 }) => (
   <div className="grid grid-cols-1 gap-4">
-    <TypographyLarge>Subclass</TypographyLarge>
+    <LoadoutStatsPriorityList stats={LoadoutStatsList} />
     <LoadoutSubclassItem
       item={subclass}
       inventoryItems={inventoryItems}

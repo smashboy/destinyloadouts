@@ -7,7 +7,7 @@ import {
 import { getDestinyItemActiveWatermarkIcon } from "~/bungie/getDestinyItemActiveWatermarkIcon";
 import { bungieNetOrigin } from "~/bungie/constants";
 import { DestinyItemSubType, DestinyItemType } from "~/bungie/__generated";
-import { ammunitionIconMap } from "~/constants/loadouts";
+import { AmmunitionIconMap } from "~/constants/loadouts";
 
 interface LoadoutItemIconProps {
   item: LoadoutItem;
@@ -61,7 +61,7 @@ export const LoadoutItemIcon: React.FC<LoadoutItemIconProps> = ({
   const watermarkIcon = getDestinyItemActiveWatermarkIcon(inventoryItem);
 
   const ammoTypeIcon = inventoryItem.equippingBlock?.ammoType
-    ? ammunitionIconMap[inventoryItem.equippingBlock.ammoType]
+    ? AmmunitionIconMap[inventoryItem.equippingBlock.ammoType]
     : null;
 
   return (

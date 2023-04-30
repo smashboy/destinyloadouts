@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { type DestinyClassType } from "@prisma/client";
 import { destinyLogoIconPath } from "~/bungie/constants";
-import { characterClassIconPathMap } from "~/constants/loadouts";
+import { CharacterClassIconPathMap } from "~/constants/loadouts";
 
 interface CharacterClassIconBackgroundProps {
   classType?: DestinyClassType;
@@ -11,7 +11,7 @@ export const CharacterClassIconBackground: React.FC<
   CharacterClassIconBackgroundProps
 > = ({ classType }) => {
   const iconPath =
-    (classType && characterClassIconPathMap[classType]) || destinyLogoIconPath;
+    (classType && CharacterClassIconPathMap[classType]) || destinyLogoIconPath;
 
   return (
     <div className="pointer-events-none fixed inset-0 flex items-center justify-center opacity-10 dark:bg-neutral-900 md:left-56">

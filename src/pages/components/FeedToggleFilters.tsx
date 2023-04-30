@@ -6,15 +6,15 @@ import {
 import { ToggleGroup, type ToggleGroupOption } from "~/components/ToggleGroup";
 import { TypographySmall } from "~/components/typography";
 import {
-  characterClassIconPathMap,
-  characterClassTitleMap,
-  damageTypeIconPathMap,
-  damageTypeTitleMap,
-  damageTypesList,
-  destinyCharacterClassTypesList,
-  loadoutTagIconsMap,
-  loadoutTagTitlesMap,
-  loadoutTagsList,
+  CharacterClassIconPathMap,
+  CharacterClassTitleMap,
+  DamageTypeIconPathMap,
+  DamageTypeTitleMap,
+  DamageTypesList,
+  DestinyCharacterClassTypesList,
+  LoadoutTagIconsMap,
+  LoadoutTagTitlesMap,
+  LoadoutTagsList,
 } from "~/constants/loadouts";
 
 export interface FeedToggleFiltersProps {
@@ -27,25 +27,25 @@ export interface FeedToggleFiltersProps {
 }
 
 const classTypeFilerOptions: ToggleGroupOption[] =
-  destinyCharacterClassTypesList.map((type) => ({
+  DestinyCharacterClassTypesList.map((type) => ({
     value: type,
-    iconPath: characterClassIconPathMap[type],
-    title: characterClassTitleMap[type],
+    iconPath: CharacterClassIconPathMap[type],
+    title: CharacterClassTitleMap[type],
   }));
 
-const subclassTypeFilerOptions: ToggleGroupOption[] = damageTypesList.map(
+const subclassTypeFilerOptions: ToggleGroupOption[] = DamageTypesList.map(
   (type) => ({
     value: type,
-    iconPath: damageTypeIconPathMap[type],
-    title: damageTypeTitleMap[type],
+    iconPath: DamageTypeIconPathMap[type],
+    title: DamageTypeTitleMap[type],
   })
 );
 
-const loadoutTagFilterOptions: ToggleGroupOption[] = loadoutTagsList.map(
+const loadoutTagFilterOptions: ToggleGroupOption[] = LoadoutTagsList.map(
   (tag) => ({
     value: tag,
-    iconPath: loadoutTagIconsMap[tag],
-    title: loadoutTagTitlesMap[tag],
+    iconPath: LoadoutTagIconsMap[tag],
+    title: LoadoutTagTitlesMap[tag],
   })
 );
 

@@ -12,9 +12,9 @@ import {
   DialogTrigger,
 } from "~/components/Dialog";
 import {
-  loadoutTagIconsMap,
-  loadoutTagTitlesMap,
-  loadoutTagsList,
+  LoadoutTagIconsMap,
+  LoadoutTagTitlesMap,
+  LoadoutTagsList,
 } from "~/constants/loadouts";
 import { TypographyLarge } from "~/components/typography";
 import { cn } from "~/utils/tailwind";
@@ -35,8 +35,8 @@ const SelectTagItem: React.FC<SelectTagItemProps> = ({
   selected,
   onSelect,
 }) => {
-  const icon = loadoutTagIconsMap[value];
-  const title = loadoutTagTitlesMap[value];
+  const icon = LoadoutTagIconsMap[value];
+  const title = LoadoutTagTitlesMap[value];
 
   const isSelected = selected.includes(value);
 
@@ -87,7 +87,7 @@ export const SelectTagsDialog: React.FC<SelectTagsDialogProps> = ({
         </DialogDescription>
       </DialogHeader>
       <div className="grid grid-cols-3 gap-2">
-        {loadoutTagsList.map((tag) => (
+        {LoadoutTagsList.map((tag) => (
           <SelectTagItem
             key={tag}
             value={tag}

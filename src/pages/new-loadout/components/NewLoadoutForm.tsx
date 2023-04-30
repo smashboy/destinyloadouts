@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { type DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
 import {
-  bungieDamageTypeToDbDamageTypeMap,
-  bungieDestinyClassToDbCharacterClassMap,
+  BungieDamageTypeToDbDamageTypeMap,
+  BungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { trpcNext } from "~/utils/api";
 import { LoadoutInfoForm, type LoadoutInfoFormValues } from "./LoadoutInfoForm";
@@ -43,14 +43,14 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
       ...formArgs,
       items: { ...loadoutProps, subclass },
       classType:
-        bungieDestinyClassToDbCharacterClassMap[
-          character.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
+        BungieDestinyClassToDbCharacterClassMap[
+          character.classType as keyof typeof BungieDestinyClassToDbCharacterClassMap
         ],
       subclassType:
-        bungieDamageTypeToDbDamageTypeMap[
+        BungieDamageTypeToDbDamageTypeMap[
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           subclassItem.talentGrid!
-            .hudDamageType as keyof typeof bungieDamageTypeToDbDamageTypeMap
+            .hudDamageType as keyof typeof BungieDamageTypeToDbDamageTypeMap
         ],
     });
   };

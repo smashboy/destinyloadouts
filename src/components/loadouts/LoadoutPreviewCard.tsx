@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { type Loadout, type User, type LoadoutTagLink } from "@prisma/client";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import { characterClassIconPathMap } from "~/constants/loadouts";
+import { CharacterClassIconPathMap } from "~/constants/loadouts";
 import { TypographyLarge, TypographySmall } from "../typography";
 import { Separator } from "../Separator";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
@@ -57,7 +57,7 @@ export const LoadoutPreviewCard: React.FC<LoadoutPreviewCardProps> = ({
 
   const loadoutLink = `/${id}`;
 
-  const classIcon = characterClassIconPathMap[classType];
+  const classIcon = CharacterClassIconPathMap[classType];
   // const subclassIcon = damageTypeIconPathMap[subclassType];
 
   const isLikedByAuthUser = !!likes.find(

@@ -12,6 +12,7 @@ export {
   faPlus as IconPlusSolid,
   faFilter as IconFilterSolid,
   faChevronDown as IconChevronDown,
+  faArrowRight as IconArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 export {
   faBookmark as IconBookmarkRegular,

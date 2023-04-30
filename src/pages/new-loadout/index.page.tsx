@@ -18,7 +18,7 @@ import { CharacterSelector } from "./components/CharacterSelector";
 import { LoadoutSelector } from "./components/LoadoutSelector";
 import { createDestinyCharacterLoadout } from "~/bungie/createDestinyCharacterLoadout";
 import { NewLoadoutForm } from "./components/NewLoadoutForm";
-import { bungieDestinyClassToDbCharacterClassMap } from "~/constants/loadouts";
+import { BungieDestinyClassToDbCharacterClassMap } from "~/constants/loadouts";
 import {
   DestinyComponentType,
   type DestinyComponentTypeConst,
@@ -54,8 +54,8 @@ const NewLoadoutPage: NextPage<NewLoadoutPageProps> = ({
         <CharacterClassIconBackground
           classType={
             (selectedCharacter?.classType &&
-              bungieDestinyClassToDbCharacterClassMap[
-                selectedCharacter.classType as keyof typeof bungieDestinyClassToDbCharacterClassMap
+              BungieDestinyClassToDbCharacterClassMap[
+                selectedCharacter.classType as keyof typeof BungieDestinyClassToDbCharacterClassMap
               ]) ||
             void 0
           }

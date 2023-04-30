@@ -43,21 +43,23 @@ model UserFollower {
 }
 
 model Loadout {
-    id           String            @id @default(cuid())
-    createdAt    DateTime          @default(value: now())
-    updatedAt    DateTime          @updatedAt
-    status       LoadoutStatus     @default(DRAFT)
-    name         String
-    classType    DestinyClassType
-    subclassType DestinyDamageType
-    tags         LoadoutTagLink[]
-    description  Json?
+    id            String            @id @default(cuid())
+    createdAt     DateTime          @default(value: now())
+    updatedAt     DateTime          @updatedAt
+    status        LoadoutStatus     @default(DRAFT)
+    name          String
+    classType     DestinyClassType
+    subclassType  DestinyDamageType
+    tags          LoadoutTagLink[]
+    description   Json?
+    /// [LoadoutStatsPriority]
+    statsPriority Json?
     /// [LoadoutDBItems]
-    items        Json
-    likes        LoadoutLike[]
-    bookmarks    LoadoutBookmark[]
-    author       User              @relation(fields: [authorId], references: [id])
-    authorId     String
+    items         Json
+    likes         LoadoutLike[]
+    bookmarks     LoadoutBookmark[]
+    author        User              @relation(fields: [authorId], references: [id])
+    authorId      String
 
     @@index([authorId])
 }

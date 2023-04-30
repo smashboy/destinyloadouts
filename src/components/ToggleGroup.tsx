@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LoadoutTag } from "@prisma/client";
 import { cn } from "~/utils/tailwind";
 import { Button } from "./Button";
-import { loadoutTagIconsMap } from "~/constants/loadouts";
+import { LoadoutTagIconsMap } from "~/constants/loadouts";
 
 export type ToggleGroupOption = {
   value: string;
@@ -58,7 +58,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
                   height={18}
                   className={cn(
                     !isSelected && "invert",
-                    iconPath === loadoutTagIconsMap[LoadoutTag.DUNGEON] &&
+                    iconPath === LoadoutTagIconsMap[LoadoutTag.DUNGEON] &&
                       "scale-[2.5]"
                   )}
                 />

@@ -71,6 +71,7 @@ export const LoadoutSubclassItem: React.FC<LoadoutSubclassItemProps> = ({
 
   return (
     <div className="grid grid-cols-1 gap-4">
+      <TypographyLarge>Subclass</TypographyLarge>
       <div className="grid w-full grid-cols-1 gap-4 2xl:w-fit 2xl:grid-cols-2">
         <div className="flex items-center justify-center">
           <SubclassSocket super={subclassSuper} isSm={isSm} />
