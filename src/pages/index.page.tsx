@@ -219,7 +219,7 @@ const Home: NextPageWithLayout = () => {
         <div className="md:col-span-3 md:mt-3">
           <DataContainer
             title="Loadouts not found"
-            description="Try changing filters to get new results."
+            description="Try changing filters to get better results."
             isLoading={isLoading}
             showMessage={loadouts.length === 0}
           >
