@@ -30,7 +30,10 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
       }),
   });
 
-  const handleCreateNewLoadout = (formArgs: LoadoutInfoFormValues) => {
+  const handleCreateNewLoadout = ({
+    statsPriority,
+    ...formArgs
+  }: LoadoutInfoFormValues) => {
     const { inventoryItems, subclass, ...loadoutProps } = loadout;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -42,6 +45,7 @@ export const NewLoadoutForm: React.FC<NewLoadoutForm> = ({
     createLoadoutMutation.mutate({
       ...formArgs,
       items: { ...loadoutProps, subclass },
+      statsPriority: statsPriority.length === 6 ? statsPriority : void 0,
       classType:
         BungieDestinyClassToDbCharacterClassMap[
           character.classType as keyof typeof BungieDestinyClassToDbCharacterClassMap

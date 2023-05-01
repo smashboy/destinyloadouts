@@ -40,6 +40,7 @@ const loadoutValidation = z.object({
   classType: z.nativeEnum(DestinyClassType),
   subclassType: z.nativeEnum(DestinyDamageType),
   tags: z.array(z.nativeEnum(LoadoutTag)),
+  statsPriority: z.array(z.number().int().min(0).max(5)).length(6).optional(),
   status: z.nativeEnum(LoadoutStatus).optional(),
   items: z.object({
     helmet: loadoutItemValidation,
@@ -259,6 +260,7 @@ export const loadoutsRouter = createTRPCRouter({
         subclassType,
         tags,
         // status,
+        statsPriority,
         items,
         name,
         description,
@@ -277,6 +279,7 @@ export const loadoutsRouter = createTRPCRouter({
           subclassType,
           status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
           description: description as Prisma.InputJsonValue,
+          statsPriority: statsPriority?.join(","),
           tags: {
             createMany: {
               data: tags.map((tag) => ({ tag })),
@@ -310,6 +313,7 @@ export const loadoutsRouter = createTRPCRouter({
             subclassType,
             tags,
             // status,
+            statsPriority,
             items,
             name,
             description,
@@ -357,6 +361,7 @@ export const loadoutsRouter = createTRPCRouter({
             name,
             classType,
             subclassType,
+            statsPriority: statsPriority?.join(",") || null,
             status: LoadoutStatus.PUBLISHED, // todo remove when user will be able to change status on client
             description: description as Prisma.InputJsonValue,
             tags: {

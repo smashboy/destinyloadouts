@@ -1,6 +1,7 @@
 import { type User } from "@prisma/client";
 import { type DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { type LoadoutItem, type LoadoutPerkItemsList } from "~/bungie/types";
+import { type LoadoutStatType } from "~/constants/loadouts";
 
 export const getLoadoutItemHashes = (
   loadout: Record<string, LoadoutItem>
@@ -94,3 +95,10 @@ export const getInventoryItemPerks = (
       .map((perk) => perks[perk.perkHash]!)
       .filter((perk) => perk && perk.isDisplayable)
   );
+
+export const parseLoadoutStatsPriority = (stats: string | null) =>
+  stats
+    ? (stats
+        .split(",")
+        .map((stat) => Number(stat)) as unknown as LoadoutStatType[])
+    : [];

@@ -73,7 +73,7 @@ export const SelectTagsDialog: React.FC<SelectTagsDialogProps> = ({
   selected,
 }) => (
   <Dialog>
-    <DialogTrigger>
+    <DialogTrigger asChild>
       <Button variant="subtle" size="lg" className="w-full">
         Add tags +
       </Button>

@@ -11,6 +11,7 @@ import { Seo } from "~/components/Seo";
 import { PUBLIC_URL } from "~/constants/app";
 import { Tabs, TabsList, TabsTrigger } from "~/components/Tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { parseLoadoutStatsPriority } from "~/utils/loadout";
 
 interface LoadoutPageProps {
   loadoutId: string;
@@ -32,8 +33,11 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
     description,
     items,
     author: { bungieAccountDisplayName },
+    statsPriority,
     classType,
   } = loadout;
+
+  const parsedStatsPriority = parseLoadoutStatsPriority(statsPriority);
 
   return (
     <>
@@ -58,6 +62,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
           <TabsContent value="loadout">
             <CharacterSockets
               loadout={{ ...items, inventoryItems, perkItems }}
+              statsPriority={parsedStatsPriority}
             />
           </TabsContent>
           <TabsContent value="description">
@@ -91,6 +96,7 @@ const LoadoutPage: NextPage<LoadoutPageProps> = ({ loadout: pageProps }) => {
           >
             <CharacterSockets
               loadout={{ ...items, inventoryItems, perkItems }}
+              statsPriority={parsedStatsPriority}
             />
           </div>
         </div>

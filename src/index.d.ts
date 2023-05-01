@@ -30,14 +30,6 @@ declare module "@editorjs/embed" {
 
 type LoadoutItem = [number, number[]] | null | undefined;
 
-type LoadoutStatPriority =
-  | "INTELLECT"
-  | "MOBILITY"
-  | "RECOVERY"
-  | "RESILENCE"
-  | "STRENGTH"
-  | "DISCIPLINE";
-
 declare global {
   namespace PrismaJson {
     type LoadoutDBItems = {
@@ -51,7 +43,5 @@ declare global {
       power: LoadoutItem;
       subclass: LoadoutItem;
     };
-
-    type LoadoutStatsPriority = LoadoutStatPriority[];
   }
 }

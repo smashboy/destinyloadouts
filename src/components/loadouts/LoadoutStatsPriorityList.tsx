@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {
   LoadoutStatIconsMap,
-  type LoadoutStatsListType,
+  type LoadoutStatType,
 } from "~/constants/loadouts";
 import { TypographyLarge, TypographySmall } from "../typography";
 import { LoadoutSectionContainer } from "./LoadoutSectionContainer";
@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconArrowRight } from "~/icons";
 
 interface LoadoutStatsPriorityListProps {
-  stats: LoadoutStatsListType;
+  stats: LoadoutStatType[];
 }
 
 export const LoadoutStatsPriorityList: React.FC<
@@ -17,7 +17,7 @@ export const LoadoutStatsPriorityList: React.FC<
 > = ({ stats }) => (
   <div className="flex flex-col gap-2">
     <TypographyLarge>Stats priority</TypographyLarge>
-    <LoadoutSectionContainer className="flex gap-2">
+    <LoadoutSectionContainer className="flex items-center justify-center gap-2">
       {stats.map((stat, index) => (
         <div key={stat} className="flex items-center gap-2">
           <div className="relative">

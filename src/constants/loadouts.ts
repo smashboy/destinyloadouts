@@ -44,7 +44,7 @@ export const LoadoutStat = {
   STRENGTH: 5,
 } as const;
 
-export type LoadoutStatType = keyof typeof LoadoutStat;
+export type LoadoutStatType = (typeof LoadoutStat)[keyof typeof LoadoutStat];
 
 export const LoadoutStatsList = [
   LoadoutStat.DISCIPLINE,
@@ -64,6 +64,15 @@ export const LoadoutStatIconsMap = {
   [LoadoutStat.RECOVERY]: "/destiny-icons/stats/recovery.svg",
   [LoadoutStat.RESILIENCE]: "/destiny-icons/stats/resilience.svg",
   [LoadoutStat.STRENGTH]: "/destiny-icons/stats/strength.svg",
+};
+
+export const LoadoutStatTitleMap = {
+  [LoadoutStat.DISCIPLINE]: "Discipline",
+  [LoadoutStat.INTELLECT]: "Intellect",
+  [LoadoutStat.MOBILITY]: "Mobility",
+  [LoadoutStat.RECOVERY]: "Recovery",
+  [LoadoutStat.RESILIENCE]: "Resilience",
+  [LoadoutStat.STRENGTH]: "Strength",
 };
 
 export const LoadoutTagIconsMap = {

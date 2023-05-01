@@ -32,6 +32,7 @@ import {
   BungieDestinyClassToDbCharacterClassMap,
 } from "~/constants/loadouts";
 import { Seo } from "~/components/Seo";
+import { parseLoadoutStatsPriority } from "~/utils/loadout";
 
 type EditLoadoutPageProps = NonNullable<
   RouterOutputs["loadouts"]["getById"]
@@ -59,6 +60,7 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
     classType,
     subclassType,
     id: loadoutId,
+    statsPriority,
   } = loadout;
 
   const router = useRouter();
@@ -84,7 +86,10 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
       }),
   });
 
-  const handleUpdateLoadout = (formArgs: LoadoutInfoFormValues) => {
+  const handleUpdateLoadout = ({
+    statsPriority,
+    ...formArgs
+  }: LoadoutInfoFormValues) => {
     const selectedCharacter = characters[characterId as string];
 
     const { inventoryItems, subclass, ...loadoutProps } = updatedLoadout;
@@ -116,6 +121,7 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
       loadoutId,
       loadout: {
         ...formArgs,
+        statsPriority: statsPriority.length === 6 ? statsPriority : void 0,
         items: { ...loadoutProps, subclass },
         classType: updatedClassType,
         subclassType: updatedSubClassType,
@@ -152,6 +158,7 @@ const EditLoadoutPage: NextPage<EditLoadoutPageProps> = ({
               initialValues={{
                 name,
                 tags: tags.map(({ tag }) => tag),
+                statsPriority: parseLoadoutStatsPriority(statsPriority),
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 description,

@@ -52,8 +52,7 @@ model Loadout {
     subclassType  DestinyDamageType
     tags          LoadoutTagLink[]
     description   Json?
-    /// [LoadoutStatsPriority]
-    statsPriority Json?
+    statsPriority String?
     /// [LoadoutDBItems]
     items         Json
     likes         LoadoutLike[]
