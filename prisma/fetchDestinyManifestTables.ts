@@ -222,4 +222,41 @@ const run = async () => {
   console.log("Removed old manifests successfully!");
 };
 
+const cleanupFailedSeed = async () => {
+  !process.env.SKIP_ENV_VALIDATION && (await import("../src/env.mjs"));
+
+  const fetchHelper = bungieApiFetchHelper();
+
+  const manifestResponse = await getDestinyManifest(fetchHelper);
+
+  const manifestData = manifestResponse.Response;
+
+  const { version } = manifestData;
+
+  await prisma.$transaction([
+    prisma.destinyManifestTableComponent.deleteMany({
+      where: {
+        manifestVersion: version,
+      },
+    }),
+    prisma.destinyManifestTable.deleteMany({
+      where: {
+        manifestVersion: version,
+      },
+    }),
+    prisma.destinyManifestTablesByLocale.deleteMany({
+      where: {
+        manifestVersion: version,
+      },
+    }),
+    prisma.destinyManifest.deleteMany({
+      where: {
+        version: version,
+      },
+    }),
+  ]);
+};
+
+// cleanupFailedSeed();
+
 run();
