@@ -21,12 +21,14 @@ export const FeedMobileFiltersDialog: React.FC<
       <DialogTrigger asChild>
         <Button iconLeft={IconFilterSolid}>Filters</Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="h-[75vh] p-0">
+        <DialogHeader className="pt-6">
           <DialogTitle>Select filters</DialogTitle>
         </DialogHeader>
-        <FeedTabFilters {...props} />
-        <FeedToggleFilters {...props} />
+        <div className="grid gap-4 overflow-auto p-6">
+          <FeedTabFilters {...props} />
+          <FeedToggleFilters {...props} />
+        </div>
       </DialogContent>
     </Dialog>
   );
