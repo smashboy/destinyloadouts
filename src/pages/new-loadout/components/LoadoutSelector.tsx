@@ -4,7 +4,7 @@ import {
   type DestinyLoadoutIconDefinition,
   type DestinyLoadoutColorDefinition,
 } from "bungie-api-ts/destiny2";
-import { LoadoutSocket } from "~/components/destiny/LoadoutSocket";
+import { LoadoutSocket } from "~/components/loadouts/LoadoutSocket";
 import { TypographyLarge } from "~/components/typography";
 
 interface LoadoutSelectorProps {

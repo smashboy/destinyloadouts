@@ -1,8 +1,8 @@
 import { type DestinyCharacterLoadout } from "~/bungie/types";
 import { TypographyLarge } from "~/components/typography";
-import { LoadoutSubclassItem } from "~/components/destiny/LoadoutSubclassItem";
-import { LoadoutWeaponItem } from "~/components/destiny/LoadoutWeaponItem";
-import { LoadoutArmorItem } from "~/components/destiny/LoadoutArmorItem";
+import { LoadoutSubclassItem } from "~/components/loadouts/LoadoutSubclassItem";
+import { LoadoutWeaponItem } from "~/components/loadouts/LoadoutWeaponItem";
+import { LoadoutArmorItem } from "~/components/loadouts/LoadoutArmorItem";
 import { LoadoutSectionContainer } from "./LoadoutSectionContainer";
 import { LoadoutStatsPriorityList } from "./LoadoutStatsPriorityList";
 import { type LoadoutStatType } from "~/constants/loadouts";

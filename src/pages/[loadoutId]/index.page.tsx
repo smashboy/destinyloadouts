@@ -5,7 +5,7 @@ import { CharacterSockets } from "~/components/loadouts/CharacterSockets";
 import { type RouterOutputs } from "~/utils/api";
 import { trpsSSG } from "~/utils/ssg";
 import { cn } from "~/utils/tailwind";
-import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
+import { CharacterClassIconBackground } from "~/components/loadouts/CharacterClassIconBackground";
 import { LoadoutHeader } from "./components/LoadoutHeader";
 import { Seo } from "~/components/Seo";
 import { PUBLIC_URL } from "~/constants/app";

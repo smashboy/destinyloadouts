@@ -11,7 +11,7 @@ import { getMembershipDataForCurrentUser } from "bungie-api-ts/user";
 import { bungieApiFetchHelper } from "~/bungie/fetchHelper";
 import { getSingleMembershipData } from "~/bungie/getSingleMembershipData";
 import { type DestinyCharacterLoadout } from "~/bungie/types";
-import { CharacterClassIconBackground } from "~/components/destiny/CharacterClassIconBackground";
+import { CharacterClassIconBackground } from "~/components/loadouts/CharacterClassIconBackground";
 import { getServerAuthSession } from "~/server/auth";
 import { trpsSSG } from "~/utils/ssg";
 import { CharacterSelector } from "./components/CharacterSelector";
