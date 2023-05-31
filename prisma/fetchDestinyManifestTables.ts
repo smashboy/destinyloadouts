@@ -8,7 +8,7 @@ import { bungieApiFetchHelper } from "~/bungie/fetchHelper";
 import { destinyManifestTableNames } from "~/bungie/constants";
 import { prisma, type Prisma } from "./client";
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 10;
 
 dotenv.config();
 
